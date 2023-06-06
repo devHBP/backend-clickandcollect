@@ -51,7 +51,7 @@ const signup = (req, res) => {
       User.create(userData)
         .then((user) => {
           const userId = user.id;
-        //   console.log('verif id', userData);
+          // console.log('verif id', userData);
           res.status(201).json({ id: userId, message: "User created" });
           
         })
