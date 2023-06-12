@@ -1,4 +1,11 @@
-const User = require('../models/users')
+// const User = require('../models/users')
+const Test = require('../models/testclient')
+
+/**
+ * Attention
+ * Test avec nouvelle base de données Testclient = Test
+ */
+
 const userValidation = require('../validation/uservalidation')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -47,8 +54,8 @@ const signup = (req, res) => {
       if (req.body.id_magasin) {
         userData.id_magasin = req.body.id_magasin;
       }
-  
-      User.create(userData)
+    
+      Test.create(userData)
         .then((user) => {
           const userId = user.id;
           // console.log('verif id', userData);
@@ -66,7 +73,7 @@ const signup = (req, res) => {
 
 //login d'un user
 const login = (req, res) => {
-    User.findOne({where: {email: req.body.email}})
+    Test.findOne({where: {email: req.body.email}})
         .then(dbUser => {
             if(!dbUser){
                 return res.status(404).json({message:"user not found"})
@@ -82,7 +89,9 @@ const login = (req, res) => {
                         const user = {
                           id: dbUser.id,
                           id_magasin: dbUser.id_magasin,
-                          firstname: dbUser.firstname
+                          firstname: dbUser.firstname,
+                          lastname: dbUser.lastname,
+                          email: dbUser.email
                         };
                         // res.status(200).json({msg : "user logged in", "token": token, "user": dbUser.firstname})
                         res.status(200).json({ message: "Utilisateur connecté", token:token, user: user });
@@ -99,7 +108,7 @@ const login = (req, res) => {
 
 //lister tous les users
 const getAll = (req, res) => {
-    User.findAll({
+    Test.findAll({
         attributes : {exclude: ['createdAt', "updatedAt"]}
     })
     .then((users) => {
@@ -112,7 +121,7 @@ const getAll = (req, res) => {
 const getOne = ( req, res) => {
     const { id} = req.params
     //findbyprimarykey
-    User.findByPk(id)
+    Test.findByPk(id)
         .then( user => {
             if(!user) return res.status(404).json({msg:"user not found"})
             res.status(200).json(user)
@@ -123,7 +132,7 @@ const getOne = ( req, res) => {
 //supprimer un user
 const deleteOne = (req, res) => {
     const { id} = req.params
-    User.destroy({where : {id : id}})
+    Test.destroy({where : {id : id}})
     .then( user => {
         if(user === 0) return res.status(404).json({msg:"not found"})
         res.status(200).json({msg:"User deleted"})
@@ -136,7 +145,7 @@ const updateOneUser = (req, res) => {
     const { id } = req.params;
     const { id_magasin } = req.body;
   
-    User.findByPk(id)
+    Test.findByPk(id)
       .then((user) => {
         console.log('user not found !!')
         if (!user) {
@@ -157,8 +166,8 @@ const updateOneUser = (req, res) => {
       });
   };
   
-  module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser };
+module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser };
   
 
 
-module.exports =  { signup,login,  getAll, getOne, deleteOne, updateOneUser }
+// module.exports =  { signup,login,  getAll, getOne, deleteOne, updateOneUser }
