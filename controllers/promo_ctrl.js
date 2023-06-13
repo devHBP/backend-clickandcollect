@@ -40,4 +40,17 @@ const handleApplyDiscount = async (req, res) => {
       }
 };
 
-module.exports = { addPromo, handleApplyDiscount}
+//lister toutes les promos
+const allDiscounts = async (req, res) => {
+  try {
+    // Récupérer tous les codes promo de la base de données
+    const promoCodes = await PromoCode.findAll();
+
+    res.json(promoCodes); // Envoyer la réponse avec tous les codes promo
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des codes promo.' });
+  }
+}
+
+module.exports = { addPromo, handleApplyDiscount, allDiscounts}
