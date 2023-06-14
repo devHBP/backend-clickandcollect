@@ -3,9 +3,14 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db/db')
 
-const PromoCode = db.define(
-  'PromoCode',
+const Promotion = db.define(
+  'Promos',
   {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
     code: {
       type: DataTypes.STRING,
       primaryKey: true,
@@ -23,4 +28,4 @@ const PromoCode = db.define(
   }
 );
 
-module.exports = PromoCode;
+module.exports = Promotion;
