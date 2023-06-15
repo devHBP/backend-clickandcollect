@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize')
 const db = require('../db/db')
 
-const Store = db.define('Magasins', {
+const TestStore = db.define('Magasins', {
       id_magasin: {
           type: DataTypes.INTEGER,
           primaryKey: true,
@@ -36,7 +36,7 @@ const Store = db.define('Magasins', {
       
 })
 
-Store.beforeValidate((store, options) => {
+TestStore.beforeValidate((store, options) => {
   if (!store.reference_magasin) {
     let lastStoreId;
     return Store.max('id_magasin')
@@ -52,4 +52,4 @@ Store.beforeValidate((store, options) => {
 });
 
 
-module.exports = Store
+module.exports = TestStore

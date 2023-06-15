@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize')
 const db = require('../db/db')
-const Product = require('./produits')
+const Product = require('./testProduct.js')
 
 const famille_produit = db.define('Famille_produit', {
     id_famille_produit: {

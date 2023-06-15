@@ -1,4 +1,4 @@
-const Promotion = require('../models/promotions.js');
+const Promotion = require('../models/testPromotions.js');
 
 
 const addPromo = async (req, res) => {

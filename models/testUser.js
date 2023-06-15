@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize')
 const db = require('../db/db')
-const Store = require('./magasins')
+const TestStore = require('./testStore')
 
-const Test = db.define('Client', {
+const TestClient = db.define('Client', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -66,5 +66,5 @@ const Test = db.define('Client', {
       }
       
 })
-Test.belongsTo(Store, { foreignKey: 'id_magasin' });
-module.exports = Test
+TestClient.belongsTo(TestStore, { foreignKey: 'id_magasin' });
+module.exports = TestClient

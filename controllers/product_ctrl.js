@@ -1,5 +1,5 @@
 //appel du model
-const Product = require('../models/produits')
+const Product = require('../models/testProduct.js')
 
 //import multer
 const multer = require('multer')

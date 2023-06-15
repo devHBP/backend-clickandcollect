@@ -1,6 +1,6 @@
 //penser à enlever commentaire dans modèle
 
-const Store = require('../models/magasins')
+const TestStore = require('../models/testStore.js')
 
 //Créer un magasin
 const addStore = async (req, res ) => {
@@ -15,7 +15,7 @@ const addStore = async (req, res ) => {
             nom_gestionnaire: req.body.nom_gestionnaire,
         }
     
-        const store = await Store.create(magasin)
+        const store = await TestStore.create(magasin)
     
         res.status(201).json({ msg: "magasin créé", stores: store })
         console.log('store', store)
@@ -34,7 +34,7 @@ const updateStore = ( req, res ) => {
 //lister tous les magasins
 const getAllStores = ( req, res ) => {
 
-    Store.findAll({
+    TestStore.findAll({
         attributes : {exclude: ['createdAt', 'updatedAt']}
     })
     .then((stores) => {
@@ -49,7 +49,7 @@ const getAllStores = ( req, res ) => {
 const getOneStore = ( req, res ) => {
     const { id} = req.params
     //findbyprimarykey
-    Store.findByPk(id)
+    TestStore.findByPk(id)
         .then( store => {
             if(!store) return res.status(404).json({msg:"store not found"})
             res.status(200).json(store)

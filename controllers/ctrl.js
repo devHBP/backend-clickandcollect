@@ -1,5 +1,5 @@
 // const User = require('../models/users')
-const Test = require('../models/testclient')
+const TestClient = require('../models/testUser.js')
 
 
 /**
@@ -56,7 +56,7 @@ const signup = (req, res) => {
         userData.id_magasin = req.body.id_magasin;
       }
     
-      Test.create(userData)
+      TestClient.create(userData)
         .then((user) => {
           const userId = user.id;
           // console.log('verif id', userData);
@@ -74,7 +74,7 @@ const signup = (req, res) => {
 
 //login d'un user
 const login = (req, res) => {
-    Test.findOne({where: {email: req.body.email}})
+  TestClient.findOne({where: {email: req.body.email}})
         .then(dbUser => {
             if(!dbUser){
                 return res.status(404).json({message:"user not found (login)"})
@@ -109,7 +109,7 @@ const login = (req, res) => {
 
 //lister tous les users
 const getAll = (req, res) => {
-    Test.findAll({
+  TestClient.findAll({
         attributes : {exclude: ['createdAt', "updatedAt"]}
     })
     .then((users) => {
@@ -122,7 +122,7 @@ const getAll = (req, res) => {
 const getOne = ( req, res) => {
     const { id} = req.params
     //findbyprimarykey
-    Test.findByPk(id)
+    TestClient.findByPk(id)
         .then( user => {
             if(!user) return res.status(404).json({msg:"user not found"})
             res.status(200).json(user)
@@ -146,7 +146,7 @@ const updateOneUser = (req, res) => {
     const { id } = req.params;
     const { id_magasin } = req.body;
   
-    Test.findByPk(id)
+    TestClient.findByPk(id)
       .then((user) => {
         console.log('User found !!')
         if (!user) {
