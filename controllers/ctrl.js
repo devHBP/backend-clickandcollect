@@ -1,6 +1,7 @@
 // const User = require('../models/users')
 const Test = require('../models/testclient')
 
+
 /**
  * Attention
  * Test avec nouvelle base de données Testclient = Test
@@ -76,7 +77,7 @@ const login = (req, res) => {
     Test.findOne({where: {email: req.body.email}})
         .then(dbUser => {
             if(!dbUser){
-                return res.status(404).json({message:"user not found"})
+                return res.status(404).json({message:"user not found (login)"})
             }
             else {
                 bcrypt.compare(req.body.password, dbUser.password, (err, compaRes) => {
@@ -147,15 +148,15 @@ const updateOneUser = (req, res) => {
   
     Test.findByPk(id)
       .then((user) => {
-        console.log('user not found !!')
+        console.log('User found !!')
         if (!user) {
-          return res.status(404).json({ msg: "User not found" });
+          return res.status(404).json({ msg: "User not found (updateone)" });
         }
   
         user
           .update({ id_magasin })
           .then(() => {
-            res.status(200).json({ msg: "Magasin ajouté"});
+            res.status(200).json({ msg: "Magasin modifié"});
           })
           .catch((error) => {
             res.status(500).json({ error: "Error updating user" });
