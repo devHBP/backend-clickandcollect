@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize')
 const db = require('../db/db')
+// const TestOrder = require('./testOrder')
 
 const Product = db.define('Products', {
     
@@ -133,4 +134,19 @@ const Product = db.define('Products', {
 
 })
 
+// relation
+// a rajouter
+// Un produit (Products) peut être inclus dans plusieurs commandes (Orders) via la table OrderProducts.
+
+/**Product.associate = function(models) {
+  Product.belongsToMany(models.TestOrder, { 
+    through: 'TestOrderProduct', 
+    foreignKey: 'id_produit', //productId
+    otherKey: 'id' //orderId
+  });
+};
+*/
+
+
 module.exports = Product
+

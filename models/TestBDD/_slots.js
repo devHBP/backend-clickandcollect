@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize')
-const db = require('../db/db')
+const db = require('../../db/db')
 const TestOrders = require('./_orders')
 
 const TestSlots = db.define(
@@ -26,6 +26,6 @@ const TestSlots = db.define(
 // relation
 // a rajouter
 // Un créneau horaire (Slots) peut être associé à plusieurs commandes (Orders).
-TestSlots.hasMany(models.TestOrders, { foreignKey: 'slotId' })
+//TestSlots.hasMany(TestOrders, { foreignKey: 'slotId' })
 
-// module.exports = TestSlots
+module.exports = TestSlots

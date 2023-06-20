@@ -1,6 +1,6 @@
 // modèle : TestOrderProduct
 const { DataTypes } = require('sequelize')
-const db = require('../db/db')
+const db = require('../../db/db')
 
 //table d'association
 const TestOrderProducts = db.define(
@@ -38,5 +38,5 @@ const TestOrderProducts = db.define(
 // Cette table fait le lien entre les commandes (Orders) et les produits (Products).
 // Elle permet de savoir quels produits sont inclus dans chaque commande et en quelle quantité.
 
-// module.exports = TestOrderProducts
+module.exports = TestOrderProducts
 

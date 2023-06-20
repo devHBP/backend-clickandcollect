@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize')
-const db = require('../db/db')
+const db = require('../../db/db')
 const TestOrders = require('./_orders')
 
 const TestStores = db.define('TestStores', {
@@ -8,7 +8,7 @@ const TestStores = db.define('TestStores', {
           primaryKey: true,
           autoIncrement: true,
         },
-        //pdj001 par exemple
+        //pdj_001 par exemple
       reference_magasin: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -40,7 +40,7 @@ const TestStores = db.define('TestStores', {
 TestStores.beforeValidate((store, options) => {
   if (!store.reference_magasin) {
     let lastStoreId;
-    return Store.max('storeId')
+    return TestStores.max('storeId')
       .then((maxId) => {
         lastStoreId = maxId || 0;
         const reference_magasin = `pdj_00${lastStoreId + 1}`;
@@ -56,6 +56,6 @@ TestStores.beforeValidate((store, options) => {
 //a rajouter
 // Une commande (Orders) peut être passée dans un magasin (Stores).
 
-  TestStores.hasMany(TestOrders, { foreignKey: 'storeId' }); 
+ // TestStores.hasMany(TestOrders, { foreignKey: 'storeId' }); 
 
-//module.exports = TestStores
+module.exports = TestStores

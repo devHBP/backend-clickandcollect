@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize')
-const db = require('../db/db')
+const db = require('../../db/db')
 const TestStores = require('./_stores')
 const TestOrders = require('./_orders')
 
@@ -35,7 +35,8 @@ const TestUsers = db.define('TestUsers', {
         defaultValue : 'client'
         // rôles: admin, gestionnaire, employe, client
       },
-      id_magasin: {
+      //modif ici id_magasin = storeId
+      storeId: {
         type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: null, // Définit la valeur par défaut sur null
@@ -68,12 +69,12 @@ const TestUsers = db.define('TestUsers', {
       
 })
 
-TestUsers.belongsTo(TestStores, { foreignKey: 'id_magasin' });
-TestUsers.hasMany(TestOrders, {
+//TestUsers.belongsTo(TestStores, { foreignKey: 'id_magasin' });
+/**TestUsers.hasMany(TestOrders, {
     foreignKey: 'userId', 
     as: 'orders',
   });
-
+*/
 // Une commande (Orders) peut être passée par un utilisateur (Users).
 
-//module.exports = TestUsers
+module.exports = TestUsers

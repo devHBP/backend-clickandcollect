@@ -7,7 +7,7 @@ const TestSlots = require('./_slots')
 const TestPayments = require('./_payments')
 const TestPromotions = require('./_promotions')
 
-const TestOrders = db.define('TestOrders', {
+const TestOrders = db.define('TestOrder', {
     orderId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -38,13 +38,14 @@ const TestOrders = db.define('TestOrders', {
       type: DataTypes.STRING,
       allowNull: false
     },
-    magasin: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
+    //inutila, nous avons déja le storeid pour identifier le magasin
+    // magasin: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false
+    // },
     delivery: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: true
     },
     heure: {
       type: DataTypes.STRING,
@@ -62,7 +63,7 @@ const TestOrders = db.define('TestOrders', {
     },
     slotId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     paymentId: {
       type: DataTypes.INTEGER,
@@ -70,7 +71,7 @@ const TestOrders = db.define('TestOrders', {
     },
     promotionId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
 
   });
@@ -100,18 +101,25 @@ const TestOrders = db.define('TestOrders', {
 // generéation numéro de commande
 // changer le format 
 TestOrders.beforeValidate((order, options) => {
-  if (!order.numero_commande) {
-    let lastOrderId;
-    return TestOrders.max('orderId')
-      .then((maxId) => {
-        lastOrderId = maxId || 0;
-        const numero_commande = `pdj_00${lastOrderId + 1}`;
-        order.numero_commande = numero_commande;
-      })
-      .catch((error) => {
-        throw new Error('Erreur lors de la génération du numéro de commande');
-      });
-  }
+    if (!order.numero_commande) {
+        return Promise.all([
+          TestOrders.max('orderId'), // Récupérer l'ID maximal
+          TestOrders.belongsTo(TestStores, { foreignKey: 'storeId' }).getAssociation('TestStores').target.key, // Récupérer la clé étrangère de TestStores
+        ])
+        .then(([maxId, reference_magasin]) => {
+          const currentDate = new Date();
+          const year = currentDate.getFullYear();
+          const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+          const day = String(currentDate.getDate()).padStart(2, '0');
+          const lastOrderId = maxId || 0;
+          const sequentialId = String(lastOrderId + 1).padStart(5, '0');
+          const numero_commande = `${reference_magasin}_${day}${month}${year}_${sequentialId}`;
+          order.numero_commande = numero_commande;
+        })
+        .catch((error) => {
+          throw new Error('Erreur lors de la génération du numéro de commande');
+        });
+      }
 });
   
   //une fois OK

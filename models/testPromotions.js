@@ -1,7 +1,6 @@
-// models/PromoCode.js
-
 const { DataTypes } = require('sequelize');
 const db = require('../db/db')
+// const TestOrder = require('./testOrder')
 
 const Promotion = db.define(
   'Promos',
@@ -27,5 +26,10 @@ const Promotion = db.define(
       },
   }
 );
+
+// relation
+// a rajouter
+// Une promotion (Promotions) peut être appliquée à plusieurs commandes (Orders).
+//Promotion.hasMany(TestOrder, { foreignKey: 'id' }) //promotionId
 
 module.exports = Promotion;

@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize')
 const db = require('../db/db')
+// const TestOrder = require('./testOrder')
 
 const TestStore = db.define('Magasins', {
       id_magasin: {
@@ -50,6 +51,15 @@ TestStore.beforeValidate((store, options) => {
       });
   }
 });
+
+//relation
+//a rajouter
+// Une commande (Orders) peut être passée dans un magasin (Stores).
+
+/**
+ * TestStore.hasMany(TestOrder, { foreignKey: 'id_magasin' }); //storeId (id)
+ */
+
 
 
 module.exports = TestStore

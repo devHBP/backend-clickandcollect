@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize')
-const db = require('../db/db')
+const db = require('../../db/db')
 const TestOrders = require('./_orders')
 
 const TestPayments = db.define(
@@ -24,6 +24,6 @@ const TestPayments = db.define(
 // relation
 // a rajouter
 // Une méthode de paiement (Payments) peut être associée à plusieurs commandes (Orders).
-TestPayments.hasMany(TestOrders, { foreignKey: 'paymentId' });
+//TestPayments.hasMany(TestOrders, { foreignKey: 'paymentId' });
 
-// module.exports = TestPayments
+module.exports = TestPayments

@@ -1,4 +1,5 @@
-const Promotion = require('../models/testPromotions.js');
+//const Promotion = require('../models/testPromotions.js');
+const TestPromotions = require('../models/TestBDD/_promotions')
 
 
 const addPromo = async (req, res) => {
@@ -7,7 +8,7 @@ const addPromo = async (req, res) => {
     const { code, percentage, durationInDays, active } = req.body;
 
     // Créer le code promo dans la base de données
-    const promoCode = await Promotion.create({
+    const promoCode = await TestPromotions.create({
       code,
       percentage,
       durationInDays,
@@ -26,7 +27,7 @@ const handleApplyDiscount = async (req, res) => {
         const code = req.params.code;
     
         // Recherche du code promo dans la base de données
-        const promoCode = await Promotion.findOne({
+        const promoCode = await TestPromotions.findOne({
           where: { code: code.toUpperCase() }
         });
     
@@ -44,7 +45,7 @@ const handleApplyDiscount = async (req, res) => {
 const allDiscounts = async (req, res) => {
   try {
     // Récupérer tous les codes promo de la base de données
-    const promoCodes = await Promotion.findAll();
+    const promoCodes = await TestPromotions.findAll();
 
     res.json(promoCodes); // Envoyer la réponse avec tous les codes promo
   } catch (error) {
@@ -79,7 +80,7 @@ const deletePromo =  async (req, res) => {
   const promoCode = req.params.id;
 
   try {
-    const promo = await Promotion.findByPk(promoCode);
+    const promo = await TestPromotions.findByPk(promoCode);
 
     if (!promo) {
       return res.status(404).json({ error: 'Promo not found' });

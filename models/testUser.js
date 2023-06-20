@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize')
 const db = require('../db/db')
 const TestStore = require('./testStore')
+// const TestOrder = require('./testOrder')
 
 const TestClient = db.define('Client', {
     id: {
@@ -66,5 +67,21 @@ const TestClient = db.define('Client', {
       }
       
 })
+
 TestClient.belongsTo(TestStore, { foreignKey: 'id_magasin' });
+
+// relation
+// a rajouter
+// Une commande (Orders) peut être passée par un utilisateur (Users).
+
+/**
+ * TestClient.hasMany(TestOrder, {
+  foreignKey: 'id', //userId
+  as: 'orders',
+});
+ */
+
+
+
+
 module.exports = TestClient

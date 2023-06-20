@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const db = require('../db/db')
+const db = require('../../db/db')
 const TestOrders = require('./_orders')
 
 const TestPromotions = db.define(
@@ -30,6 +30,6 @@ const TestPromotions = db.define(
 // relation
 // a rajouter
 // Une promotion (Promotions) peut être appliquée à plusieurs commandes (Orders).
-TestPromotions.hasMany(TestOrders, { foreignKey: 'promotionId' }) 
+//TestPromotions.hasMany(TestOrders, { foreignKey: 'promotionId' }) 
 
-//module.exports = TestPromotions;
+module.exports = TestPromotions;

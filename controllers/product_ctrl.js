@@ -1,5 +1,7 @@
 //appel du model
-const Product = require('../models/testProduct.js')
+// const Product = require('../models/testProduct.js')
+const TestProducts = require('../models/TestBDD/_products.js')
+const TestProductsV2 = require('../models/TestBDD/__products.js')
 
 //import multer
 const multer = require('multer')
@@ -18,14 +20,16 @@ try {
         image: req.file.path,
         // image: req.files.path for multiple images
         libelle: req.body.libelle,
-        prix: req.body.prix,
+        prix_unitaire: req.body.prix_unitaire,
         categorie: req.body.categorie,
         description: req.body.description,
+        prix_remise_collaborateur: req.body.prix_remise_collaborateur,
+        disponibilite: req.body.disponibilite,
     }
 
-    const product = await Product.create(produit)
+    const product = await TestProductsV2.create(produit)
 
-    const produits = await Product.findAll()
+    const produits = await TestProductsV2.findAll()
 
     res.status(201).json({ msg: "produit créé", produits: produits })
   } catch (error) {
@@ -41,14 +45,14 @@ const updateProduct = async (req, res) => {
     const updates = req.body;
   
     try {
-      const product = await Product.findOne({ where: { id_produit: productId } });
+      const product = await TestProductsV2.findOne({ where: { productId: productId } });
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
       }
   
       // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-      await Product.update(updates, { where: { id_produit: productId } });
+      await TestProductsV2.update(updates, { where: { productId: productId } });
       console.log(product)
       return res.status(200).json({ msg: 'Product updated successfully' });
     } catch (error) {
@@ -62,7 +66,7 @@ const updateProduct = async (req, res) => {
 //lister tous les produits
 const getAllProducts = (req, res) =>
     {
-        Product.findAll({
+      TestProductsV2.findAll({
             attributes : {exclude: ['createdAt', 'updatedAt']}
         })
         .then((products) => {
@@ -73,10 +77,12 @@ const getAllProducts = (req, res) =>
     }
 
 //lister un produit par id
+// ?? User ?
 const getOneProduct = ( req, res) => {
     const { id } = req.params
     //findbyprimarykey
-    User.findByPk(id)
+    // User.findByPk
+    TestProductsV2.findByPk(id)
         .then( product => {
             if(!product) return res.status(404).json({msg:"product not found"})
             res.status(200).json(product)
@@ -126,7 +132,7 @@ const deleteProduct = async (req, res) => {
     const productId = req.params.id;
   
     try {
-      const product = await Product.findByPk(productId);
+      const product = await TestProductsV2.findByPk(productId);
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
