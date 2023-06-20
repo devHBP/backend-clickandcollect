@@ -4,6 +4,7 @@ const TestOrders = require('./_orders');
 const TestOrderProducts = require('./_orderproducts');
 const TestProducts = require('./_products');
 const TestProductsV2 = require('./__products');
+const TestProductsV3 = require('./___products');
 const TestSlots = require('./_slots');
 const TestPayments = require('./_payments');
 const TestPromotions = require('./_promotions');
@@ -24,8 +25,10 @@ TestOrders.belongsTo(TestStoresV2, { foreignKey: 'storeId' });
 // Un produit (Products) peut être inclus dans plusieurs commandes (Orders) via la table OrderProducts.
 //TestProducts.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
 //TestOrders.belongsToMany(TestProducts, { through: TestOrderProducts, foreignKey: 'orderId' });
-TestProductsV2.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
-TestOrders.belongsToMany(TestProductsV2, { through: TestOrderProducts, foreignKey: 'orderId' });
+//TestProductsV2.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
+//TestOrders.belongsToMany(TestProductsV2, { through: TestOrderProducts, foreignKey: 'orderId' });
+TestProductsV3.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
+TestOrders.belongsToMany(TestProductsV3, { through: TestOrderProducts, foreignKey: 'orderId' });
 
 // Un créneau horaire (Slots) peut être associé à plusieurs commandes (Orders).
 TestSlots.hasMany(TestOrders, { foreignKey: 'slotId', as: 'orders' });
@@ -40,7 +43,8 @@ TestPromotions.hasMany(TestOrders, { foreignKey: 'promotionId', as: 'orders' });
 TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 
 //
-TestStocks.belongsTo(TestProducts, { foreignKey: 'productId' });
+//TestStocks.belongsTo(TestProductsV2, { foreignKey: 'productId' });
+TestStocks.belongsTo(TestProductsV3, { foreignKey: 'productId' });
 
 module.exports = {
   TestUsers,
@@ -53,6 +57,7 @@ module.exports = {
   TestPromotions, 
   TestStoresV2,
   TestStocks, 
-  TestProductsV2
+  TestProductsV2,
+  TestProductsV3
 };
 
