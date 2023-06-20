@@ -1,6 +1,9 @@
 //penser à enlever commentaire dans modèle
 
-const TestStore = require('../models/testStore.js')
+//const TestStore = require('../models/testStore.js')
+//const TestStores = require('../models/TestBDD/_stores')
+const TestStoresV2 = require('../models/TestBDD/__stores')
+
 
 //Créer un magasin
 const addStore = async (req, res ) => {
@@ -13,9 +16,11 @@ const addStore = async (req, res ) => {
             ville_magasin: req.body.ville_magasin,
             cp_magasin: req.body.cp_magasin,
             nom_gestionnaire: req.body.nom_gestionnaire,
+            heure_ouverture: req.body.heure_ouverture,
+            heure_fermeture: req.body.heure_fermeture
         }
     
-        const store = await TestStore.create(magasin)
+        const store = await TestStoresV2.create(magasin)
     
         res.status(201).json({ msg: "magasin créé", stores: store })
         console.log('store', store)
@@ -34,7 +39,7 @@ const updateStore = ( req, res ) => {
 //lister tous les magasins
 const getAllStores = ( req, res ) => {
 
-    TestStore.findAll({
+    TestStoresV2.findAll({
         attributes : {exclude: ['createdAt', 'updatedAt']}
     })
     .then((stores) => {
@@ -49,7 +54,7 @@ const getAllStores = ( req, res ) => {
 const getOneStore = ( req, res ) => {
     const { id} = req.params
     //findbyprimarykey
-    TestStore.findByPk(id)
+    TestStoresV2.findByPk(id)
         .then( store => {
             if(!store) return res.status(404).json({msg:"store not found"})
             res.status(200).json(store)
