@@ -1,5 +1,6 @@
 // const User = require('../models/users')
-const TestClient = require('../models/testUser.js')
+//const TestClient = require('../models/testUser.js')
+const TestUsers = require('../models/TestBDD/_users')
 
 
 /**
@@ -52,14 +53,14 @@ const signup = (req, res) => {
       }
   
       const userData = { ...body, password: passwordHash };
-      if (req.body.id_magasin) {
-        userData.id_magasin = req.body.id_magasin;
+      if (req.body.storeId) {
+        userData.storeId = req.body.storeId;
       }
     
-      TestClient.create(userData)
+      TestUsers.create(userData)
         .then((user) => {
-          const userId = user.id;
-          // console.log('verif id', userData);
+          const userId = user.userId;
+           console.log('verif id', userData);
           res.status(201).json({ id: userId, message: "User created" });
           
         })
@@ -74,7 +75,7 @@ const signup = (req, res) => {
 
 //login d'un user
 const login = (req, res) => {
-  TestClient.findOne({where: {email: req.body.email}})
+  TestUsers.findOne({where: {email: req.body.email}})
         .then(dbUser => {
             if(!dbUser){
                 return res.status(404).json({message:"user not found (login)"})
@@ -88,8 +89,8 @@ const login = (req, res) => {
                         //save user token
                         dbUser.token = token
                         const user = {
-                          id: dbUser.id,
-                          id_magasin: dbUser.id_magasin,
+                          userId: dbUser.userId,
+                          storeId: dbUser.storeId,
                           firstname: dbUser.firstname,
                           lastname: dbUser.lastname,
                           email: dbUser.email
@@ -109,7 +110,7 @@ const login = (req, res) => {
 
 //lister tous les users
 const getAll = (req, res) => {
-  TestClient.findAll({
+  TestUsers.findAll({
         attributes : {exclude: ['createdAt', "updatedAt"]}
     })
     .then((users) => {
@@ -122,7 +123,7 @@ const getAll = (req, res) => {
 const getOne = ( req, res) => {
     const { id} = req.params
     //findbyprimarykey
-    TestClient.findByPk(id)
+    TestUsers.findByPk(id)
         .then( user => {
             if(!user) return res.status(404).json({msg:"user not found"})
             res.status(200).json(user)
@@ -133,7 +134,7 @@ const getOne = ( req, res) => {
 //supprimer un user
 const deleteOne = (req, res) => {
     const { id} = req.params
-    Test.destroy({where : {id : id}})
+    TestUsers.destroy({where : {id : id}})
     .then( user => {
         if(user === 0) return res.status(404).json({msg:"not found"})
         res.status(200).json({msg:"User deleted"})
@@ -141,12 +142,12 @@ const deleteOne = (req, res) => {
     .catch(error => res.statut(500).json(error))
 }
 
-//update un user
+//update le magasin rattaché au user
 const updateOneUser = (req, res) => {
     const { id } = req.params;
-    const { id_magasin } = req.body;
+    const { storeId } = req.body;
   
-    TestClient.findByPk(id)
+    TestUsers.findByPk(id)
       .then((user) => {
         console.log('User found !!')
         if (!user) {
@@ -154,7 +155,7 @@ const updateOneUser = (req, res) => {
         }
   
         user
-          .update({ id_magasin })
+          .update({ storeId })
           .then(() => {
             res.status(200).json({ msg: "Magasin modifié"});
           })
@@ -166,8 +167,35 @@ const updateOneUser = (req, res) => {
         res.status(500).json({ error: "Error finding user" });
       });
   };
+
+// Modifier le rôle d'un utilisateur
+const updateRole = (req, res) => {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    TestUsers.findByPk(id)
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ msg: "User not found" });
+        }
+
+        user
+          .update({ role }) // Mettez à jour uniquement la propriété "role"
+          .then(() => {
+            res.status(200).json({ msg: "Rôle modifié" });
+          })
+          .catch((error) => {
+            res.status(500).json({ error: "Error updating user" });
+          });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Error finding user" });
+      });
+};
+
+
   
-module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser };
+module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole };
   
 
 
