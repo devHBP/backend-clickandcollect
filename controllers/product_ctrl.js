@@ -4,7 +4,9 @@ const TestProducts = require('../models/TestBDD/_products.js')
 const TestProductsV2 = require('../models/TestBDD/__products.js')
 const TestProductsV3 = require('../models/TestBDD/___products.js')
 const TestProductsV4 = require('../models/TestBDD/_____products.js')
+const TestProductsV5 = require('../models/TestBDD/______products.js')
 const TestStocksV2 = require('../models/TestBDD/__stocks.js')
+const TestStocksV3 = require('../models/TestBDD/___stocks.js')
 
 //import multer
 const multer = require('multer')
@@ -27,18 +29,18 @@ try {
         prix_remise_collaborateur: req.body.prix_remise_collaborateur,
         disponibilite: req.body.disponibilite,
         stock: req.body.stock,
-        TestStocksV2: {
+        TestStocksV3: {
           quantite: req.body.stock,
           // Ajoutez ici d'autres champs nécessaires pour créer un stock
         }
     }
 
-    const product = await TestProductsV4.create(produit, {
-      include: [TestStocksV2]
+    const product = await TestProductsV5.create(produit, {
+      include: [TestStocksV3]
     })
 
-    const produits = await TestProductsV4.findAll({
-      include: [TestStocksV2]
+    const produits = await TestProductsV5.findAll({
+      include: [TestStocksV3]
     })
 
     res.status(201).json({ msg: "produit créé", produits: produits })
@@ -54,14 +56,14 @@ const updateProduct = async (req, res) => {
     const updates = req.body;
   
     try {
-      const product = await TestProductsV4.findOne({ where: { productId: productId } });
+      const product = await TestProductsV5.findOne({ where: { productId: productId } });
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
       }
   
       // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-      await TestProductsV4.update(updates, { where: { productId: productId } });
+      await TestProductsV5.update(updates, { where: { productId: productId } });
       console.log(product)
       return res.status(200).json({ msg: 'Product updated successfully' });
     } catch (error) {
@@ -75,7 +77,7 @@ const updateProduct = async (req, res) => {
 //lister tous les produits
 const getAllProducts = (req, res) =>
     {
-      TestProductsV4.findAll({
+      TestProductsV5.findAll({
             attributes : {exclude: ['createdAt', 'updatedAt']}
         })
         .then((products) => {
@@ -91,7 +93,7 @@ const getOneProduct = ( req, res) => {
     const { id } = req.params
     //findbyprimarykey
     // User.findByPk
-    TestProductsV4.findByPk(id)
+    TestProductsV5.findByPk(id)
         .then( product => {
             if(!product) return res.status(404).json({msg:"product not found"})
             res.status(200).json(product)
@@ -141,7 +143,7 @@ const deleteProduct = async (req, res) => {
     const productId = req.params.id;
   
     try {
-      const product = await TestProductsV4.findByPk(productId);
+      const product = await TestProductsV5.findByPk(productId);
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });

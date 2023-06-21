@@ -6,12 +6,14 @@ const TestProducts = require('./_products');
 const TestProductsV2 = require('./__products');
 const TestProductsV3 = require('./___products');
 const TestProductsV4 = require('./_____products');
+const TestProductsV5 = require('./______products');
 const TestSlots = require('./_slots');
 const TestPayments = require('./_payments');
 const TestPromotions = require('./_promotions');
 const TestStoresV2 = require('./__stores')
 const TestStocks = require('./_stocks')
 const TestStocksV2 = require('./__stocks')
+const TestStocksV3 = require('./___stocks')
 
 // Relations
 // Une commande (Orders) peut être passée par un utilisateur (Users).
@@ -29,8 +31,10 @@ TestOrders.belongsTo(TestStoresV2, { foreignKey: 'storeId' });
 //TestOrders.belongsToMany(TestProducts, { through: TestOrderProducts, foreignKey: 'orderId' });
 //TestProductsV2.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
 //TestOrders.belongsToMany(TestProductsV2, { through: TestOrderProducts, foreignKey: 'orderId' });
-TestProductsV4.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
-TestOrders.belongsToMany(TestProductsV4, { through: TestOrderProducts, foreignKey: 'orderId' });
+//TestProductsV4.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
+//TestOrders.belongsToMany(TestProductsV4, { through: TestOrderProducts, foreignKey: 'orderId' });
+TestProductsV5.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
+TestOrders.belongsToMany(TestProductsV5, { through: TestOrderProducts, foreignKey: 'orderId' });
 
 // Un créneau horaire (Slots) peut être associé à plusieurs commandes (Orders).
 TestSlots.hasMany(TestOrders, { foreignKey: 'slotId', as: 'orders' });
@@ -48,8 +52,10 @@ TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 //TestStocks.belongsTo(TestProductsV2, { foreignKey: 'productId' });
 //TestProductsV3.hasOne(TestStocks, { foreignKey: 'stockId' });
 //TestStocks.belongsTo(TestProductsV3, { foreignKey: 'productId' });
-TestProductsV4.hasOne(TestStocksV2, { foreignKey: 'productId' });
-TestStocksV2.belongsTo(TestProductsV4, { foreignKey: 'productId' });
+//TestProductsV4.hasOne(TestStocksV2, { foreignKey: 'productId' });
+//TestStocksV2.belongsTo(TestProductsV4, { foreignKey: 'productId' });
+TestProductsV5.hasOne(TestStocksV3, { foreignKey: 'productId' });
+TestStocksV3.belongsTo(TestProductsV5, { foreignKey: 'productId' });
 
 
 
@@ -65,8 +71,10 @@ module.exports = {
   TestStoresV2,
   TestStocks, 
   TestStocksV2,
+  TestStocksV3,
   TestProductsV2,
   TestProductsV3,
-  TestProductsV4
+  TestProductsV4, 
+  TestProductsV5
 };
 

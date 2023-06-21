@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize')
 const db = require('../../db/db')
-const TestProductsV4 = require('./_____products.js')
+const TestProductsV5 = require('./______products.js')
 
-const TestStocksV2 = db.define('TestStocksV2', {
+const TestStocksV3 = db.define('TestStocksV3', {
     stockId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -22,9 +22,9 @@ const TestStocksV2 = db.define('TestStocksV2', {
     },
   });
 
-  TestStocksV2.associate = function(models) {
-    TestStocksV2.belongsTo(models.TestProductsV4, { foreignKey: 'productId' });
+  TestStocksV3.associate = function(models) {
+    TestStocksV3.belongsTo(models.TestProductsV5, { foreignKey: 'productId' });
   };
   //chaque stock appartient à un produit
 
-module.exports = TestStocksV2
+module.exports = TestStocksV3
