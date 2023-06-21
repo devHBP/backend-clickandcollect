@@ -14,8 +14,8 @@ const TestStocks = require('./_stocks')
 const TestStocksV2 = require('./__stocks')
 const TestStocksV3 = require('./___stocks')
 const StocksTest = require('./Stocks')
-const ProductsTest = require('./Stocks')
-const TestOrders = require('./_orders');
+const ProductsTest = require('./Products')
+const TestOrders = require('./__orders');
 
 
 
@@ -61,8 +61,9 @@ TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 //TestStocksV2.belongsTo(TestProductsV4, { foreignKey: 'productId' });
 //TestProductsV5.hasOne(TestStocksV3, { foreignKey: 'productId' });
 //TestStocksV3.belongsTo(TestProductsV5, { foreignKey: 'productId' });
-StocksTest.belongsTo(ProductsTest, { foreignKey: 'productId' });
 ProductsTest.hasOne(StocksTest, { foreignKey: 'productId' });
+StocksTest.belongsTo(ProductsTest, { foreignKey: 'productId' });
+
 
 
 
@@ -70,7 +71,6 @@ ProductsTest.hasOne(StocksTest, { foreignKey: 'productId' });
 module.exports = {
   TestUsers,
   TestStores,
-  
   TestOrderProducts,
   TestProducts,
   TestSlots,

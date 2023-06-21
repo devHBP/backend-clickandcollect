@@ -123,4 +123,4 @@ TestOrders.beforeValidate((order, options) => {
 });
   
   //une fois OK
-// module.exports = TestOrders
+ module.exports = TestOrders

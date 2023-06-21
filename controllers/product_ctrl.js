@@ -107,6 +107,7 @@ const addProduct = async (req, res) => {
     console.log('product', product)
 
     const createdProduct = await ProductsTest.create(product);
+    console.log('createdProduct', createdProduct)
 
     const productId = createdProduct.productId; // Récupérer l'ID du produit créé
 
@@ -115,15 +116,17 @@ const addProduct = async (req, res) => {
       quantite: product.stock,
       // Ajoutez ici d'autres champs nécessaires pour créer un stock
     });
+    console.log('productStock', productStock)
 
-    const produits = await ProductsTest.findAll({
-      include: [StocksTest],
-    });
+    // const produits = await ProductsTest.findAll({
+    //   include: [StocksTest],
+    // });
+    // console.log('produits', produits)
 
     console.log(createdProduct);
     console.log(productStock);
 
-    res.status(201).json({ msg: "produit créé", produits });
+    res.status(201).json({ msg: "produit créé", createdProduct });
   } catch (error) {
     console.error('erreur', error);
     res.status(500).json({ error: "Internal server error" });
