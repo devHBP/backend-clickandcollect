@@ -167,6 +167,7 @@ TestProductsV5.associate = function(models) {
       foreignKey: 'productId'
     });
   };
+
   
 
 

@@ -15,6 +15,9 @@ const TestStocks = require('./_stocks')
 const TestStocksV2 = require('./__stocks')
 const TestStocksV3 = require('./___stocks')
 
+
+
+
 // Relations
 // Une commande (Orders) peut être passée par un utilisateur (Users).
 TestUsers.hasMany(TestOrders, { foreignKey: 'userId', as: 'orders' });

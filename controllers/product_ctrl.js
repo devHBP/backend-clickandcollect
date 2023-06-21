@@ -15,40 +15,86 @@ const path = require('path')
 //creation des routes
 
 //créer un produit
-const addProduct = async (req, res) => {
-try {
-    let produit = {
-        //verifier infos
-        // a completer avec tous les champs
-        image: req.file.path,
-        // image: req.files.path for multiple images
-        libelle: req.body.libelle,
-        prix_unitaire: req.body.prix_unitaire,
-        categorie: req.body.categorie,
-        description: req.body.description,
-        prix_remise_collaborateur: req.body.prix_remise_collaborateur,
-        disponibilite: req.body.disponibilite,
-        stock: req.body.stock,
-        TestStocksV3: {
-          quantite: req.body.stock,
-          // Ajoutez ici d'autres champs nécessaires pour créer un stock
-        }
-    }
+// const addProduct = async (req, res) => {
+// try {
+//     let produit = {
+//         //verifier infos
+//         // a completer avec tous les champs
+//         image: req.file.path,
+//         // image: req.files.path for multiple images
+//         libelle: req.body.libelle,
+//         prix_unitaire: req.body.prix_unitaire,
+//         categorie: req.body.categorie,
+//         description: req.body.description,
+//         prix_remise_collaborateur: req.body.prix_remise_collaborateur,
+//         disponibilite: req.body.disponibilite,
+//         //stock: req.body.stock,
+//         TestStocksV3: {
+//           quantite: req.body.stock,
+//           // Ajoutez ici d'autres champs nécessaires pour créer un stock
+//         }
+//     }
 
-    const product = await TestProductsV5.create(produit, {
-      include: [TestStocksV3]
-    })
+//     const product = await TestProductsV5.create(produit, {
+//       include: [{ model: TestStocksV3 }]
+//     })
+//     console.log(product)
+
+//     const produits = await TestProductsV5.findAll({
+//       include: [{ model: TestStocksV3 }]
+//     })
+
+//     res.status(201).json({ msg: "produit créé", produits: produits })
+//   } catch (error) {
+//     console.error(error)
+//     res.status(500).json({ error: "Internal server error" })
+// }
+// }
+
+const addProduct = async (req, res) => {
+  try {
+    const { path: image } = req.file;
+    const {
+      libelle,
+      prix_unitaire,
+      categorie,
+      description,
+      prix_remise_collaborateur,
+      disponibilite,
+      stock,
+    } = req.body;
+
+    const product = await TestProductsV5.create({
+      image,
+      libelle,
+      prix_unitaire,
+      categorie,
+      description,
+      prix_remise_collaborateur,
+      disponibilite,
+      stock
+    });
+
+    const productStock = await TestStocksV3.create({
+      productId: product.productId, // ID du produit associé au stock
+      quantite: stock,
+      // Ajoutez ici d'autres champs nécessaires pour créer un stock
+    });
 
     const produits = await TestProductsV5.findAll({
-      include: [TestStocksV3]
-    })
+      include: [TestStocksV3],
+    });
 
-    res.status(201).json({ msg: "produit créé", produits: produits })
+    console.log(product);
+    console.log(productStock);
+
+    res.status(201).json({ msg: "produit créé", produits });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: "Internal server error" })
-}
-}
+    console.error('erreur', error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 //modifier un produit
 const updateProduct = async (req, res) => {

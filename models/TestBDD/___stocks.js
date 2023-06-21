@@ -25,6 +25,7 @@ const TestStocksV3 = db.define('TestStocksV3', {
   TestStocksV3.associate = function(models) {
     TestStocksV3.belongsTo(models.TestProductsV5, { foreignKey: 'productId' });
   };
+
   //chaque stock appartient à un produit
 
 module.exports = TestStocksV3
