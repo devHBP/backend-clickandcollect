@@ -163,9 +163,9 @@ TestProductsV5.associate = function(models) {
       otherKey: 'orderId'
     });
   
-    TestProductsV5.hasOne(models.TestStocksV3, {
-      foreignKey: 'productId'
-    });
+    // TestProductsV5.hasOne(models.TestStocksV3, {
+    //   foreignKey: 'productId'
+    // });
   };
 
   

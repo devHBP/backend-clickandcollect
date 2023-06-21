@@ -72,12 +72,12 @@ module.exports = {
   TestPayments,
   TestPromotions, 
   TestStoresV2,
-  TestStocks, 
-  TestStocksV2,
-  TestStocksV3,
   TestProductsV2,
   TestProductsV3,
   TestProductsV4, 
-  TestProductsV5
+  TestProductsV5,
+  TestStocks, 
+  TestStocksV2,
+  TestStocksV3,
 };
 

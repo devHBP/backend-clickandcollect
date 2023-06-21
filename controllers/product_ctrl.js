@@ -1,12 +1,15 @@
 //appel du model
 // const Product = require('../models/testProduct.js')
+const TestStocksV2 = require('../models/TestBDD/__stocks.js')
+const TestStocksV3 = require('../models/TestBDD/___stocks.js')
 const TestProducts = require('../models/TestBDD/_products.js')
 const TestProductsV2 = require('../models/TestBDD/__products.js')
 const TestProductsV3 = require('../models/TestBDD/___products.js')
 const TestProductsV4 = require('../models/TestBDD/_____products.js')
 const TestProductsV5 = require('../models/TestBDD/______products.js')
-const TestStocksV2 = require('../models/TestBDD/__stocks.js')
-const TestStocksV3 = require('../models/TestBDD/___stocks.js')
+
+
+const db = require('../db/db.js')
 
 //import multer
 const multer = require('multer')
@@ -51,33 +54,62 @@ const path = require('path')
 // }
 // }
 
+// const addProduct = async (req, res) => {
+//   try {
+//     let product = {
+//       // Vérifier si req.file existe et contient les informations sur le fichier
+//       image: req.file ? req.file.path : '',
+//       libelle: req.body.libelle,
+//       prix_unitaire: req.body.prix_unitaire,
+//       categorie: req.body.categorie,
+//       description: req.body.description,
+//       prix_remise_collaborateur: req.body.prix_remise_collaborateur,
+//       disponibilite: req.body.disponibilite,
+//       stock: req.body.stock,
+//     };
+
+//     const createdProduct = await TestProductsV5.create(product);
+
+//     const productStock = await TestStocksV3.create({
+//       productId: createdProduct.productId,
+//       quantite: product.stock,
+//       // Ajoutez ici d'autres champs nécessaires pour créer un stock
+//     });
+
+//     const produits = await TestProductsV5.findAll({
+//       include: [TestStocksV3],
+//     });
+
+//     console.log(createdProduct);
+//     console.log(productStock);
+
+//     res.status(201).json({ msg: "produit créé", produits });
+//   } catch (error) {
+//     console.error('erreur', error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
 const addProduct = async (req, res) => {
   try {
-    const { path: image } = req.file;
-    const {
-      libelle,
-      prix_unitaire,
-      categorie,
-      description,
-      prix_remise_collaborateur,
-      disponibilite,
-      stock,
-    } = req.body;
+    let product = {
+      // Vérifier si req.file existe et contient les informations sur le fichier
+      image: req.file ? req.file.path : '',
+      libelle: req.body.libelle,
+      prix_unitaire: req.body.prix_unitaire,
+      categorie: req.body.categorie,
+      description: req.body.description,
+      prix_remise_collaborateur: req.body.prix_remise_collaborateur,
+      disponibilite: req.body.disponibilite,
+      stock: req.body.stock,
+    };
 
-    const product = await TestProductsV5.create({
-      image,
-      libelle,
-      prix_unitaire,
-      categorie,
-      description,
-      prix_remise_collaborateur,
-      disponibilite,
-      stock
-    });
+    const createdProduct = await TestProductsV5.create(product);
+
+    const productId = createdProduct.productId; // Récupérer l'ID du produit créé
 
     const productStock = await TestStocksV3.create({
-      productId: product.productId, // ID du produit associé au stock
-      quantite: stock,
+      productId: productId,
+      quantite: product.stock,
       // Ajoutez ici d'autres champs nécessaires pour créer un stock
     });
 
@@ -85,7 +117,7 @@ const addProduct = async (req, res) => {
       include: [TestStocksV3],
     });
 
-    console.log(product);
+    console.log(createdProduct);
     console.log(productStock);
 
     res.status(201).json({ msg: "produit créé", produits });
@@ -94,6 +126,7 @@ const addProduct = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 
 //modifier un produit
