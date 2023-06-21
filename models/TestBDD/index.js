@@ -44,7 +44,9 @@ TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 
 //
 //TestStocks.belongsTo(TestProductsV2, { foreignKey: 'productId' });
-TestStocks.belongsTo(TestProductsV3, { foreignKey: 'productId' });
+TestProductsV3.belongsTo(TestStocks, { foreignKey: 'stockId' });
+TestStocks.hasOne(TestProductsV3, { foreignKey: 'stockId' });
+
 
 module.exports = {
   TestUsers,

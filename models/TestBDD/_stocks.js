@@ -21,4 +21,8 @@ const TestStocks = db.define('TestStocks', {
     },
   });
 
+  TestStocks.associate = function(models) {
+    TestStocks.hasOne(models.TestProductsV3, { foreignKey: 'stockId' });
+  };
+
 module.exports = TestStocks

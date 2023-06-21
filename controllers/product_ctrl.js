@@ -3,6 +3,7 @@
 const TestProducts = require('../models/TestBDD/_products.js')
 const TestProductsV2 = require('../models/TestBDD/__products.js')
 const TestProductsV3 = require('../models/TestBDD/___products.js')
+const TestStocks = require('../models/TestBDD/_stocks.js')
 
 //import multer
 const multer = require('multer')
@@ -25,11 +26,19 @@ try {
         prix_remise_collaborateur: req.body.prix_remise_collaborateur,
         disponibilite: req.body.disponibilite,
         stock: req.body.stock,
+        TestStocks: {
+          quantite: req.body.stock,
+          // Ajoutez ici d'autres champs nécessaires pour créer un stock
+        }
     }
 
-    const product = await TestProductsV3.create(produit)
+    const product = await TestProductsV3.create(produit, {
+      include: [TestStocks]
+    })
 
-    const produits = await TestProductsV3.findAll()
+    const produits = await TestProductsV3.findAll({
+      include: [TestStocks]
+    })
 
     res.status(201).json({ msg: "produit créé", produits: produits })
   } catch (error) {
