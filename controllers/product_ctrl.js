@@ -7,6 +7,8 @@ const TestProductsV2 = require('../models/TestBDD/__products.js')
 const TestProductsV3 = require('../models/TestBDD/___products.js')
 const TestProductsV4 = require('../models/TestBDD/_____products.js')
 const TestProductsV5 = require('../models/TestBDD/______products.js')
+const StocksTest = require('../models/TestBDD/Stocks.js')
+const ProductsTest = require('../models/TestBDD/Products.js')
 
 
 const db = require('../db/db.js')
@@ -102,19 +104,20 @@ const addProduct = async (req, res) => {
       disponibilite: req.body.disponibilite,
       stock: req.body.stock,
     };
+    console.log('product', product)
 
-    const createdProduct = await TestProductsV5.create(product);
+    const createdProduct = await ProductsTest.create(product);
 
     const productId = createdProduct.productId; // Récupérer l'ID du produit créé
 
-    const productStock = await TestStocksV3.create({
+    const productStock = await StocksTest.create({
       productId: productId,
       quantite: product.stock,
       // Ajoutez ici d'autres champs nécessaires pour créer un stock
     });
 
-    const produits = await TestProductsV5.findAll({
-      include: [TestStocksV3],
+    const produits = await ProductsTest.findAll({
+      include: [StocksTest],
     });
 
     console.log(createdProduct);
@@ -135,14 +138,14 @@ const updateProduct = async (req, res) => {
     const updates = req.body;
   
     try {
-      const product = await TestProductsV5.findOne({ where: { productId: productId } });
+      const product = await ProductsTest.findOne({ where: { productId: productId } });
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
       }
   
       // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-      await TestProductsV5.update(updates, { where: { productId: productId } });
+      await ProductsTest.update(updates, { where: { productId: productId } });
       console.log(product)
       return res.status(200).json({ msg: 'Product updated successfully' });
     } catch (error) {
@@ -156,7 +159,7 @@ const updateProduct = async (req, res) => {
 //lister tous les produits
 const getAllProducts = (req, res) =>
     {
-      TestProductsV5.findAll({
+      ProductsTest.findAll({
             attributes : {exclude: ['createdAt', 'updatedAt']}
         })
         .then((products) => {

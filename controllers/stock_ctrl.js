@@ -1,8 +1,8 @@
-const TestStocksV3 = require('../models/TestBDD/___stocks')
+const StocksTest = require('../models/TestBDD/Stocks')
 
 //lister tous les stocks
 const getAllStocks = (req, res) => {
-    TestStocksV3.findAll({
+    StocksTest.findAll({
           attributes : {exclude: ['createdAt', "updatedAt"]}
       })
       .then((stocks) => {

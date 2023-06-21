@@ -1,6 +1,5 @@
 const TestUsers = require('./_users');
 const TestStores = require('./_stores');
-const TestOrders = require('./_orders');
 const TestOrderProducts = require('./_orderproducts');
 const TestProducts = require('./_products');
 const TestProductsV2 = require('./__products');
@@ -14,6 +13,9 @@ const TestStoresV2 = require('./__stores')
 const TestStocks = require('./_stocks')
 const TestStocksV2 = require('./__stocks')
 const TestStocksV3 = require('./___stocks')
+const StocksTest = require('./Stocks')
+const ProductsTest = require('./Stocks')
+const TestOrders = require('./_orders');
 
 
 
@@ -36,8 +38,8 @@ TestOrders.belongsTo(TestStoresV2, { foreignKey: 'storeId' });
 //TestOrders.belongsToMany(TestProductsV2, { through: TestOrderProducts, foreignKey: 'orderId' });
 //TestProductsV4.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
 //TestOrders.belongsToMany(TestProductsV4, { through: TestOrderProducts, foreignKey: 'orderId' });
-TestProductsV5.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
-TestOrders.belongsToMany(TestProductsV5, { through: TestOrderProducts, foreignKey: 'orderId' });
+ProductsTest.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
+TestOrders.belongsToMany(ProductsTest, { through: TestOrderProducts, foreignKey: 'orderId' });
 
 // Un créneau horaire (Slots) peut être associé à plusieurs commandes (Orders).
 TestSlots.hasMany(TestOrders, { foreignKey: 'slotId', as: 'orders' });
@@ -57,15 +59,18 @@ TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 //TestStocks.belongsTo(TestProductsV3, { foreignKey: 'productId' });
 //TestProductsV4.hasOne(TestStocksV2, { foreignKey: 'productId' });
 //TestStocksV2.belongsTo(TestProductsV4, { foreignKey: 'productId' });
-TestProductsV5.hasOne(TestStocksV3, { foreignKey: 'productId' });
-TestStocksV3.belongsTo(TestProductsV5, { foreignKey: 'productId' });
+//TestProductsV5.hasOne(TestStocksV3, { foreignKey: 'productId' });
+//TestStocksV3.belongsTo(TestProductsV5, { foreignKey: 'productId' });
+StocksTest.belongsTo(ProductsTest, { foreignKey: 'productId' });
+ProductsTest.hasOne(StocksTest, { foreignKey: 'productId' });
+
 
 
 
 module.exports = {
   TestUsers,
   TestStores,
-  TestOrders,
+  
   TestOrderProducts,
   TestProducts,
   TestSlots,
@@ -79,5 +84,7 @@ module.exports = {
   TestStocks, 
   TestStocksV2,
   TestStocksV3,
+  ProductsTest,
+  StocksTest,
 };
 
