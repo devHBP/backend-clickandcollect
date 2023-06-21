@@ -27,7 +27,7 @@ try {
         prix_remise_collaborateur: req.body.prix_remise_collaborateur,
         disponibilite: req.body.disponibilite,
         stock: req.body.stock,
-        TestStocks: {
+        TestStocksV2: {
           quantite: req.body.stock,
           // Ajoutez ici d'autres champs nécessaires pour créer un stock
         }

@@ -11,6 +11,7 @@ const TestPayments = require('./_payments');
 const TestPromotions = require('./_promotions');
 const TestStoresV2 = require('./__stores')
 const TestStocks = require('./_stocks')
+const TestStocksV2 = require('./__stocks')
 
 // Relations
 // Une commande (Orders) peut être passée par un utilisateur (Users).
@@ -47,8 +48,8 @@ TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 //TestStocks.belongsTo(TestProductsV2, { foreignKey: 'productId' });
 //TestProductsV3.hasOne(TestStocks, { foreignKey: 'stockId' });
 //TestStocks.belongsTo(TestProductsV3, { foreignKey: 'productId' });
-TestProductsV4.hasOne(TestStocks, { foreignKey: 'productId' });
-TestStocks.belongsTo(TestProductsV4, { foreignKey: 'productId' });
+TestProductsV4.hasOne(TestStocksV2, { foreignKey: 'productId' });
+TestStocksV2.belongsTo(TestProductsV4, { foreignKey: 'productId' });
 
 
 
@@ -63,6 +64,7 @@ module.exports = {
   TestPromotions, 
   TestStoresV2,
   TestStocks, 
+  TestStocksV2,
   TestProductsV2,
   TestProductsV3,
   TestProductsV4
