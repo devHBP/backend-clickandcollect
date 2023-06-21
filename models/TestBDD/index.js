@@ -5,6 +5,7 @@ const TestOrderProducts = require('./_orderproducts');
 const TestProducts = require('./_products');
 const TestProductsV2 = require('./__products');
 const TestProductsV3 = require('./___products');
+const TestProductsV4 = require('./_____products');
 const TestSlots = require('./_slots');
 const TestPayments = require('./_payments');
 const TestPromotions = require('./_promotions');
@@ -27,8 +28,8 @@ TestOrders.belongsTo(TestStoresV2, { foreignKey: 'storeId' });
 //TestOrders.belongsToMany(TestProducts, { through: TestOrderProducts, foreignKey: 'orderId' });
 //TestProductsV2.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
 //TestOrders.belongsToMany(TestProductsV2, { through: TestOrderProducts, foreignKey: 'orderId' });
-TestProductsV3.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
-TestOrders.belongsToMany(TestProductsV3, { through: TestOrderProducts, foreignKey: 'orderId' });
+TestProductsV4.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
+TestOrders.belongsToMany(TestProductsV4, { through: TestOrderProducts, foreignKey: 'orderId' });
 
 // Un créneau horaire (Slots) peut être associé à plusieurs commandes (Orders).
 TestSlots.hasMany(TestOrders, { foreignKey: 'slotId', as: 'orders' });
@@ -44,8 +45,11 @@ TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 
 //
 //TestStocks.belongsTo(TestProductsV2, { foreignKey: 'productId' });
-TestProductsV3.belongsTo(TestStocks, { foreignKey: 'stockId' });
-TestStocks.hasOne(TestProductsV3, { foreignKey: 'stockId' });
+//TestProductsV3.hasOne(TestStocks, { foreignKey: 'stockId' });
+//TestStocks.belongsTo(TestProductsV3, { foreignKey: 'productId' });
+TestProductsV4.hasOne(TestStocks, { foreignKey: 'productId' });
+TestStocks.belongsTo(TestProductsV4, { foreignKey: 'productId' });
+
 
 
 module.exports = {
@@ -60,6 +64,7 @@ module.exports = {
   TestStoresV2,
   TestStocks, 
   TestProductsV2,
-  TestProductsV3
+  TestProductsV3,
+  TestProductsV4
 };
 

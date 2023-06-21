@@ -3,7 +3,8 @@
 const TestProducts = require('../models/TestBDD/_products.js')
 const TestProductsV2 = require('../models/TestBDD/__products.js')
 const TestProductsV3 = require('../models/TestBDD/___products.js')
-const TestStocks = require('../models/TestBDD/_stocks.js')
+const TestProductsV4 = require('../models/TestBDD/_____products.js')
+const TestStocksV2 = require('../models/TestBDD/__stocks.js')
 
 //import multer
 const multer = require('multer')
@@ -32,12 +33,12 @@ try {
         }
     }
 
-    const product = await TestProductsV3.create(produit, {
-      include: [TestStocks]
+    const product = await TestProductsV4.create(produit, {
+      include: [TestStocksV2]
     })
 
-    const produits = await TestProductsV3.findAll({
-      include: [TestStocks]
+    const produits = await TestProductsV4.findAll({
+      include: [TestStocksV2]
     })
 
     res.status(201).json({ msg: "produit créé", produits: produits })
@@ -53,14 +54,14 @@ const updateProduct = async (req, res) => {
     const updates = req.body;
   
     try {
-      const product = await TestProductsV3.findOne({ where: { productId: productId } });
+      const product = await TestProductsV4.findOne({ where: { productId: productId } });
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
       }
   
       // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-      await TestProductsV3.update(updates, { where: { productId: productId } });
+      await TestProductsV4.update(updates, { where: { productId: productId } });
       console.log(product)
       return res.status(200).json({ msg: 'Product updated successfully' });
     } catch (error) {
@@ -74,7 +75,7 @@ const updateProduct = async (req, res) => {
 //lister tous les produits
 const getAllProducts = (req, res) =>
     {
-      TestProductsV3.findAll({
+      TestProductsV4.findAll({
             attributes : {exclude: ['createdAt', 'updatedAt']}
         })
         .then((products) => {
@@ -90,7 +91,7 @@ const getOneProduct = ( req, res) => {
     const { id } = req.params
     //findbyprimarykey
     // User.findByPk
-    TestProductsV3.findByPk(id)
+    TestProductsV4.findByPk(id)
         .then( product => {
             if(!product) return res.status(404).json({msg:"product not found"})
             res.status(200).json(product)
@@ -140,7 +141,7 @@ const deleteProduct = async (req, res) => {
     const productId = req.params.id;
   
     try {
-      const product = await TestProductsV3.findByPk(productId);
+      const product = await TestProductsV4.findByPk(productId);
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
