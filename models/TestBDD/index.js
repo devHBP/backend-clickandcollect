@@ -61,7 +61,7 @@ TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 //TestStocksV2.belongsTo(TestProductsV4, { foreignKey: 'productId' });
 //TestProductsV5.hasOne(TestStocksV3, { foreignKey: 'productId' });
 //TestStocksV3.belongsTo(TestProductsV5, { foreignKey: 'productId' });
-ProductsTest.hasOne(StocksTest, { foreignKey: 'productId' });
+ProductsTest.hasOne(StocksTest, { foreignKey: 'productId', as:'stock' }); //j'ai rajouté l'alias stock pour test
 StocksTest.belongsTo(ProductsTest, { foreignKey: 'productId' });
 
 

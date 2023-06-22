@@ -56,41 +56,6 @@ const path = require('path')
 // }
 // }
 
-// const addProduct = async (req, res) => {
-//   try {
-//     let product = {
-//       // Vérifier si req.file existe et contient les informations sur le fichier
-//       image: req.file ? req.file.path : '',
-//       libelle: req.body.libelle,
-//       prix_unitaire: req.body.prix_unitaire,
-//       categorie: req.body.categorie,
-//       description: req.body.description,
-//       prix_remise_collaborateur: req.body.prix_remise_collaborateur,
-//       disponibilite: req.body.disponibilite,
-//       stock: req.body.stock,
-//     };
-
-//     const createdProduct = await TestProductsV5.create(product);
-
-//     const productStock = await TestStocksV3.create({
-//       productId: createdProduct.productId,
-//       quantite: product.stock,
-//       // Ajoutez ici d'autres champs nécessaires pour créer un stock
-//     });
-
-//     const produits = await TestProductsV5.findAll({
-//       include: [TestStocksV3],
-//     });
-
-//     console.log(createdProduct);
-//     console.log(productStock);
-
-//     res.status(201).json({ msg: "produit créé", produits });
-//   } catch (error) {
-//     console.error('erreur', error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
 const addProduct = async (req, res) => {
   try {
     let product = {
@@ -114,14 +79,13 @@ const addProduct = async (req, res) => {
     const productStock = await StocksTest.create({
       productId: productId,
       quantite: product.stock,
-      // Ajoutez ici d'autres champs nécessaires pour créer un stock
     });
     console.log('productStock', productStock)
 
-    // const produits = await ProductsTest.findAll({
-    //   include: [StocksTest],
-    // });
-    // console.log('produits', produits)
+    const produits = await ProductsTest.findAll({
+      include: [ {model: StocksTest, as: 'stock'} ]}
+    );
+    console.log('produits', produits)
 
     console.log(createdProduct);
     console.log(productStock);
@@ -178,7 +142,7 @@ const getOneProduct = ( req, res) => {
     const { id } = req.params
     //findbyprimarykey
     // User.findByPk
-    TestProductsV5.findByPk(id)
+    ProductsTest.findByPk(id)
         .then( product => {
             if(!product) return res.status(404).json({msg:"product not found"})
             res.status(200).json(product)
@@ -218,7 +182,6 @@ const uploadImage = multer({
         cb(`Mauvais format d'image`)
     }
 }).single('image')
-
 //pour plusieurs images
 // .array('images', 3) ici 3 nombre d'images
 
@@ -228,7 +191,7 @@ const deleteProduct = async (req, res) => {
     const productId = req.params.id;
   
     try {
-      const product = await TestProductsV5.findByPk(productId);
+      const product = await ProductsTest.findByPk(productId);
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
@@ -240,6 +203,87 @@ const deleteProduct = async (req, res) => {
       return res.status(500).json({ error: 'Failed to delete product' });
     }
   };
+  //test
+//   const deleteProduct = async (req, res) => {
+//   const productId = req.params.id;
+
+//   try {
+//     const product = await ProductsTest.findByPk(productId);
+
+//     if (!product) {
+//       return res.status(404).json({ error: 'Product not found' });
+//     }
+
+//     // Supprimer le produit
+//     await product.destroy();
+
+//     // Supprimer le stock associé
+//     const stock = await StocksTest.findOne({ where: { productId: productId } });
+//     if (stock) {
+//       await stock.destroy();
+//     }
+
+//     return res.status(200).json({ msg: 'Product and stock deleted successfully' });
+//   } catch (error) {
+//     return res.status(500).json({ error: 'Failed to delete product and stock' });
+//   }
+// };
+
+
+  //diminuer un stock
+  const decreaseProductStock = async (req, res) => {
+    const { id, decreaseAmount } = req.body;
+
+  try {
+    const stock = await StocksTest.findOne({ where: { productId: id } });
+    const product = await ProductsTest.findOne({ where: { productId: id } });
+
+    if (!stock || !product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    if (stock.quantite < decreaseAmount) {
+      return res.status(400).json({ error: 'Not enough stock' });
+    }
+
+    stock.quantite -= Number(decreaseAmount);
+    product.stock -= Number(decreaseAmount);
+
+    await stock.save();
+    await product.save();
+
+    res.status(200).json({ msg: 'Stock decreased successfully', stock });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+const increaseProductStock = async (req, res) => {
+  const { id, increaseAmount } = req.body;
+
+  try {
+    const stock = await StocksTest.findOne({ where: { productId: id } });
+    const product = await ProductsTest.findOne({ where: { productId: id } });
+
+    if (!stock || !product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    stock.quantite += Number(increaseAmount)  ;
+    product.stock += Number(increaseAmount);
+
+    await stock.save();
+    await product.save();
+
+    res.status(200).json({ msg: 'Stock increased successfully', stock });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
   
 
-module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct}
+module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock}

@@ -1,6 +1,6 @@
 const Router = require('express')
 const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole } = require('../controllers/ctrl')
-const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct } = require('../controllers/product_ctrl')
+const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock } = require('../controllers/product_ctrl')
 const { addStore, getAllStores, getOneStore } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks } = require('../controllers/stock_ctrl')
@@ -19,10 +19,12 @@ router.put('/updateRole/:id', updateRole)
 //PRODUCTS
 router.post('/addProduct',uploadImage, addProduct)
 router.get('/getAllProducts',getAllProducts)
-router.get('/getOneProduct', getOneProduct)
+router.get('/getOneProduct/:id', getOneProduct)
 router.put('/updateProduct/:id', updateProduct);
 router.patch('/updateProduct/:id', updateProduct);
 router.delete('/deleteProduct/:id', deleteProduct);
+router.put('/decreaseStock/:id', decreaseProductStock);
+router.put('/increaseStock/:id', increaseProductStock)
 
 //STORES
 router.post('/addStore', addStore)
