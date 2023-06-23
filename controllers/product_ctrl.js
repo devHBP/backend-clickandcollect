@@ -82,10 +82,10 @@ const addProduct = async (req, res) => {
     });
     console.log('productStock', productStock)
 
-    const produits = await ProductsTest.findAll({
-      include: [ {model: StocksTest, as: 'stock'} ]}
-    );
-    console.log('produits', produits)
+    // const produits = await ProductsTest.findAll({
+    //   include: [ {model: StocksTest, as: 'stock'} ]}
+    // );
+    // console.log('produits', produits)
 
     console.log(createdProduct);
     console.log(productStock);
@@ -187,47 +187,30 @@ const uploadImage = multer({
 
 
 //supprimer un produit
-const deleteProduct = async (req, res) => {
-    const productId = req.params.id;
-  
-    try {
-      const product = await ProductsTest.findByPk(productId);
-  
-      if (!product) {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-  
-      await product.destroy();
-      return res.status(200).json({ msg: 'Product deleted successfully' });
-    } catch (error) {
-      return res.status(500).json({ error: 'Failed to delete product' });
+  const deleteProduct = async (req, res) => {
+  const productId = req.params.id;
+
+  try {
+    const product = await ProductsTest.findByPk(productId);
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
     }
-  };
-  //test
-//   const deleteProduct = async (req, res) => {
-//   const productId = req.params.id;
 
-//   try {
-//     const product = await ProductsTest.findByPk(productId);
+    // Supprimer le produit
+    await product.destroy();
 
-//     if (!product) {
-//       return res.status(404).json({ error: 'Product not found' });
-//     }
+    // Supprimer le stock associé
+    const stock = await StocksTest.findOne({ where: { productId: productId } });
+    if (stock) {
+      await stock.destroy();
+    }
 
-//     // Supprimer le produit
-//     await product.destroy();
-
-//     // Supprimer le stock associé
-//     const stock = await StocksTest.findOne({ where: { productId: productId } });
-//     if (stock) {
-//       await stock.destroy();
-//     }
-
-//     return res.status(200).json({ msg: 'Product and stock deleted successfully' });
-//   } catch (error) {
-//     return res.status(500).json({ error: 'Failed to delete product and stock' });
-//   }
-// };
+    return res.status(200).json({ msg: 'Product and stock deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to delete product and stock' });
+  }
+};
 
 
   //diminuer un stock
