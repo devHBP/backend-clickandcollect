@@ -2,28 +2,9 @@ const stripe = require('stripe')(
     'secret')
 
 const createSession = async (req, res) => {
-    // const session = await stripe.checkout.sessions.create({
-    //     payment_method_types: ['card'],
-    //     line_items: [
-    //       {
-    //         price_data: {
-    //           currency: 'eur',
-    //           product_data: {
-    //             name: 'T-shirt',
-    //           },
-    //           unit_amount: 4000,
-    //         },
-    //         quantity: 1,
-    //       },
-    //     ],
-    //     mode: 'payment',
-    //     success_url: 'http://localhost:8080/success',
-    //     cancel_url: 'http://localhost:8080/cancel',
-    //   });
-
-    // const { orderInfo } = req.body;
-    // console.log('orderInfo', orderInfo)
-    const lineItems = req.body.map((item) => {
+   
+    console.log('req', req.body.orderInfo.cartItems)
+    const lineItems = req.body.orderInfo.cartItems.map((item) => {
       const { libelle, prix_unitaire, qty } = item;
       return {
         price_data: {
@@ -44,8 +25,25 @@ const createSession = async (req, res) => {
       success_url: 'http://localhost:8080/success',
       cancel_url: 'http://localhost:8080/cancel',
     });
+    //  console.log(res)
       res.json({ id: session.id, session: session.url, lineItems });
+      
+}
+
+const success = (req, res) => {
+  // Vous pouvez envoyer une réponse JSON indiquant le succès du paiement
+  // res.json({ message: 'Payment successful' });
+  // res.send(`
+  //   <html>
+  //     <body>
+  //       <h1>Paiement réussi !</h1>
+  //       <p>Merci d'avoir effectué votre paiement.</p>
+  //       <a href="http://localhost:8080/success">Revenir à l'application</a>
+  //     </body>
+  //   </html>
+  // `);
+  res.redirect(`http://localhost:8080/success`);
 }
 
 
-module.exports = { createSession }
+module.exports = { createSession , success}

@@ -4,7 +4,7 @@ const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, d
 const { addStore, getAllStores, getOneStore } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks } = require('../controllers/stock_ctrl')
-const { createSession } = require('../controllers/payment_ctrl')
+const { createSession, success } = require('../controllers/payment_ctrl')
 const router = Router()
 
 
@@ -46,6 +46,7 @@ router.get('/allStocks', getAllStocks)
 
 //PAYMENTS
 router.post('/checkout_session', createSession )
+router.get('/success', success)
 
 
 module.exports = router
