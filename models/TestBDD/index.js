@@ -8,6 +8,7 @@ const TestProductsV4 = require('./_____products');
 const TestProductsV5 = require('./______products');
 const TestSlots = require('./_slots');
 const TestPayments = require('./_payments');
+const TestPaymentsV2 = require('./__payments');
 const TestPromotions = require('./_promotions');
 const TestStoresV2 = require('./__stores')
 const TestStocks = require('./_stocks')
@@ -46,8 +47,8 @@ TestSlots.hasMany(TestOrders, { foreignKey: 'slotId', as: 'orders' });
 TestOrders.belongsTo(TestSlots, { foreignKey: 'slotId' });
 
 // Une commande (Orders) peut avoir une méthode de paiement spécifique (Payments).
-TestPayments.hasMany(TestOrders, { foreignKey: 'paymentId', as: 'orders' });
-TestOrders.belongsTo(TestPayments, { foreignKey: 'paymentId' });
+TestPaymentsV2.hasMany(TestOrders, { foreignKey: 'paymentId', as: 'orders' });
+TestOrders.belongsTo(TestPaymentsV2, { foreignKey: 'paymentId' });
 
 // Une commande (Orders) peut avoir une promotion appliquée (Promotions).
 TestPromotions.hasMany(TestOrders, { foreignKey: 'promotionId', as: 'orders' });
@@ -75,6 +76,7 @@ module.exports = {
   TestProducts,
   TestSlots,
   TestPayments,
+  TestPaymentsV2,
   TestPromotions, 
   TestStoresV2,
   TestProductsV2,
