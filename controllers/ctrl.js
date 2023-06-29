@@ -2,7 +2,6 @@
 //const TestClient = require('../models/testUser.js')
 const TestUsers = require('../models/TestBDD/_users')
 
-
 /**
  * Attention
  * Test avec nouvelle base de données Testclient = Test
@@ -87,6 +86,7 @@ const login = (req, res) => {
                     } else if (compaRes) {
                         const token = jwt.sign({email: req.body.email}, 'secret', { expiresIn: '1h'})
                         //save user token
+                       
                         dbUser.token = token
                         const user = {
                           userId: dbUser.userId,
@@ -193,9 +193,24 @@ const updateRole = (req, res) => {
       });
 };
 
+const verifyToken = (req, res) => {
+  const token = req.headers['x-access-token'];
+  
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+
+  jwt.verify(token, 'secret', (err, decoded) => {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+
+      // if everything good, save to request for use in other routes
+      req.userId = decoded.id;
+
+      res.status(200).send({ auth: true, message: 'Token is valid.' });
+  });
+}
+
 
   
-module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole };
+module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken };
   
 
 
