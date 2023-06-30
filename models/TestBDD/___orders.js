@@ -7,7 +7,7 @@ const TestSlots = require('./_slots')
 const TestPayments = require('./_payments')
 const TestPromotions = require('./_promotions')
 
-const TestOrders = db.define('TestOrder', {
+const TestOrdersV2 = db.define('TestOrdersV2', {
     orderId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -38,11 +38,6 @@ const TestOrders = db.define('TestOrder', {
       type: DataTypes.STRING,
       allowNull: false
     },
-    //inutila, nous avons déja le storeid pour identifier le magasin
-    // magasin: {
-    //   type: DataTypes.STRING,
-    //   allowNull: false
-    // },
     delivery: {
       type: DataTypes.BOOLEAN,
       allowNull: true
@@ -52,7 +47,6 @@ const TestOrders = db.define('TestOrder', {
       allowNull: true
     },
     //clés étrangères (5)
-    //rajouter dans la nouvelle table
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -99,7 +93,7 @@ const TestOrders = db.define('TestOrder', {
 
 
 // generéation numéro de commande
-TestOrders.beforeValidate((order, options) => {
+TestOrdersV2.beforeValidate((order, options) => {
   if (!order.numero_commande) {
       return TestStoresV2.findOne({ where: { storeId: order.storeId } }) // Récupérer le magasin associé
       .then(store => {
@@ -107,7 +101,7 @@ TestOrders.beforeValidate((order, options) => {
           throw new Error('Le magasin associé à la commande est introuvable.');
         }
         const reference_magasin = store.reference_magasin; // Utilisez la propriété 'reference_magasin' du magasin
-        return TestOrders.max('orderId') // Récupérer l'ID maximal
+        return TestOrdersV2.max('orderId') // Récupérer l'ID maximal
         .then(maxId => {
           const currentDate = new Date();
           const year = currentDate.getFullYear();
@@ -127,4 +121,4 @@ TestOrders.beforeValidate((order, options) => {
 
   
   //une fois OK
- module.exports = TestOrders
+ module.exports = TestOrdersV2

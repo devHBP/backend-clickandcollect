@@ -17,20 +17,21 @@ const TestStocksV3 = require('./___stocks')
 const StocksTest = require('./Stocks')
 const ProductsTest = require('./Products')
 const TestOrders = require('./__orders');
+const TestOrdersV2 = require('./___orders');
 
 
 
 
 // Relations
 // Une commande (Orders) peut être passée par un utilisateur (Users).
-TestUsers.hasMany(TestOrders, { foreignKey: 'userId', as: 'orders' });
-TestOrders.belongsTo(TestUsers, { foreignKey: 'userId' });
+TestUsers.hasMany(TestOrdersV2, { foreignKey: 'userId', as: 'orders' });
+TestOrdersV2.belongsTo(TestUsers, { foreignKey: 'userId' });
 
 // Une commande (Orders) peut être passée dans un magasin (Stores).
 // TestStores.hasMany(TestOrders, { foreignKey: 'storeId', as: 'orders' });
 // TestOrders.belongsTo(TestStores, { foreignKey: 'storeId' });
-TestStoresV2.hasMany(TestOrders, { foreignKey: 'storeId', as: 'orders' });
-TestOrders.belongsTo(TestStoresV2, { foreignKey: 'storeId' });
+TestStoresV2.hasMany(TestOrdersV2, { foreignKey: 'storeId', as: 'orders' });
+TestOrdersV2.belongsTo(TestStoresV2, { foreignKey: 'storeId' });
 
 // Un produit (Products) peut être inclus dans plusieurs commandes (Orders) via la table OrderProducts.
 //TestProducts.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
@@ -39,20 +40,20 @@ TestOrders.belongsTo(TestStoresV2, { foreignKey: 'storeId' });
 //TestOrders.belongsToMany(TestProductsV2, { through: TestOrderProducts, foreignKey: 'orderId' });
 //TestProductsV4.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
 //TestOrders.belongsToMany(TestProductsV4, { through: TestOrderProducts, foreignKey: 'orderId' });
-ProductsTest.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
-TestOrders.belongsToMany(ProductsTest, { through: TestOrderProducts, foreignKey: 'orderId' });
+ProductsTest.belongsToMany(TestOrdersV2, { through: TestOrderProducts, foreignKey: 'productId' });
+TestOrdersV2.belongsToMany(ProductsTest, { through: TestOrderProducts, foreignKey: 'orderId' });
 
 // Un créneau horaire (Slots) peut être associé à plusieurs commandes (Orders).
-TestSlots.hasMany(TestOrders, { foreignKey: 'slotId', as: 'orders' });
-TestOrders.belongsTo(TestSlots, { foreignKey: 'slotId' });
+TestSlots.hasMany(TestOrdersV2, { foreignKey: 'slotId', as: 'orders' });
+TestOrdersV2.belongsTo(TestSlots, { foreignKey: 'slotId' });
 
 // Une commande (Orders) peut avoir une méthode de paiement spécifique (Payments).
-TestPaymentsV2.hasMany(TestOrders, { foreignKey: 'paymentId', as: 'orders' });
-TestOrders.belongsTo(TestPaymentsV2, { foreignKey: 'paymentId' });
+TestPaymentsV2.hasMany(TestOrdersV2, { foreignKey: 'paymentId', as: 'orders' });
+TestOrdersV2.belongsTo(TestPaymentsV2, { foreignKey: 'paymentId' });
 
 // Une commande (Orders) peut avoir une promotion appliquée (Promotions).
-TestPromotions.hasMany(TestOrders, { foreignKey: 'promotionId', as: 'orders' });
-TestOrders.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
+TestPromotions.hasMany(TestOrdersV2, { foreignKey: 'promotionId', as: 'orders' });
+TestOrdersV2.belongsTo(TestPromotions, { foreignKey: 'promotionId' });
 
 //
 //TestStocks.belongsTo(TestProductsV2, { foreignKey: 'productId' });
@@ -88,5 +89,6 @@ module.exports = {
   TestStocksV3,
   ProductsTest,
   StocksTest,
+  TestOrdersV2
 };
 

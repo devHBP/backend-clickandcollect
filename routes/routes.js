@@ -5,6 +5,7 @@ const { addStore, getAllStores, getOneStore } = require('../controllers/stores_c
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement } = require('../controllers/payment_ctrl')
+const { createOrder, updateStatusOrder, allOrders, deleteOneOrder } = require('../controllers/order_ctrl')
 const router = Router()
 
 
@@ -44,6 +45,10 @@ router.delete('/deletepromocodes/:id', deletePromo)
 router.get('/allStocks', getAllStocks)
 
 //ORDERS
+router.post('/createorder',createOrder )
+router.put('/updateStatusOrder/:orderId', updateStatusOrder)
+router.get('/allOrders', allOrders)
+router.delete('/deleteOneOrder/:id', deleteOneOrder)
 
 //PAYMENTS
 router.post('/checkout_session', createSession )
