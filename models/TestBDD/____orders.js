@@ -7,7 +7,7 @@ const TestSlots = require('./_slots')
 const TestPayments = require('./_payments')
 const TestPromotions = require('./_promotions')
 
-const TestOrdersV2 = db.define('TestOrdersV2', {
+const TestOrdersV3 = db.define('TestOrdersV3', {
     orderId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -37,7 +37,8 @@ const TestOrdersV2 = db.define('TestOrdersV2', {
     //en attente, preparation, livrée ...
     status: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue:'en attente'
     },
     delivery: {
       type: DataTypes.BOOLEAN,
@@ -46,6 +47,16 @@ const TestOrdersV2 = db.define('TestOrdersV2', {
     heure: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    paymentMethod:{
+        type: DataTypes.ENUM('online','onsite'),
+        allowNull:false,
+        defaultValue:'online'
+    },
+    paid:{
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue:false
     },
     //clés étrangères (5)
     userId: {
@@ -62,7 +73,7 @@ const TestOrdersV2 = db.define('TestOrdersV2', {
     },
     paymentId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     promotionId: {
       type: DataTypes.INTEGER,
@@ -94,15 +105,15 @@ const TestOrdersV2 = db.define('TestOrdersV2', {
 
 
 // generéation numéro de commande
-TestOrdersV2.beforeValidate((order, options) => {
+TestOrdersV3.beforeValidate((order, options) => {
   if (!order.numero_commande) {
-      return TestStoresV2.findOne({ where: { storeId: order.storeId } }) // Récupérer le magasin associé
+      return TestOrdersV3.findOne({ where: { storeId: order.storeId } }) // Récupérer le magasin associé
       .then(store => {
         if(!store) {
           throw new Error('Le magasin associé à la commande est introuvable.');
         }
         const reference_magasin = store.reference_magasin; // Utilisez la propriété 'reference_magasin' du magasin
-        return TestOrdersV2.max('orderId') // Récupérer l'ID maximal
+        return TestOrdersV3.max('orderId') // Récupérer l'ID maximal
         .then(maxId => {
           const currentDate = new Date();
           const year = currentDate.getFullYear();
@@ -122,4 +133,4 @@ TestOrdersV2.beforeValidate((order, options) => {
 
   
   //une fois OK
- module.exports = TestOrdersV2
+ module.exports = TestOrdersV3

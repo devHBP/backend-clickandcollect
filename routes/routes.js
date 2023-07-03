@@ -4,8 +4,8 @@ const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, d
 const { addStore, getAllStores, getOneStore } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks } = require('../controllers/stock_ctrl')
-const { createSession, success, paiementStatus, createPaiement } = require('../controllers/payment_ctrl')
-const { createOrder, updateStatusOrder, allOrders, deleteOneOrder } = require('../controllers/order_ctrl')
+const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
+const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder } = require('../controllers/order_ctrl')
 const router = Router()
 
 
@@ -45,16 +45,21 @@ router.delete('/deletepromocodes/:id', deletePromo)
 router.get('/allStocks', getAllStocks)
 
 //ORDERS
-router.post('/createorder',createOrder )
+router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
 router.put('/updateStatusOrder/:orderId', updateStatusOrder)
 router.get('/allOrders', allOrders)
 router.delete('/deleteOneOrder/:id', deleteOneOrder)
+router.get('/ordersOfUser/:userId', ordersOfUser)
+router.post('/updateOrder', updateOrder) //update paymentId if order paid 
+//router.post('/createOrderAndPayment')
+
+
 
 //PAYMENTS
 router.post('/checkout_session', createSession )
 router.get('/success', success)
 router.get('/paiementStatus', paiementStatus)
-router.post('/createPaiement', createPaiement)
+router.post('/createPaiement', createPaiement) //paiement sur place, seuleulement le paiement ici
 
 
 module.exports = router
