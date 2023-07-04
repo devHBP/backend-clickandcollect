@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize')
 const db = require('../../db/db')
 const TestOrders = require('./_orders')
+const TestOrdersV4 = require('./_____orders')
+
 const TestStocksV3 = require('./___stocks')
 
 const TestProductsV5 = db.define('TestProductsV5', {
@@ -157,7 +159,7 @@ const TestProductsV5 = db.define('TestProductsV5', {
 // Un produit (Products) peut être inclus dans plusieurs commandes (Orders) via la table OrderProducts.
 
 TestProductsV5.associate = function(models) {
-    TestProductsV5.belongsToMany(models.TestOrders, {
+    TestProductsV5.belongsToMany(models.TestOrdersV6, {
       through: 'TestOrderProducts',
       foreignKey: 'productId',
       otherKey: 'orderId'

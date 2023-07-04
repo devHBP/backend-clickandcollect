@@ -5,7 +5,7 @@ const { addStore, getAllStores, getOneStore } = require('../controllers/stores_c
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
-const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder } = require('../controllers/order_ctrl')
+const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts   } = require('../controllers/order_ctrl')
 const router = Router()
 
 
@@ -51,6 +51,10 @@ router.get('/allOrders', allOrders)
 router.delete('/deleteOneOrder/:id', deleteOneOrder)
 router.get('/ordersOfUser/:userId', ordersOfUser)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 
+router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
+// router.post('/insertProduct', insertProduct)
+
+
 //router.post('/createOrderAndPayment')
 
 

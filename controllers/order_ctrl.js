@@ -2,7 +2,17 @@ const TestOrders = require('../models/TestBDD/__orders')
 const TestOrdersV2 = require('../models/TestBDD/___orders')
 const TestOrdersV3 = require('../models/TestBDD/____orders')
 const TestOrdersV4 = require('../models/TestBDD/_____orders')
+//const TestOrdersV5 = require('../models/TestBDD/______orders')
+const TestOrdersV6 = require('../models/TestBDD/_______orders')
 const TestPaymentsV2 = require('../models/TestBDD/__payments')
+const ProductsTest = require('../models/TestBDD/Products')
+//const TestOrderProductsV2 = require('../models/TestBDD/__orderproducts')
+const TestOrderProductsV3 = require('../models/TestBDD/___orderproducts')
+const TestOrderProductsV4 = require('../models/TestBDD/____orderproducts')
+const TestOrderProductsV5 = require('../models/TestBDD/_____orderproducts')
+const TestOrderProductsV6 = require('../models/TestBDD/______orderproducts')
+const ProductsTests = require('../models/TestBDD/Products')
+
 
 //creation commande (sans le paiement, par exemple pour prendre en compte le paiement sur place plus tard)
 const createOrder = async (req, res) => {
@@ -21,19 +31,26 @@ const createOrder = async (req, res) => {
         slotId,
         promotionId,
         paymentMethod,
+        //chaine de caractère
+        productIdsString 
     } = req.body;
+
+    console.log('prod', productIdsString)
+    //mise en tableau
+    const productIds = productIdsString.split(",");
+    console.log('prod2', productIds)
 
     // Par défaut, le statut est "en attente" et paid est false
     const status = 'en attente';
     const paid = false;
 
-      const order = await TestOrdersV4.create({
+      const order = await TestOrdersV6.create({
             firstname_client,
             lastname_client,
             prix_total,
             date,
             status,
-            delivery,
+            delivery:false,
             heure,
             paymentMethod,
             paid,
@@ -42,8 +59,17 @@ const createOrder = async (req, res) => {
             slotId,
             paymentId,
             promotionId,
+            productIds:productIdsString,
     
       });
+
+      const orderProducts = productIds.map(productId => ({
+      orderId: order.orderId,
+      productId
+    }));
+    console.log(orderProducts)
+
+    await TestOrderProductsV6.bulkCreate(orderProducts);
   
       res.status(201).json(order); 
     } catch (error) {
@@ -110,7 +136,7 @@ const createOrder = async (req, res) => {
     }
   
     try {
-      const order = await TestOrdersV4.findByPk(orderId);
+      const order = await TestOrdersV6.findByPk(orderId);
   
       if (!order) {
         return res.status(404).json({ error: 'Order not found.' });
@@ -136,7 +162,7 @@ const createOrder = async (req, res) => {
   //lister toutes les commandes
   const allOrders = async (req, res) => {
     try {
-      const orders = await TestOrdersV4.findAll();
+      const orders = await TestOrdersV6.findAll();
   
       if (!orders) {
         return res.status(404).json({ error: 'No orders found.' });
@@ -154,7 +180,7 @@ const createOrder = async (req, res) => {
   const deleteOneOrder = async (req, res) => {
     try {
       const orderId = req.params.id;
-      const order = await TestOrdersV4.findOne({ where: { orderId: orderId }});
+      const order = await TestOrdersV6.findOne({ where: { orderId: orderId }});
   
       if (!order) {
         return res.status(404).json({ error: 'No order found with the specified ID.' });
@@ -173,7 +199,7 @@ const createOrder = async (req, res) => {
   const ordersOfUser = async (req, res) => {
     try {
       const userId = req.params.userId;
-      const orders = await TestOrdersV4.findAll({ where: { userId: userId }});
+      const orders = await TestOrdersV6.findAll({ where: { userId: userId }});
   
       if (orders.length === 0) {
         return res.status(404).json({ error: 'No orders found for the specified user.' });
@@ -192,7 +218,7 @@ const createOrder = async (req, res) => {
         const { numero_commande, status, paymentId } = req.body;
 
         // Trouvez la commande correspondante dans la base de données
-        const order = await TestOrdersV4.findOne({ where: { numero_commande: numero_commande } });
+        const order = await TestOrdersV6.findOne({ where: { numero_commande: numero_commande } });
 
         // Si aucune commande n'est trouvée, renvoyez une erreur
         if (!order) {
@@ -212,6 +238,97 @@ const createOrder = async (req, res) => {
     }
 }
 
+//lister les produits d'une commande
+//l'association ProductsTest et TestOrders ne fonctionnent pas (comme avec les stock et les produits)
+// const getOrderProducts = async (req, res, next) => {
+
+//   const orderId = req.params.orderId;
+
+//   let order = await TestOrdersV4.findOne({ where: { orderId: orderId } });
+
+//   console.log('order', order);
+
+//   TestOrdersV4.findByPk(orderId, { include: [ 'ProductsTest' ] })
+//     .then(order => {
+//       return order.getProductsTests();
+//     })
+//     .then(products => {
+//       res.render('order', { 
+//         products: products, 
+//         orderId: orderId 
+//       });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     });
+// };
+
+//non utilisé
+// const insertProduct = async (req, res) => {
+//   try {
+//     // Récupérer les informations de la commande depuis la requête (par exemple : orderId, productIds)
+//     const { orderId, productIds } = req.body;
+
+//     // Insérer les associations produit-commande dans la table TestOrderProductsV3
+//     for (const productId of productIds) {
+//       await TestOrderProductsV6.create({
+//         orderId: orderId,
+//         productId: productId
+//       });
+//     }
+
+//     // Autres étapes de traitement de la création de la commande...
+
+//     res.status(201).json({ message: 'Commande créée avec succès.' });
+//   } catch (error) {
+//     console.error('Erreur lors de la création de la commande :', error);
+//     res.status(500).json({ error: 'Une erreur est survenue lors de la création de la commande.' });
+//   }
+// }
 
 
-  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder }
+//non utilisé
+// const getOrderProducts = async (req, res, next) => {
+//   const orderId = req.params.orderId;
+
+//   console.log('orderId', orderId);
+
+
+//   // Step 1: Fetch the TestOrderProducts for a specific order
+//   let orderProductEntries = await TestOrderProductsV6.findAll({
+//     where: { orderId: orderId }
+//   });
+
+//   console.log('order-product', orderProductEntries);
+// };
+
+const getOrderProducts = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const order = await TestOrdersV6.findByPk(orderId);
+    if (!order) {
+      return res.status(404).json({ message: 'La commande spécifiée est introuvable.' });
+    }
+
+    const productIds = order.productIds.split(',');
+
+    const products = await Promise.all(
+      productIds.map(async (productId) => {
+        const product = await ProductsTests.findByPk(productId);
+        return product;
+      })
+    );
+
+    console.log('products', products)
+
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur s\'est produite lors de la récupération des produits de la commande.' });
+  }
+}
+
+
+
+  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts }

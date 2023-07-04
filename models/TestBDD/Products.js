@@ -155,8 +155,8 @@ const ProductsTest = db.define('ProductsTest', {
 // Un produit (Products) peut être inclus dans plusieurs commandes (Orders) via la table OrderProducts.
 
 ProductsTest.associate = function(models) {
-    ProductsTest.belongsToMany(models.TestOrders, {
-      through: 'TestOrderProducts',
+    ProductsTest.belongsToMany(models.TestOrdersV6, {
+      through: 'TestOrderProductsV5',
       foreignKey: 'productId',
       otherKey: 'orderId'
     });
