@@ -11,6 +11,7 @@ const TestOrderProductsV3 = require('../models/TestBDD/___orderproducts')
 const TestOrderProductsV4 = require('../models/TestBDD/____orderproducts')
 const TestOrderProductsV5 = require('../models/TestBDD/_____orderproducts')
 const TestOrderProductsV6 = require('../models/TestBDD/______orderproducts')
+const OrderProducts = require('../models/TestBDD/OrderProducts.js')
 const ProductsTests = require('../models/TestBDD/Products')
 
 
@@ -32,13 +33,20 @@ const createOrder = async (req, res) => {
         promotionId,
         paymentMethod,
         //chaine de caractère
-        productIdsString 
+        //productIdsString 
+        products
+        // [
+        //   { productId: 1, quantity: 2 },
+        //   { productId: 2, quantity: 1 },
+        //   { productId: 3, quantity: 5 },
+        //   // etc.
+        // ]
     } = req.body;
 
-    console.log('prod', productIdsString)
+    console.log('products', products)
     //mise en tableau
-    const productIds = productIdsString.split(",");
-    console.log('prod2', productIds)
+    //const productIds = productIdsString.split(",");
+    //console.log('prod2', productIds)
 
     // Par défaut, le statut est "en attente" et paid est false
     const status = 'en attente';
@@ -59,17 +67,19 @@ const createOrder = async (req, res) => {
             slotId,
             paymentId,
             promotionId,
-            productIds:productIdsString,
+            //productIds:productIdsString,
+            productIds: products.map(product => product.productId).join(","),
     
       });
 
-      const orderProducts = productIds.map(productId => ({
-      orderId: order.orderId,
-      productId
-    }));
+      const orderProducts = products.map(product => ({
+        orderId: order.orderId,
+        productId: product.productId,
+        quantity: product.quantity
+      }));
     console.log(orderProducts)
 
-    await TestOrderProductsV6.bulkCreate(orderProducts);
+    await OrderProducts.bulkCreate(orderProducts);
   
       res.status(201).json(order); 
     } catch (error) {
@@ -226,7 +236,7 @@ const createOrder = async (req, res) => {
         }
 
         // Mettez à jour le statut de la commande et l'ID du paiement
-        order.status = status;
+        order.status = 'en attente';
         order.paymentId = paymentId;
         order.paid = true;
         await order.save();
@@ -302,6 +312,32 @@ const createOrder = async (req, res) => {
 //   console.log('order-product', orderProductEntries);
 // };
 
+// const getOrderProducts = async (req, res) => {
+//   const { orderId } = req.params;
+
+//   try {
+//     const order = await TestOrdersV6.findByPk(orderId);
+//     if (!order) {
+//       return res.status(404).json({ message: 'La commande spécifiée est introuvable.' });
+//     }
+
+//     const productIds = order.productIds.split(',');
+
+//     const products = await Promise.all(
+//       productIds.map(async (productId) => {
+//         const product = await ProductsTests.findByPk(productId);
+//         return product;
+//       })
+//     );
+
+//     console.log('products', products)
+
+//     res.json(products);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Une erreur s\'est produite lors de la récupération des produits de la commande.' });
+//   }
+// }
 const getOrderProducts = async (req, res) => {
   const { orderId } = req.params;
 
@@ -311,12 +347,18 @@ const getOrderProducts = async (req, res) => {
       return res.status(404).json({ message: 'La commande spécifiée est introuvable.' });
     }
 
-    const productIds = order.productIds.split(',');
+    const orderProducts = await OrderProducts.findAll({
+      where: { orderId },
+    });
 
     const products = await Promise.all(
-      productIds.map(async (productId) => {
-        const product = await ProductsTests.findByPk(productId);
-        return product;
+      orderProducts.map(async (orderProduct) => {
+        const product = await ProductsTests.findByPk(orderProduct.productId);
+        return {
+          ...product.get(),
+          //on rajoute dans l'objet product la quantité 
+          quantity: orderProduct.quantity,
+        };
       })
     );
 
@@ -328,6 +370,8 @@ const getOrderProducts = async (req, res) => {
     res.status(500).json({ message: 'Une erreur s\'est produite lors de la récupération des produits de la commande.' });
   }
 }
+
+
 
 
 

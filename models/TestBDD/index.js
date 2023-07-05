@@ -6,6 +6,8 @@ const TestOrderProductsV3 = require('./___orderproducts');
 const TestOrderProductsV4 = require('./____orderproducts');
 const TestOrderProductsV5 = require('./_____orderproducts');
 const TestOrderProductsV6 = require('./______orderproducts');
+const TestOrderProductsV7 = require('./_______orderproducts');
+const OrderProducts = require('./OrderProducts.js');
 const TestProducts = require('./_products');
 const TestProductsV2 = require('./__products');
 const TestProductsV3 = require('./___products');
@@ -49,8 +51,8 @@ TestOrdersV6.belongsTo(TestStoresV2, { foreignKey: 'storeId' });
 //TestOrders.belongsToMany(TestProductsV2, { through: TestOrderProducts, foreignKey: 'orderId' });
 //TestProductsV4.belongsToMany(TestOrders, { through: TestOrderProducts, foreignKey: 'productId' });
 //TestOrders.belongsToMany(TestProductsV4, { through: TestOrderProducts, foreignKey: 'orderId' });
-ProductsTest.belongsToMany(TestOrdersV6, { through: TestOrderProductsV6, foreignKey: 'productId' });
-TestOrdersV6.belongsToMany(ProductsTest, { through: TestOrderProductsV6, foreignKey: 'orderId' });
+ProductsTest.belongsToMany(TestOrdersV6, { through: OrderProducts, foreignKey: 'productId' });
+TestOrdersV6.belongsToMany(ProductsTest, { through: OrderProducts, foreignKey: 'orderId' });
 
 // Un créneau horaire (Slots) peut être associé à plusieurs commandes (Orders).
 TestSlots.hasMany(TestOrdersV6, { foreignKey: 'slotId', as: 'orders' });
@@ -87,6 +89,8 @@ module.exports = {
   TestOrderProductsV3,
   TestOrderProductsV4,
   TestOrderProductsV6,
+  TestOrderProductsV7,
+  OrderProducts,
   TestProducts,
   TestSlots,
   TestPayments,
