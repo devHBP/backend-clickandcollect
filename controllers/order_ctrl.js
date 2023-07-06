@@ -140,6 +140,8 @@ const createOrder = async (req, res) => {
   const updateStatusOrder = async (req, res) => {
     const { orderId } = req.params;
     const { status } = req.body;
+    // console.log('orderId', orderId)
+    // console.log('status', status)
   
     if (!status) {
       return res.status(400).json({ error: 'You must provide a status to update.' });
@@ -155,7 +157,7 @@ const createOrder = async (req, res) => {
       order.status = status;
   
       // If status is set to "delivered", also set delivery to true.
-      if (status.toLowerCase() === 'livrée') {
+      if (status.toLowerCase() === 'livree') {
         order.delivery = true;
       }
   
@@ -168,6 +170,30 @@ const createOrder = async (req, res) => {
       res.status(500).json({ error: 'An error occurred while updating the order status.' });
     }
   }
+
+  //updatestatus pour websocket
+  const updateStatus = async (orderId, status) => {
+    if (!status) {
+      throw new Error('You must provide a status to update.');
+    }
+  
+    const order = await TestOrdersV6.findByPk(orderId);
+  
+    if (!order) {
+      throw new Error('Order not found.');
+    }
+  
+    order.status = status;
+  
+    // If status is set to "delivered", also set delivery to true.
+    if (status.toLowerCase() === 'livree') {
+      order.delivery = true;
+    }
+  
+    await order.save();
+  
+    return order;
+  };
 
   //lister toutes les commandes
   const allOrders = async (req, res) => {
@@ -362,7 +388,7 @@ const getOrderProducts = async (req, res) => {
       })
     );
 
-    console.log('products', products)
+    //console.log('products', products)
 
     res.json(products);
   } catch (error) {
@@ -375,4 +401,4 @@ const getOrderProducts = async (req, res) => {
 
 
 
-  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts }
+  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus }
