@@ -12,7 +12,6 @@ const TestOrderProductsV4 = require('../models/TestBDD/____orderproducts')
 const TestOrderProductsV5 = require('../models/TestBDD/_____orderproducts')
 const TestOrderProductsV6 = require('../models/TestBDD/______orderproducts')
 const OrderProducts = require('../models/TestBDD/OrderProducts.js')
-const ProductsTests = require('../models/TestBDD/Products')
 
 
 //creation commande (sans le paiement, par exemple pour prendre en compte le paiement sur place plus tard)
@@ -80,7 +79,24 @@ const createOrder = async (req, res) => {
     console.log(orderProducts)
 
     await OrderProducts.bulkCreate(orderProducts);
-  
+
+    // Mettre à jour le stock des produits
+    for (let product of products) {
+      // Récupérer le produit de la base de données
+      const dbProduct = await ProductsTest.findByPk(product.productId);
+
+       // Vérifier si le stock est suffisant
+    if (dbProduct.stock < product.quantity) {
+      return res.status(400).json({ message: `Le stock du produit ${dbProduct.libelle} n'est pas suffisant pour la quantité commandée.` });
+    }
+
+      // Soustraire la quantité commandée du stock actuel
+      const newStock = dbProduct.stock - product.quantity;
+
+      // Mettre à jour le produit dans la base de données avec le nouveau stock
+      await dbProduct.update({ stock: newStock });
+    }
+      
       res.status(201).json(order); 
     } catch (error) {
       console.error(error);
@@ -248,6 +264,7 @@ const createOrder = async (req, res) => {
       res.status(500).json({ error: 'An error occurred while trying to fetch the orders.' });
     }
   }
+
   const updateOrder = async (req, res) => {
     try {
         // Récupérez le numéro de commande, le nouveau statut et l'ID du paiement à partir du corps de la requête
@@ -274,96 +291,6 @@ const createOrder = async (req, res) => {
     }
 }
 
-//lister les produits d'une commande
-//l'association ProductsTest et TestOrders ne fonctionnent pas (comme avec les stock et les produits)
-// const getOrderProducts = async (req, res, next) => {
-
-//   const orderId = req.params.orderId;
-
-//   let order = await TestOrdersV4.findOne({ where: { orderId: orderId } });
-
-//   console.log('order', order);
-
-//   TestOrdersV4.findByPk(orderId, { include: [ 'ProductsTest' ] })
-//     .then(order => {
-//       return order.getProductsTests();
-//     })
-//     .then(products => {
-//       res.render('order', { 
-//         products: products, 
-//         orderId: orderId 
-//       });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
-
-//non utilisé
-// const insertProduct = async (req, res) => {
-//   try {
-//     // Récupérer les informations de la commande depuis la requête (par exemple : orderId, productIds)
-//     const { orderId, productIds } = req.body;
-
-//     // Insérer les associations produit-commande dans la table TestOrderProductsV3
-//     for (const productId of productIds) {
-//       await TestOrderProductsV6.create({
-//         orderId: orderId,
-//         productId: productId
-//       });
-//     }
-
-//     // Autres étapes de traitement de la création de la commande...
-
-//     res.status(201).json({ message: 'Commande créée avec succès.' });
-//   } catch (error) {
-//     console.error('Erreur lors de la création de la commande :', error);
-//     res.status(500).json({ error: 'Une erreur est survenue lors de la création de la commande.' });
-//   }
-// }
-
-
-//non utilisé
-// const getOrderProducts = async (req, res, next) => {
-//   const orderId = req.params.orderId;
-
-//   console.log('orderId', orderId);
-
-
-//   // Step 1: Fetch the TestOrderProducts for a specific order
-//   let orderProductEntries = await TestOrderProductsV6.findAll({
-//     where: { orderId: orderId }
-//   });
-
-//   console.log('order-product', orderProductEntries);
-// };
-
-// const getOrderProducts = async (req, res) => {
-//   const { orderId } = req.params;
-
-//   try {
-//     const order = await TestOrdersV6.findByPk(orderId);
-//     if (!order) {
-//       return res.status(404).json({ message: 'La commande spécifiée est introuvable.' });
-//     }
-
-//     const productIds = order.productIds.split(',');
-
-//     const products = await Promise.all(
-//       productIds.map(async (productId) => {
-//         const product = await ProductsTests.findByPk(productId);
-//         return product;
-//       })
-//     );
-
-//     console.log('products', products)
-
-//     res.json(products);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Une erreur s\'est produite lors de la récupération des produits de la commande.' });
-//   }
-// }
 const getOrderProducts = async (req, res) => {
   const { orderId } = req.params;
 
@@ -387,9 +314,6 @@ const getOrderProducts = async (req, res) => {
         };
       })
     );
-
-    //console.log('products', products)
-
     res.json(products);
   } catch (error) {
     console.error(error);
@@ -397,8 +321,48 @@ const getOrderProducts = async (req, res) => {
   }
 }
 
+// Annuler une commande
+const cancelOrder = async (req, res) => {
+  try {
+    // Récupérer l'ID de la commande du corps de la requête
+    const { orderId } = req.body;
+
+    // Récupérer la commande de la base de données
+    const order = await TestOrdersV6.findByPk(orderId);
+
+    // Vérifier si la commande existe
+    if (!order) {
+      return res.status(404).json({ message: 'Commande non trouvée' });
+    }
+
+    // Récupérer les produits de la commande
+    const orderProducts = await OrderProducts.findAll({ where: { orderId: orderId } });
+
+    // Réintégrer les produits commandés dans le stock
+    for (let orderProduct of orderProducts) {
+      // Récupérer le produit de la base de données
+      const product = await ProductsTest.findByPk(orderProduct.productId);
+
+      // Ajouter la quantité commandée au stock actuel
+      const newStock = product.stock + orderProduct.quantity;
+
+      // Mettre à jour le produit dans la base de données avec le nouveau stock
+      await product.update({ stock: newStock });
+    }
+
+    // Annuler la commande
+    await order.update({ status: 'annulée' });
+
+    res.json({ message: 'La commande a été annulée et les produits ont été réintégrés dans le stock.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue lors de l\'annulation de la commande' });
+  }
+};
 
 
 
 
-  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus }
+
+
+  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder }

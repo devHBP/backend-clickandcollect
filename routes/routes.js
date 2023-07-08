@@ -5,7 +5,7 @@ const { addStore, getAllStores, getOneStore } = require('../controllers/stores_c
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
-const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus  } = require('../controllers/order_ctrl')
+const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder  } = require('../controllers/order_ctrl')
 const router = Router()
 
 
@@ -52,8 +52,9 @@ router.delete('/deleteOneOrder/:id', deleteOneOrder)
 router.get('/ordersOfUser/:userId', ordersOfUser)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 
 router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
-router.put('/updateStatus/:orderId', updateStatus)
-// router.post('/insertProduct', insertProduct)
+router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
+router.post('/cancelOrder/:orderId', cancelOrder)
+
 
 
 //router.post('/createOrderAndPayment')
