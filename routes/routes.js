@@ -53,7 +53,7 @@ router.get('/ordersOfUser/:userId', ordersOfUser)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 
 router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
 router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
-router.post('/cancelOrder/:orderId', cancelOrder)
+router.post('/cancelOrder', cancelOrder)
 
 
 

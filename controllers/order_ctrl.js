@@ -306,7 +306,7 @@ const getOrderProducts = async (req, res) => {
 
     const products = await Promise.all(
       orderProducts.map(async (orderProduct) => {
-        const product = await ProductsTests.findByPk(orderProduct.productId);
+        const product = await ProductsTest.findByPk(orderProduct.productId);
         return {
           ...product.get(),
           //on rajoute dans l'objet product la quantité 
@@ -351,7 +351,7 @@ const cancelOrder = async (req, res) => {
     }
 
     // Annuler la commande
-    await order.update({ status: 'annulée' });
+    await order.update({ status: 'annulee' });
 
     res.json({ message: 'La commande a été annulée et les produits ont été réintégrés dans le stock.' });
   } catch (error) {
