@@ -12,6 +12,7 @@ const TestOrderProductsV4 = require('../models/TestBDD/____orderproducts')
 const TestOrderProductsV5 = require('../models/TestBDD/_____orderproducts')
 const TestOrderProductsV6 = require('../models/TestBDD/______orderproducts')
 const OrderProducts = require('../models/TestBDD/OrderProducts.js')
+const StocksTest = require('../models/TestBDD/Stocks.js')
 
 
 //creation commande (sans le paiement, par exemple pour prendre en compte le paiement sur place plus tard)
@@ -84,6 +85,7 @@ const createOrder = async (req, res) => {
     for (let product of products) {
       // Récupérer le produit de la base de données
       const dbProduct = await ProductsTest.findByPk(product.productId);
+      const stock = await StocksTest.findOne({ where: { productId: product.productId } });
 
        // Vérifier si le stock est suffisant
     if (dbProduct.stock < product.quantity) {
@@ -95,6 +97,7 @@ const createOrder = async (req, res) => {
 
       // Mettre à jour le produit dans la base de données avec le nouveau stock
       await dbProduct.update({ stock: newStock });
+      await stock.update({ quantite: newStock });
     }
       
       res.status(201).json(order); 
@@ -229,23 +232,63 @@ const createOrder = async (req, res) => {
   }
 
   //suppression d'une commande
-  const deleteOneOrder = async (req, res) => {
-    try {
-      const orderId = req.params.id;
-      const order = await TestOrdersV6.findOne({ where: { orderId: orderId }});
+  // const deleteOneOrder = async (req, res) => {
+  //   try {
+  //     const orderId = req.params.id;
+  //     const order = await TestOrdersV6.findOne({ where: { orderId: orderId }});
   
-      if (!order) {
-        return res.status(404).json({ error: 'No order found with the specified ID.' });
-      }
+  //     if (!order) {
+  //       return res.status(404).json({ error: 'No order found with the specified ID.' });
+  //     }
   
-      await order.destroy();
-      res.json({ message: `Order with id ${orderId} has been deleted.` });
+  //     await order.destroy();
+  //     res.json({ message: `Order with id ${orderId} has been deleted.` });
   
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred while trying to delete the order.' });
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).json({ error: 'An error occurred while trying to delete the order.' });
+  //   }
+  // }
+//test suppression commande - stock
+// Suppression d'une commande
+const deleteOneOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const order = await TestOrdersV6.findOne({ where: { orderId: orderId }});
+
+    if (!order) {
+      return res.status(404).json({ error: 'No order found with the specified ID.' });
     }
+
+    // Récupérer les produits de la commande
+    const orderProducts = await OrderProducts.findAll({ where: { orderId: orderId } });
+
+    // Réintégrer les produits commandés dans le stock
+    for (let orderProduct of orderProducts) {
+      await orderProduct.destroy();
+      
+      // Récupérer le produit de la base de données
+      const product = await ProductsTest.findByPk(orderProduct.productId);
+      const stock = await StocksTest.findOne({ where: { productId: orderProduct.productId } });
+
+      // Ajouter la quantité commandée au stock actuel
+      const newStock = product.stock + orderProduct.quantity;
+
+      // Mettre à jour le produit et le stock dans la base de données avec le nouveau stock
+      await product.update({ stock: newStock });
+      await stock.update({ quantite: newStock });
+     
+    }
+
+    await order.destroy();
+    res.json({ message: `Order with id ${orderId} has been deleted and the products have been reintegrated into the stock.` });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while trying to delete the order.' });
   }
+}
+
 
   //lister les commandes d'un utilisateur
   const ordersOfUser = async (req, res) => {
@@ -342,12 +385,14 @@ const cancelOrder = async (req, res) => {
     for (let orderProduct of orderProducts) {
       // Récupérer le produit de la base de données
       const product = await ProductsTest.findByPk(orderProduct.productId);
+      const stock = await StocksTest.findOne({ where: { productId: orderProduct.productId } });
 
       // Ajouter la quantité commandée au stock actuel
       const newStock = product.stock + orderProduct.quantity;
 
       // Mettre à jour le produit dans la base de données avec le nouveau stock
       await product.update({ stock: newStock });
+      await stock.update({ quantite: newStock });
     }
 
     // Annuler la commande

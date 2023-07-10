@@ -215,7 +215,8 @@ const uploadImage = multer({
 
   //diminuer un stock
   const decreaseProductStock = async (req, res) => {
-    const { id, decreaseAmount } = req.body;
+    const { id } = req.params;
+    const { decreaseAmount } = req.body;
 
   try {
     const stock = await StocksTest.findOne({ where: { productId: id } });
@@ -244,7 +245,8 @@ const uploadImage = multer({
 
 
 const increaseProductStock = async (req, res) => {
-  const { id, increaseAmount } = req.body;
+  const { id } = req.params;
+  const { increaseAmount } = req.body;
 
   try {
     const stock = await StocksTest.findOne({ where: { productId: id } });
