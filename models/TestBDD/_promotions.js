@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const db = require('../../db/db')
-const TestOrders = require('./_orders')
 
 const TestPromotions = db.define(
   'TestPromotions',

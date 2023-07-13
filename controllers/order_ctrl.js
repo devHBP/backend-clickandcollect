@@ -1,16 +1,7 @@
-const TestOrders = require('../models/TestBDD/__orders')
-const TestOrdersV2 = require('../models/TestBDD/___orders')
-const TestOrdersV3 = require('../models/TestBDD/____orders')
-const TestOrdersV4 = require('../models/TestBDD/_____orders')
-//const TestOrdersV5 = require('../models/TestBDD/______orders')
+const moment = require('moment');
 const TestOrdersV6 = require('../models/TestBDD/_______orders')
 const TestPaymentsV2 = require('../models/TestBDD/__payments')
 const ProductsTest = require('../models/TestBDD/Products')
-//const TestOrderProductsV2 = require('../models/TestBDD/__orderproducts')
-const TestOrderProductsV3 = require('../models/TestBDD/___orderproducts')
-const TestOrderProductsV4 = require('../models/TestBDD/____orderproducts')
-const TestOrderProductsV5 = require('../models/TestBDD/_____orderproducts')
-const TestOrderProductsV6 = require('../models/TestBDD/______orderproducts')
 const OrderProducts = require('../models/TestBDD/OrderProducts.js')
 const StocksTest = require('../models/TestBDD/Stocks.js')
 
@@ -47,6 +38,21 @@ const createOrder = async (req, res) => {
     //mise en tableau
     //const productIds = productIdsString.split(",");
     //console.log('prod2', productIds)
+
+      // Validation de la date avec moment
+      // const dateIsValid = moment(date, 'YYYY-MM-DD HH:mm:ss', true).isValid();
+      // if (!dateIsValid) {
+      //   console.log('date invalide')
+      //   return res.status(400).json({ message: 'La date fournie est invalide.' });
+      // }
+      // if (dateIsValid){
+      //   console.log('date valide')
+      // }
+
+      const dateIsValid = moment(date, 'YYYY-MM-DD', true).isValid();
+      if (!dateIsValid) {
+    return res.status(400).json({ message: 'La date fournie est invalide.' });
+    }
 
     // Par défaut, le statut est "en attente" et paid est false
     const status = 'en attente';

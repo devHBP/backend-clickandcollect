@@ -1,8 +1,7 @@
-const TestPayments = require('../models/TestBDD/_payments')
 const TestPaymentsV2 = require('../models/TestBDD/__payments')
 
 const stripe = require('stripe')(
-    'secret')
+    'sk_test_51NKoFqGnFAjiWNhK8ZUaazl2L6zB7JLsBolTdPnyNo0VrZxsVsKi3997L0WXepSzhCigzdiOluNTq9xUo929Q7KQ00t9aM5khL')
 
 const createSession = async (req, res) => {
    
@@ -56,6 +55,10 @@ const success = (req, res) => {
      </body>
    </html>
  `);
+// res.json({
+//   message: 'Payment successful',
+//   deepLink: 'clickandcollect://success',
+// });
 }
 
 const paiementStatus = async (req, res) => {

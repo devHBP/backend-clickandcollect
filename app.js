@@ -36,7 +36,7 @@ const server = app.listen(8080, () => {
   console.log('connexion !!');
 });
 const wss = new WebSocket.Server({server})
-const { updateStatus}  = require('./controllers/order_ctrl.js')
+const { updateStatus, allOrders}  = require('./controllers/order_ctrl.js')
 
 wss.on('connection', socket => {
   console.log('WebSocket connection established.');
@@ -64,6 +64,24 @@ wss.on('connection', socket => {
         wss.clients.forEach(client => {
           if (client !== socket && client.readyState === WebSocket.OPEN) {
             client.send(updatedOrderMessage);
+          }
+        });
+      }
+
+      if (type === 'newOrder'){
+        // Call allOrders function
+        const newOrders = await allOrders();
+
+        // Create a message to send to other clients
+        const newOrderMessage = JSON.stringify({
+          type: 'newOrder',
+          data: newOrders,
+        });
+
+        // Send message to all other clients
+        wss.clients.forEach(client => {
+          if (client !== socket && client.readyState === WebSocket.OPEN) {
+            client.send(newOrderMessage);
           }
         });
       }

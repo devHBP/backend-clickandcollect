@@ -1,12 +1,4 @@
 //appel du model
-// const Product = require('../models/testProduct.js')
-const TestStocksV2 = require('../models/TestBDD/__stocks.js')
-const TestStocksV3 = require('../models/TestBDD/___stocks.js')
-const TestProducts = require('../models/TestBDD/_products.js')
-const TestProductsV2 = require('../models/TestBDD/__products.js')
-const TestProductsV3 = require('../models/TestBDD/___products.js')
-const TestProductsV4 = require('../models/TestBDD/_____products.js')
-const TestProductsV5 = require('../models/TestBDD/______products.js')
 const StocksTest = require('../models/TestBDD/Stocks.js')
 const ProductsTest = require('../models/TestBDD/Products.js')
 

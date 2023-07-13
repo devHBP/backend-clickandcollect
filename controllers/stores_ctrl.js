@@ -1,7 +1,3 @@
-//penser à enlever commentaire dans modèle
-
-//const TestStore = require('../models/testStore.js')
-//const TestStores = require('../models/TestBDD/_stores')
 const TestStoresV2 = require('../models/TestBDD/__stores')
 
 
