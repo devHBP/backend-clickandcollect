@@ -2,11 +2,6 @@
 //const TestClient = require('../models/testUser.js')
 const TestUsers = require('../models/TestBDD/_users')
 
-/**
- * Attention
- * Test avec nouvelle base de données Testclient = Test
- */
-
 const userValidation = require('../validation/uservalidation')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -208,9 +203,29 @@ const verifyToken = (req, res) => {
   });
 }
 
+//modification du user
+const modifyUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const updateData = req.body;
+    //console.log(updateData)
+    const user = await TestUsers.findOne({ where: { userId: userId } });
+
+    if (user) {
+      await user.update(updateData);
+      return res.status(200).json({ message: 'Utilisateur mis à jour', user: user });
+    } else {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour de l\'utilisateur :', error);
+    return res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur' });
+  }
+}
+
 
   
-module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken };
+module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser };
   
 
 

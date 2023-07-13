@@ -1,9 +1,9 @@
 const Router = require('express')
-const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken } = require('../controllers/ctrl')
+const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser } = require('../controllers/ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock } = require('../controllers/product_ctrl')
 const { addStore, getAllStores, getOneStore } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
-const { getAllStocks } = require('../controllers/stock_ctrl')
+const { getAllStocks, getStockByProduct } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder  } = require('../controllers/order_ctrl')
 const router = Router()
@@ -18,6 +18,7 @@ router.delete('/deleteOne/:id', deleteOne)
 router.put('/updateOneUser/:id', updateOneUser)
 router.put('/updateRole/:id', updateRole)
 router.get('/verifyToken', verifyToken)
+router.patch('/modifyUser/:userId', modifyUser)
 
 //PRODUCTS
 router.post('/addProduct',uploadImage, addProduct)
@@ -43,6 +44,8 @@ router.delete('/deletepromocodes/:id', deletePromo)
 
 //STOCKS
 router.get('/allStocks', getAllStocks)
+router.get('/getStockByProduct/:productId', getStockByProduct)
+
 
 //ORDERS
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
