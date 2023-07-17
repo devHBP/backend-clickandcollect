@@ -1,4 +1,5 @@
 const TestUsers = require('./_users');
+const Users = require('./__users');
 const TestStores = require('./_stores');
 const TestOrderProducts = require('./_orderproducts');
 //const TestOrderProductsV2 = require('./__orderproducts');
@@ -35,8 +36,8 @@ const TestOrdersV6 = require('./_______orders');
 
 // Relations
 // Une commande (Orders) peut être passée par un utilisateur (Users).
-TestUsers.hasMany(TestOrdersV6, { foreignKey: 'userId', as: 'orders' });
-TestOrdersV6.belongsTo(TestUsers, { foreignKey: 'userId' });
+Users.hasMany(TestOrdersV6, { foreignKey: 'userId', as: 'orders' });
+TestOrdersV6.belongsTo(Users, { foreignKey: 'userId' });
 
 // Une commande (Orders) peut être passée dans un magasin (Stores).
 // TestStores.hasMany(TestOrders, { foreignKey: 'storeId', as: 'orders' });
@@ -83,6 +84,7 @@ StocksTest.belongsTo(ProductsTest, { foreignKey: 'productId' });
 
 module.exports = {
   TestUsers,
+  Users,
   TestStores,
   TestOrderProducts,
   // TestOrderProductsV2,

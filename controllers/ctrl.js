@@ -1,6 +1,7 @@
 // const User = require('../models/users')
 //const TestClient = require('../models/testUser.js')
 const TestUsers = require('../models/TestBDD/_users')
+const Users = require('../models/TestBDD/__users')
 
 const userValidation = require('../validation/uservalidation')
 const bcrypt = require('bcrypt')
@@ -51,7 +52,7 @@ const signup = (req, res) => {
         userData.storeId = req.body.storeId;
       }
     
-      TestUsers.create(userData)
+      Users.create(userData)
         .then((user) => {
           const userId = user.userId;
            console.log('verif id', userData);
@@ -69,7 +70,7 @@ const signup = (req, res) => {
 
 //login d'un user
 const login = (req, res) => {
-  TestUsers.findOne({where: {email: req.body.email}})
+  Users.findOne({where: {email: req.body.email}})
         .then(dbUser => {
             if(!dbUser){
                 return res.status(404).json({message:"user not found (login)"})
@@ -105,7 +106,7 @@ const login = (req, res) => {
 
 //lister tous les users
 const getAll = (req, res) => {
-  TestUsers.findAll({
+  Users.findAll({
         attributes : {exclude: ['createdAt', "updatedAt"]}
     })
     .then((users) => {
@@ -118,7 +119,7 @@ const getAll = (req, res) => {
 const getOne = ( req, res) => {
     const { id} = req.params
     //findbyprimarykey
-    TestUsers.findByPk(id)
+    Users.findByPk(id)
         .then( user => {
             if(!user) return res.status(404).json({msg:"user not found"})
             res.status(200).json(user)
@@ -129,7 +130,7 @@ const getOne = ( req, res) => {
 //supprimer un user
 const deleteOne = (req, res) => {
     const { id} = req.params
-    TestUsers.destroy({where : {id : id}})
+    Users.destroy({where : {id : id}})
     .then( user => {
         if(user === 0) return res.status(404).json({msg:"not found"})
         res.status(200).json({msg:"User deleted"})
@@ -142,10 +143,11 @@ const updateOneUser = (req, res) => {
     const { id } = req.params;
     const { storeId } = req.body;
   
-    TestUsers.findByPk(id)
+    Users.findByPk(id)
       .then((user) => {
         console.log('User found !!')
         if (!user) {
+          console.log('error')
           return res.status(404).json({ msg: "User not found (updateone)" });
         }
   
@@ -168,7 +170,7 @@ const updateRole = (req, res) => {
     const { id } = req.params;
     const { role } = req.body;
 
-    TestUsers.findByPk(id)
+    Users.findByPk(id)
       .then((user) => {
         if (!user) {
           return res.status(404).json({ msg: "User not found" });
@@ -208,11 +210,11 @@ const modifyUser = async (req, res) => {
   try {
     const userId = req.params.userId;
     const updateData = req.body;
-    //console.log(updateData)
-    const user = await TestUsers.findOne({ where: { userId: userId } });
+    console.log(updateData)
+    const user = await Users.findOne({ where: { userId: userId } });
 
     if (user) {
-      await user.update(updateData);
+      await user.update('upd', updateData);
       return res.status(200).json({ message: 'Utilisateur mis à jour', user: user });
     } else {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
