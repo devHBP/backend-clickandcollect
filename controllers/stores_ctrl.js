@@ -28,8 +28,26 @@ const addStore = async (req, res ) => {
 }
 
 //Modifier un magasin
-const updateStore = ( req, res ) => {
-
+const updateStore = async (req, res ) => {
+    console.log('test')
+    try {
+        // récupérer l'ID du magasin et les nouvelles données du corps de la demande
+        let storeId = req.params.id;
+        let updateData = req.body;
+        console.log('updateData', updateData)
+        const store = await TestStoresV2.findOne({ where: { storeId: storeId } });
+        console.log('store', store)
+        if (!store) {
+            return res.status(404).json({ error: 'Store not found' });
+        }
+        
+        // Mettez à jour uniquement les champs spécifiés dans les mises à jour
+        await store.update(updateData);
+        return res.status(200).json({ msg: 'Store updated successfully', store: store });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to update store' });
+    }
 }
 
 //lister tous les magasins
