@@ -1,8 +1,11 @@
 const moment = require('moment');
 const TestOrdersV6 = require('../models/TestBDD/_______orders')
+const Orders = require('../models/TestBDD/Orders')
 const TestPaymentsV2 = require('../models/TestBDD/__payments')
 const ProductsTest = require('../models/TestBDD/Products')
+const Products = require('../models/TestBDD/_Products')
 const OrderProducts = require('../models/TestBDD/OrderProducts.js')
+const Ordersproducts = require('../models/TestBDD/__orderproducts')
 const StocksTest = require('../models/TestBDD/Stocks.js')
 
 
@@ -58,7 +61,7 @@ const createOrder = async (req, res) => {
     const status = 'en attente';
     const paid = false;
 
-      const order = await TestOrdersV6.create({
+      const order = await Orders.create({
             firstname_client,
             lastname_client,
             prix_total,
@@ -85,12 +88,12 @@ const createOrder = async (req, res) => {
       }));
     console.log(orderProducts)
 
-    await OrderProducts.bulkCreate(orderProducts);
+    await Ordersproducts.bulkCreate(orderProducts);
 
     // Mettre à jour le stock des produits
     for (let product of products) {
       // Récupérer le produit de la base de données
-      const dbProduct = await ProductsTest.findByPk(product.productId);
+      const dbProduct = await Products.findByPk(product.productId);
       const stock = await StocksTest.findOne({ where: { productId: product.productId } });
 
        // Vérifier si le stock est suffisant
@@ -173,7 +176,7 @@ const createOrder = async (req, res) => {
     }
   
     try {
-      const order = await TestOrdersV6.findByPk(orderId);
+      const order = await Orders.findByPk(orderId);
   
       if (!order) {
         return res.status(404).json({ error: 'Order not found.' });
@@ -202,7 +205,7 @@ const createOrder = async (req, res) => {
       throw new Error('You must provide a status to update.');
     }
   
-    const order = await TestOrdersV6.findByPk(orderId);
+    const order = await Orders.findByPk(orderId);
   
     if (!order) {
       throw new Error('Order not found.');
@@ -223,7 +226,7 @@ const createOrder = async (req, res) => {
   //lister toutes les commandes
   const allOrders = async (req, res) => {
     try {
-      const orders = await TestOrdersV6.findAll();
+      const orders = await Orders.findAll();
   
       if (!orders || orders.length === 0) {
         return res.status(404).json({ error: 'No orders found.' });
@@ -260,21 +263,21 @@ const createOrder = async (req, res) => {
 const deleteOneOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const order = await TestOrdersV6.findOne({ where: { orderId: orderId }});
+    const order = await Orders.findOne({ where: { orderId: orderId }});
 
     if (!order) {
       return res.status(404).json({ error: 'No order found with the specified ID.' });
     }
 
     // Récupérer les produits de la commande
-    const orderProducts = await OrderProducts.findAll({ where: { orderId: orderId } });
+    const orderProducts = await Ordersproducts.findAll({ where: { orderId: orderId } });
 
     // Réintégrer les produits commandés dans le stock
     for (let orderProduct of orderProducts) {
       await orderProduct.destroy();
       
       // Récupérer le produit de la base de données
-      const product = await ProductsTest.findByPk(orderProduct.productId);
+      const product = await Products.findByPk(orderProduct.productId);
       const stock = await StocksTest.findOne({ where: { productId: orderProduct.productId } });
 
       // Ajouter la quantité commandée au stock actuel
@@ -300,7 +303,7 @@ const deleteOneOrder = async (req, res) => {
   const ordersOfUser = async (req, res) => {
     try {
       const userId = req.params.userId;
-      const orders = await TestOrdersV6.findAll({ where: { userId: userId }});
+      const orders = await Orders.findAll({ where: { userId: userId }});
   
       if (orders.length === 0) {
         return res.json([]);
@@ -321,7 +324,7 @@ const deleteOneOrder = async (req, res) => {
         const { numero_commande, status, paymentId } = req.body;
 
         // Trouvez la commande correspondante dans la base de données
-        const order = await TestOrdersV6.findOne({ where: { numero_commande: numero_commande } });
+        const order = await Orders.findOne({ where: { numero_commande: numero_commande } });
 
         // Si aucune commande n'est trouvée, renvoyez une erreur
         if (!order) {
@@ -345,18 +348,18 @@ const getOrderProducts = async (req, res) => {
   const { orderId } = req.params;
 
   try {
-    const order = await TestOrdersV6.findByPk(orderId);
+    const order = await Orders.findByPk(orderId);
     if (!order) {
       return res.status(404).json({ message: 'La commande spécifiée est introuvable.' });
     }
 
-    const orderProducts = await OrderProducts.findAll({
+    const orderProducts = await Ordersproducts.findAll({
       where: { orderId },
     });
 
     const products = await Promise.all(
       orderProducts.map(async (orderProduct) => {
-        const product = await ProductsTest.findByPk(orderProduct.productId);
+        const product = await Products.findByPk(orderProduct.productId);
         return {
           ...product.get(),
           //on rajoute dans l'objet product la quantité 
@@ -378,7 +381,7 @@ const cancelOrder = async (req, res) => {
     const { orderId } = req.body;
 
     // Récupérer la commande de la base de données
-    const order = await TestOrdersV6.findByPk(orderId);
+    const order = await Orders.findByPk(orderId);
 
     // Vérifier si la commande existe
     if (!order) {
@@ -386,12 +389,12 @@ const cancelOrder = async (req, res) => {
     }
 
     // Récupérer les produits de la commande
-    const orderProducts = await OrderProducts.findAll({ where: { orderId: orderId } });
+    const orderProducts = await Ordersproducts.findAll({ where: { orderId: orderId } });
 
     // Réintégrer les produits commandés dans le stock
     for (let orderProduct of orderProducts) {
       // Récupérer le produit de la base de données
-      const product = await ProductsTest.findByPk(orderProduct.productId);
+      const product = await Products.findByPk(orderProduct.productId);
       const stock = await StocksTest.findOne({ where: { productId: orderProduct.productId } });
 
       // Ajouter la quantité commandée au stock actuel

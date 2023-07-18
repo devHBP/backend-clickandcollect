@@ -14,7 +14,8 @@ const createSession = async (req, res) => {
           product_data: {
             name: libelle,
           },
-          unit_amount: parseFloat(prix_unitaire) * 100, // Assurez-vous de convertir le prix en centimes
+          unit_amount: Math.round(parseFloat(prix_unitaire) * 100),
+          //unit_amount: parseFloat(prix_unitaire) * 100, // Assurez-vous de convertir le prix en centimes
         },
         quantity: qty,
       };

@@ -1,11 +1,12 @@
 const { DataTypes } = require('sequelize')
 const db = require('../../db/db')
-const TestUsers = require('./_users')
+
 const TestStoresV2 = require('./__stores')
-const TestProducts = require('./_products')
-const TestSlots = require('./_slots')
-const TestPayments = require('./_payments')
-const TestPromotions = require('./_promotions')
+//const TestUsers = require('./_users')
+//const TestProducts = require('./_products')
+// const TestSlots = require('./_slots')
+// const TestPayments = require('./_payments')
+// const TestPromotions = require('./_promotions')
 
 const TestOrders = db.define('TestOrder', {
     orderId: {

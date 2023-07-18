@@ -1,6 +1,8 @@
 //appel du model
 const StocksTest = require('../models/TestBDD/Stocks.js')
 const ProductsTest = require('../models/TestBDD/Products.js')
+const Products = require('../models/TestBDD/_Products.js')
+const OrdersProducts = require('../models/TestBDD/__orderproducts.js')
 
 
 const db = require('../db/db.js')
@@ -63,7 +65,7 @@ const addProduct = async (req, res) => {
     };
     console.log('product', product)
 
-    const createdProduct = await ProductsTest.create(product);
+    const createdProduct = await Products.create(product);
     console.log('createdProduct', createdProduct)
 
     const productId = createdProduct.productId; // Récupérer l'ID du produit créé
@@ -97,14 +99,14 @@ const updateProduct = async (req, res) => {
     const updates = req.body;
   
     try {
-      const product = await ProductsTest.findOne({ where: { productId: productId } });
+      const product = await Products.findOne({ where: { productId: productId } });
   
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
       }
   
       // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-      await ProductsTest.update(updates, { where: { productId: productId } });
+      await Products.update(updates, { where: { productId: productId } });
       console.log(product)
       return res.status(200).json({ msg: 'Product updated successfully' });
     } catch (error) {
@@ -118,7 +120,7 @@ const updateProduct = async (req, res) => {
 //lister tous les produits
 const getAllProducts = (req, res) =>
     {
-      ProductsTest.findAll({
+      Products.findAll({
             attributes : {exclude: ['createdAt', 'updatedAt']}
         })
         .then((products) => {
@@ -134,7 +136,7 @@ const getOneProduct = ( req, res) => {
     const { id } = req.params
     //findbyprimarykey
     // User.findByPk
-    ProductsTest.findByPk(id)
+    Products.findByPk(id)
         .then( product => {
             if(!product) return res.status(404).json({msg:"product not found"})
             res.status(200).json(product)
@@ -177,32 +179,60 @@ const uploadImage = multer({
 //pour plusieurs images
 // .array('images', 3) ici 3 nombre d'images
 
-
-//supprimer un produit
-  const deleteProduct = async (req, res) => {
+//"supprimer" - rendre indisponible un produit
+const deleteProduct = async (req, res) => {
   const productId = req.params.id;
 
   try {
-    const product = await ProductsTest.findByPk(productId);
+    const product = await Products.findByPk(productId);
 
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    // Supprimer le produit
-    await product.destroy();
+    // Désactiver le produit
+    await product.update({ disponibilite: false });
+    await product.save();
 
-    // Supprimer le stock associé
-    const stock = await StocksTest.findOne({ where: { productId: productId } });
-    if (stock) {
-      await stock.destroy();
-    }
-
-    return res.status(200).json({ msg: 'Product and stock deleted successfully' });
+    return res.status(200).json({ msg: 'Product disabled successfully' });
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to delete product and stock' });
+    console.error('Error:', error);  // Ajout de log d'erreur
+    return res.status(500).json({ error: 'Failed to disable product' });
   }
-};
+}
+
+//supprimer un produit
+// A NE PAS FAIRE POUR RAISONS DE SECURITE = PLUTOT DESACTIVER UN PRODUIT
+//   const deleteProduct = async (req, res) => {
+//     const productId = req.params.id;
+
+//     try {
+//       const product = await Products.findByPk(productId);
+  
+//       if (!product) {
+//         return res.status(404).json({ error: 'Product not found' });
+//       }
+  
+//       // Supprimer les associations avec les commandes
+//       await OrdersProducts.destroy({ where: { productId: productId } });
+  
+//       // Supprimer le stock associé
+//       const stock = await StocksTest.findOne({ where: { productId: productId } });
+//       if (stock) {
+//         await stock.destroy();
+//       }
+  
+//       // Supprimer le produit
+//       await product.destroy();
+  
+//       return res.status(200).json({ msg: 'Product and associated entries deleted successfully' });
+//     } catch (error) {
+//       console.error('Error:', error);  // Ajout de log d'erreur
+//       return res.status(500).json({ error: 'Failed to delete product and associated entries' });
+//     }
+// };
+
+
 
 
   //diminuer un stock
@@ -212,7 +242,7 @@ const uploadImage = multer({
 
   try {
     const stock = await StocksTest.findOne({ where: { productId: id } });
-    const product = await ProductsTest.findOne({ where: { productId: id } });
+    const product = await Products.findOne({ where: { productId: id } });
 
     if (!stock || !product) {
       return res.status(404).json({ error: 'Product not found' });
@@ -242,7 +272,7 @@ const increaseProductStock = async (req, res) => {
 
   try {
     const stock = await StocksTest.findOne({ where: { productId: id } });
-    const product = await ProductsTest.findOne({ where: { productId: id } });
+    const product = await Products.findOne({ where: { productId: id } });
 
     if (!stock || !product) {
       return res.status(404).json({ error: 'Product not found' });
