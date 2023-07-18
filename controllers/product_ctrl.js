@@ -132,7 +132,7 @@ const getAllProducts = (req, res) =>
 
 //lister un produit par id
 // ?? User ?
-const getOneProduct = ( req, res) => {
+const getOneProduct =  ( req, res) => {
     const { id } = req.params
     //findbyprimarykey
     // User.findByPk
@@ -143,6 +143,21 @@ const getOneProduct = ( req, res) => {
         })
         .catch(error => res.statut(500).json(error))
 }
+
+//lister les produits d'une catégorie
+const getProductsofOneCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await Products.findAll({
+      where: { categorie: category },
+    });
+    res.json(products);
+  } catch (error) {
+    console.error('Une erreur s\'est produite lors de la récupération des produits par catégorie:', error);
+    res.status(500).json({ message: 'Une erreur s\'est produite lors de la récupération des produits par catégorie' });
+  }
+}
+
 
 
 //upload une image
@@ -293,4 +308,5 @@ const increaseProductStock = async (req, res) => {
 
   
 
-module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock}
+module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage,
+updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory}
