@@ -1,25 +1,29 @@
 const TestPaymentsV2 = require('../models/TestBDD/__payments')
 
 const stripe = require('stripe')(
-    'sk_test_51NKoFqGnFAjiWNhK8ZUaazl2L6zB7JLsBolTdPnyNo0VrZxsVsKi3997L0WXepSzhCigzdiOluNTq9xUo929Q7KQ00t9aM5khL')
+    '')
 
 const createSession = async (req, res) => {
    
     console.log('req', req.body.orderInfo.cartItems)
     const lineItems = req.body.orderInfo.cartItems.map((item) => {
-      const { libelle, prix_unitaire, qty } = item;
+      const { libelle, prix, qty } = item;
+      console.log('item', item)
+      console.log('libelle', libelle)
+      console.log('prix_unitaire', prix)
       return {
         price_data: {
           currency: 'eur',
           product_data: {
             name: libelle,
           },
-          unit_amount: Math.round(parseFloat(prix_unitaire) * 100),
+          unit_amount: Math.round(parseFloat(prix) * 100),
           //unit_amount: parseFloat(prix_unitaire) * 100, // Assurez-vous de convertir le prix en centimes
         },
         quantity: qty,
       };
     });
+    console.log('lineItems', lineItems)
   
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],

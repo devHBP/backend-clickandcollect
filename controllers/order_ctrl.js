@@ -38,6 +38,7 @@ const createOrder = async (req, res) => {
     } = req.body;
 
     console.log('products', products)
+    console.log('prix total', prix_total)
     //mise en tableau
     //const productIds = productIdsString.split(",");
     //console.log('prod2', productIds)
@@ -112,7 +113,7 @@ const createOrder = async (req, res) => {
       res.status(201).json(order); 
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Une erreur est survenue lors de la création de la commande' });
+      res.status(500).json({ message: 'ICI, Une erreur est survenue lors de la création de la commande' });
     }
   }
 
