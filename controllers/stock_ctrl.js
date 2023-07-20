@@ -1,4 +1,5 @@
 const StocksTest = require('../models/TestBDD/Stocks')
+const { Op } = require("sequelize");
 
 //lister tous les stocks
 const getAllStocks = (req, res) => {
@@ -28,6 +29,6 @@ const getAllStocks = (req, res) => {
       res.status(500).json({ error: "Une erreur s'est produite lors de la récupération du stock par produit." });
     }
   };
-  
+
   
   module.exports = { getAllStocks, getStockByProduct }
