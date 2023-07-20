@@ -210,12 +210,18 @@ const modifyUser = async (req, res) => {
   try {
     const userId = req.params.userId;
     const updateData = req.body;
-    console.log(updateData)
+
+    // Recherche de l'utilisateur dans la base de données
     const user = await Users.findOne({ where: { userId: userId } });
 
     if (user) {
-      await user.update('upd', updateData);
-      return res.status(200).json({ message: 'Utilisateur mis à jour', user: user });
+      // Mise à jour des champs de l'utilisateur avec les données de mise à jour
+      await user.update(updateData);
+
+      // Récupération de l'utilisateur mis à jour
+      const updatedUser = await Users.findOne({ where: { userId: userId } });
+
+      return res.status(200).json({ message: 'Utilisateur mis à jour', user: updatedUser });
     } else {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
@@ -224,6 +230,7 @@ const modifyUser = async (req, res) => {
     return res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur' });
   }
 }
+
 
 
   
