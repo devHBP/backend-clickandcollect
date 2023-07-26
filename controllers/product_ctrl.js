@@ -3,7 +3,7 @@ const StocksTest = require('../models/TestBDD/Stocks.js')
 const ProductsTest = require('../models/TestBDD/Products.js')
 const Products = require('../models/TestBDD/_Products.js')
 const OrdersProducts = require('../models/TestBDD/__orderproducts.js')
-
+const FamillyProducts = require('../models/TestBDD/_famille.js')
 
 const db = require('../db/db.js')
 
@@ -50,8 +50,18 @@ const path = require('path')
 // }
 // }
 
+
+//test categorie _ nom famille produit 
 const addProduct = async (req, res) => {
   try {
+    // Récupérer la famille de produits associée
+    const familleProduit = await FamillyProducts.findOne({ where: { nom_famille_produit: req.body.categorie } });
+
+    // Vérifier si la famille de produits existe
+    if (!familleProduit) {
+      return res.status(400).json({ error: "Famille de produit non trouvée" });
+    }
+
     let product = {
       // Vérifier si req.file existe et contient les informations sur le fichier
       image: req.file ? req.file.path : '',
@@ -62,6 +72,7 @@ const addProduct = async (req, res) => {
       prix_remise_collaborateur: req.body.prix_remise_collaborateur,
       disponibilite: req.body.disponibilite,
       stock: req.body.stock,
+      id_famille_produit: familleProduit.id_famille_produit, // Utiliser l'ID de la famille de produits trouvée
     };
     console.log('product', product)
 
@@ -76,11 +87,6 @@ const addProduct = async (req, res) => {
     });
     console.log('productStock', productStock)
 
-    // const produits = await ProductsTest.findAll({
-    //   include: [ {model: StocksTest, as: 'stock'} ]}
-    // );
-    // console.log('produits', produits)
-
     console.log(createdProduct);
     console.log(productStock);
 
@@ -94,26 +100,59 @@ const addProduct = async (req, res) => {
 
 
 //modifier un produit
+// const updateProduct = async (req, res) => {
+//     const productId = req.params.id;
+//     const updates = req.body;
+  
+//     try {
+//       const product = await Products.findOne({ where: { productId: productId } });
+  
+//       if (!product) {
+//         return res.status(404).json({ error: 'Product not found' });
+//       }
+  
+//       // Mettez à jour uniquement les champs spécifiés dans les mises à jour
+//       await Products.update(updates, { where: { productId: productId } });
+//       console.log(product)
+//       return res.status(200).json({ msg: 'Product updated successfully' });
+//     } catch (error) {
+//       return res.status(500).json({ error: 'Failed to update product' });
+//     }
+//   };
+  //modifier un produit - verif categorie / nom_famille_produit
 const updateProduct = async (req, res) => {
-    const productId = req.params.id;
-    const updates = req.body;
-  
-    try {
-      const product = await Products.findOne({ where: { productId: productId } });
-  
-      if (!product) {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-  
-      // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-      await Products.update(updates, { where: { productId: productId } });
-      console.log(product)
-      return res.status(200).json({ msg: 'Product updated successfully' });
-    } catch (error) {
-      return res.status(500).json({ error: 'Failed to update product' });
+  const productId = req.params.id;
+  const updates = req.body;
+
+  try {
+    const product = await Products.findOne({ where: { productId: productId } });
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
     }
-  };
-  
+
+    // Si une nouvelle catégorie est spécifiée, vérifiez qu'elle correspond à la famille de produits
+    if (updates.categorie) {
+      const familleProduit = await FamillyProducts.findOne({ where: { nom_famille_produit: updates.categorie } });
+
+      // Vérifier si la famille de produits existe
+      if (!familleProduit) {
+        return res.status(400).json({ error: "Famille de produit non trouvée" });
+      }
+
+      // Mettre à jour l'ID de la famille de produits
+      updates.id_famille_produit = familleProduit.id_famille_produit;
+    }
+
+    // Mettez à jour uniquement les champs spécifiés dans les mises à jour
+    await Products.update(updates, { where: { productId: productId } });
+    console.log(product)
+    return res.status(200).json({ msg: 'Product updated successfully' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to update product' });
+  }
+};
+
 
 
 
@@ -305,6 +344,7 @@ const increaseProductStock = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
   
 

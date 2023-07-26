@@ -1,6 +1,7 @@
 const Router = require('express')
 const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser } = require('../controllers/ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory } = require('../controllers/product_ctrl')
+const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct } = require('../controllers/stock_ctrl')
@@ -30,6 +31,11 @@ router.delete('/deleteProduct/:id', deleteProduct);
 router.put('/decreaseStock/:id', decreaseProductStock);
 router.put('/increaseStock/:id', increaseProductStock)
 router.get('/getProductsofOneCategory/:category', getProductsofOneCategory)
+
+//FAMILLES PRODUITS - CATEGORIES
+router.post('/addFamillyProduct', addFamillyProduct)
+router.get('/getAllFamillyProducts', getAllFamillyProducts)
+router.get('/getOneFamillyProduct/:id', getOneFamillyProduct)
 
 
 //STORES
