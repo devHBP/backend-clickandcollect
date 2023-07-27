@@ -4,6 +4,7 @@ const ProductsTest = require('../models/TestBDD/Products.js')
 const Products = require('../models/TestBDD/_Products.js')
 const OrdersProducts = require('../models/TestBDD/__orderproducts.js')
 const FamillyProducts = require('../models/TestBDD/_famille.js')
+const ProductDetail = require('../models/TestBDD/___productDetail.js')
 
 const db = require('../db/db.js')
 
@@ -77,6 +78,7 @@ const addProduct = async (req, res) => {
     console.log('product', product)
 
     const createdProduct = await Products.create(product);
+
     console.log('createdProduct', createdProduct)
 
     const productId = createdProduct.productId; // Récupérer l'ID du produit créé
@@ -90,7 +92,18 @@ const addProduct = async (req, res) => {
     console.log(createdProduct);
     console.log(productStock);
 
-    res.status(201).json({ msg: "produit créé", createdProduct });
+    //table produtDetails
+    let productDetails = {
+      productId: createdProduct.productId, 
+      descriptionProduit: req.body.descriptionProduit,
+      ingredients: req.body.ingredients,
+    };
+    console.log('req body', req.body)
+    console.log('productDetails', productDetails)
+    const createdProductDetails = await ProductDetail.create(productDetails);
+
+
+    res.status(201).json({ msg: "produit créé", createdProduct, createdProductDetails });
   } catch (error) {
     console.error('erreur', error);
     res.status(500).json({ error: "Internal server error" });
@@ -157,18 +170,45 @@ const updateProduct = async (req, res) => {
 
 
 //lister tous les produits
-const getAllProducts = (req, res) =>
-    {
-      Products.findAll({
-            attributes : {exclude: ['createdAt', 'updatedAt']}
-        })
-        .then((products) => {
-            res.status(200).json(products)
+// const getAllProducts = (req, res) =>
+//     {
+//       Products.findAll({
+//             attributes : {exclude: ['createdAt', 'updatedAt']}
+//         })
+//         .then((products) => {
+//             res.status(200).json(products)
             
-        })
-        .catch(error => res.status(500).json(error))
-    }
+//         })
+//         .catch(error => res.status(500).json(error))
+//     }
 
+//test productdetails
+    const getAllProducts = async (req, res) => {
+      try {
+        // Récupérer tous les produits
+        const products = await Products.findAll({
+          attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+    
+        // Récupérer tous les détails des produits
+        const productDetails = await ProductDetail.findAll();
+    
+        // Combiner les produits et leurs détails
+        const combined = products.map(product => {
+          const details = productDetails.find(detail => detail.productId === product.productId);
+          return {
+            ...product.dataValues,
+            descriptionProduit: details ? details.descriptionProduit : null,
+            ingredients: details ? details.ingredients : null,
+          };
+        });
+    
+        res.status(200).json(combined);
+      } catch (error) {
+        res.status(500).json(error);
+      }
+    };
+    
 //lister un produit par id
 // ?? User ?
 const getOneProduct =  ( req, res) => {
