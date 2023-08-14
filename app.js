@@ -6,10 +6,15 @@ const path = require('path')
 const auth = require("./middleware/auth");
 const WebSocket = require('ws')
 
+const bodyParser = require('body-parser');
+
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(routes)
+
+
 
 
 // Ici j'utilise un server Static pour les images (en local)
@@ -19,6 +24,12 @@ app.use('/Images', express.static(path.join(__dirname, './Images')));
 console.log('dirname', __dirname)
 // const chemin = path.join(__dirname, './Images')
 // console.log('test chemin',chemin )
+
+app.get('/resetPassword/:token', (req, res) => {
+  console.log("Route resetPassword appelée avec le token:", req.params.token);
+  res.sendFile(path.join(__dirname, './fonctions/resetpassword.html'));
+});
+
 
 db.sync()
     .then(
@@ -35,6 +46,9 @@ app.post("/welcome", auth, (req, res) => {
 const server = app.listen(8080, () => {
   console.log('connexion !!');
 });
+
+
+
 const wss = new WebSocket.Server({server})
 const { updateStatus, allOrders}  = require('./controllers/order_ctrl.js')
 

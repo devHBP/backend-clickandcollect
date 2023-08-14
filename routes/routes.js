@@ -1,12 +1,13 @@
 const Router = require('express')
 const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser } = require('../controllers/ctrl')
-const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory } = require('../controllers/product_ctrl')
+const { forgotPassword, resetPassword } = require('../controllers/pwd_ctrl')
+const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
-const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder  } = require('../controllers/order_ctrl')
+const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , productsWithFormuleForOrder } = require('../controllers/order_ctrl')
 const router = Router()
 
 
@@ -21,6 +22,10 @@ router.put('/updateRole/:id', updateRole)
 router.get('/verifyToken', verifyToken)
 router.patch('/modifyUser/:userId', modifyUser)
 
+//PASSWORD
+router.post('/forgotPassword', forgotPassword)
+router.post('/resetPassword/:token', resetPassword);
+
 //PRODUCTS
 router.post('/addProduct',uploadImage, addProduct)
 router.get('/getAllProducts',getAllProducts)
@@ -31,6 +36,7 @@ router.delete('/deleteProduct/:id', deleteProduct);
 router.put('/decreaseStock/:id', decreaseProductStock);
 router.put('/increaseStock/:id', increaseProductStock)
 router.get('/getProductsofOneCategory/:category', getProductsofOneCategory)
+router.get('/getFamillyOfProduct/:id', getFamillyOfProduct)
 
 //FAMILLES PRODUITS - CATEGORIES
 router.post('/addFamillyProduct', addFamillyProduct)
@@ -66,6 +72,8 @@ router.post('/updateOrder', updateOrder) //update paymentId if order paid
 router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
 router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 router.post('/cancelOrder', cancelOrder)
+router.get('/productsInFormule/:id/', productsWithFormuleForOrder);
+
 
 
 
