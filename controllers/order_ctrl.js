@@ -4,9 +4,12 @@ const Orders = require('../models/TestBDD/Orders')
 const TestPaymentsV2 = require('../models/TestBDD/__payments')
 const ProductsTest = require('../models/TestBDD/Products')
 const Products = require('../models/TestBDD/_Products')
-const OrderProducts = require('../models/TestBDD/OrderProducts.js')
-const Ordersproducts = require('../models/TestBDD/__orderproducts')
+//const OrderProducts = require('../models/TestBDD/OrderProducts.js')
+//const Ordersproducts = require('../models/TestBDD/__orderproducts')
+const TableOrderProduct = require('../models/TestBDD/___orderproducts')
 const StocksTest = require('../models/TestBDD/Stocks.js')
+const { Op } = require('sequelize');
+
 
 
 //creation commande (sans le paiement, par exemple pour prendre en compte le paiement sur place plus tard)
@@ -36,9 +39,23 @@ const createOrder = async (req, res) => {
         //   // etc.
         // ]
     } = req.body;
-
+  //  console.log(req.body)
     console.log('products', products)
     console.log('prix total', prix_total)
+
+    const aggregatedProducts = products.reduce((accumulator, currentProduct) => {
+      const existingProduct = accumulator.find(p => p.productId === currentProduct.productId);
+  
+      if (existingProduct) {
+        existingProduct.quantity += currentProduct.quantity;
+      } else {
+        accumulator.push({ ...currentProduct });
+      }
+  
+      return accumulator;
+    }, []);
+
+    //console.log('aggregatedProducts', aggregatedProducts)
     //mise en tableau
     //const productIds = productIdsString.split(",");
     //console.log('prod2', productIds)
@@ -52,16 +69,19 @@ const createOrder = async (req, res) => {
       // if (dateIsValid){
       //   console.log('date valide')
       // }
-
-      const dateIsValid = moment(date, 'YYYY-MM-DD', true).isValid();
-      if (!dateIsValid) {
-    return res.status(400).json({ message: 'La date fournie est invalide.' });
-    }
-
+    // console.log('test2')
+      // const dateIsValid = moment(date, 'YYYY-MM-DD', true).isValid();
+      // const dateIsValid = moment(date, 'DD/MM/YYYY', true).isValid();
+      //  console.log(date)
+      // if (!dateIsValid) {
+      //    console.log('invalide date')
+    // return res.status(400).json({ message: 'La date fournie est invalide.' });
+    // }
+    // console.log('test3')
     // Par défaut, le statut est "en attente" et paid est false
     const status = 'en attente';
     const paid = false;
-
+    // console.log('test1')
       const order = await Orders.create({
             firstname_client,
             lastname_client,
@@ -78,18 +98,26 @@ const createOrder = async (req, res) => {
             paymentId,
             promotionId,
             //productIds:productIdsString,
-            productIds: products.map(product => product.productId).join(","),
+            // productIds: products.map(product => product.productId).join(","),
+            productIds: aggregatedProducts.map(product => product.productId).join(","),
+
     
       });
+       console.log('order', order)
 
-      const orderProducts = products.map(product => ({
-        orderId: order.orderId,
-        productId: product.productId,
-        quantity: product.quantity
+
+      // const orderProducts = products.map(product => ({
+        const orderProducts = aggregatedProducts.map(product => ({
+          orderId: order.orderId,
+          productId: product.productId,
+          quantity: product.quantity,
+          offre: product.offre,
+          formule: product.formule,
+          category: product.category
       }));
-    console.log(orderProducts)
+     //console.log('orderProducts', orderProducts)
 
-    await Ordersproducts.bulkCreate(orderProducts);
+    await TableOrderProduct.bulkCreate(orderProducts);
 
     // Mettre à jour le stock des produits
     for (let product of products) {
@@ -271,7 +299,7 @@ const deleteOneOrder = async (req, res) => {
     }
 
     // Récupérer les produits de la commande
-    const orderProducts = await Ordersproducts.findAll({ where: { orderId: orderId } });
+    const orderProducts = await TableOrderProduct.findAll({ where: { orderId: orderId } });
 
     // Réintégrer les produits commandés dans le stock
     for (let orderProduct of orderProducts) {
@@ -354,7 +382,7 @@ const getOrderProducts = async (req, res) => {
       return res.status(404).json({ message: 'La commande spécifiée est introuvable.' });
     }
 
-    const orderProducts = await Ordersproducts.findAll({
+    const orderProducts = await TableOrderProduct.findAll({
       where: { orderId },
     });
 
@@ -390,7 +418,7 @@ const cancelOrder = async (req, res) => {
     }
 
     // Récupérer les produits de la commande
-    const orderProducts = await Ordersproducts.findAll({ where: { orderId: orderId } });
+    const orderProducts = await TableOrderProduct.findAll({ where: { orderId: orderId } });
 
     // Réintégrer les produits commandés dans le stock
     for (let orderProduct of orderProducts) {
@@ -417,8 +445,47 @@ const cancelOrder = async (req, res) => {
 };
 
 
+//trouver si produits presents dans la commande est pris dans une formule
+const productsWithFormuleForOrder = async (req, res) => {
+  try {
+      const orderId = req.params.id;
+      const order = await Orders.findOne({ where: { orderId: orderId }});
+
+      if (!order) {
+          return res.status(404).json({ error: 'No order found with the specified ID.' });
+      }
+
+      // Récupérez les produits de la commande qui ont un champ 'formule'
+      const products = await TableOrderProduct.findAll({
+          where: {
+              orderId: orderId,
+              formule: { [Op.ne]: null }
+          }
+      });
+
+      if (products.length === 0) {
+          return res.status(404).json({ error: 'No products with formule found for the specified order.' });
+      }
+
+      // Regrouper les produits par formule
+      const groupedByFormule = {};
+
+      for (const product of products) {
+          if (!groupedByFormule[product.formule]) {
+              groupedByFormule[product.formule] = [];
+          }
+          groupedByFormule[product.formule].push(product);
+      }
+
+      res.json(groupedByFormule);
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while trying to fetch the products.' });
+  }
+}
 
 
 
 
-  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder }
+  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, productsWithFormuleForOrder }

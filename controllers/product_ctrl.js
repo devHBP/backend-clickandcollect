@@ -2,7 +2,8 @@
 const StocksTest = require('../models/TestBDD/Stocks.js')
 const ProductsTest = require('../models/TestBDD/Products.js')
 const Products = require('../models/TestBDD/_Products.js')
-const OrdersProducts = require('../models/TestBDD/__orderproducts.js')
+//const OrdersProducts = require('../models/TestBDD/__orderproducts.js')
+const TableOrderProduct = require('../models/TestBDD/___orderproducts')
 const FamillyProducts = require('../models/TestBDD/_famille.js')
 const ProductDetail = require('../models/TestBDD/___productDetail.js')
 
@@ -74,6 +75,8 @@ const addProduct = async (req, res) => {
       disponibilite: req.body.disponibilite,
       stock: req.body.stock,
       id_famille_produit: familleProduit.id_famille_produit, // Utiliser l'ID de la famille de produits trouvée
+      offre: req.body.offre,
+      reference_fournisseur: req.body.reference_fournisseur
     };
     console.log('product', product)
 
@@ -210,11 +213,8 @@ const updateProduct = async (req, res) => {
     };
     
 //lister un produit par id
-// ?? User ?
 const getOneProduct =  ( req, res) => {
     const { id } = req.params
-    //findbyprimarykey
-    // User.findByPk
     Products.findByPk(id)
         .then( product => {
             if(!product) return res.status(404).json({msg:"product not found"})
@@ -308,7 +308,7 @@ const deleteProduct = async (req, res) => {
 //       }
   
 //       // Supprimer les associations avec les commandes
-//       await OrdersProducts.destroy({ where: { productId: productId } });
+//       await TableOrderProduct.destroy({ where: { productId: productId } });
   
 //       // Supprimer le stock associé
 //       const stock = await StocksTest.findOne({ where: { productId: productId } });
@@ -385,8 +385,25 @@ const increaseProductStock = async (req, res) => {
   }
 };
 
+//connaitre la famille - categorie 
+const getFamillyOfProduct = (req, res) => {
+  const { id } = req.params;
+  Products.findByPk(id, {
+    attributes: ['id_famille_produit'],
+    include: [{
+        model: FamillyProducts,
+        attributes: ['nom_famille_produit']
+    }]
+})
+.then(product => {
+    if (!product) return res.status(404).json({ msg: "product not found" });
+    // The response will contain id_famille_produit and the associated nom_famille_produit.
+    res.status(200).json(product);
+})
+      .catch(error => res.status(500).json(error));
+}
 
   
 
 module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage,
-updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory}
+updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct}
