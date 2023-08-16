@@ -5,37 +5,49 @@ const stripe = require('stripe')(
 
 const createSession = async (req, res) => {
    
-    console.log('req', req.body.orderInfo.cartItems)
-    const lineItems = req.body.orderInfo.cartItems.map((item) => {
-      const { libelle, prix, qty } = item;
+    console.log('req', req.body.orderInfo.cart)
+    const lineItems = req.body.orderInfo.cart.map((item) => {
+      const { libelle, prix, qty, prix_unitaire } = item;
       console.log('item', item)
       console.log('libelle', libelle)
-      console.log('prix_unitaire', prix)
+      console.log('prix_unitaire', prix || prix_unitaire)
       return {
         price_data: {
           currency: 'eur',
           product_data: {
             name: libelle,
           },
-          unit_amount: Math.round(parseFloat(prix) * 100),
+          unit_amount: Math.round(parseFloat(prix || prix_unitaire) * 100),
           //unit_amount: parseFloat(prix_unitaire) * 100, // Assurez-vous de convertir le prix en centimes
         },
         quantity: qty,
       };
     });
     console.log('lineItems', lineItems)
-  
+
+    // adresses pour ios ou android
+    let success_url = 'http://localhost:8080/success';
+    let cancel_url = 'http://localhost:8080/cancel';
+    
+    if (req.body.platform === 'android' && req.body.isDev) {
+        success_url = 'http://10.0.2.2:8080/success';
+        cancel_url = 'http://10.0.2.2:8080/cancel';
+    } else if (req.body.platform === 'ios' && req.body.isDev) {
+        success_url = 'http://localhost:8080/success-ios-dev';
+        cancel_url = 'http://localhost:8080/cancel-ios-dev';
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
       //adresse URL deepLinkg
-      success_url: 'http://localhost:8080/success',
-      cancel_url: 'http://localhost:8080/cancel',
+      success_url: success_url,
+      cancel_url: cancel_url,
     });
      //console.log('response',res)
     const sessionId = session.id;
-    console.log("sessionId", sessionId)
+    //console.log("sessionId", sessionId)
     //  console.log(res)
       res.json({ id: session.id, session: session.url, lineItems });
       
