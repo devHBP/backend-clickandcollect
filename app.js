@@ -5,6 +5,8 @@ var cors = require('cors')
 const path = require('path')
 const auth = require("./middleware/auth");
 const WebSocket = require('ws')
+const NODEJS_PORT = process.env.NODEJS_PORT;
+const NODEJS_URL = process.env.NODEJS_URL;
 
 const bodyParser = require('body-parser');
 
@@ -15,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(routes)
 
 
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Ici j'utilise un server Static pour les images (en local)
@@ -26,7 +29,7 @@ console.log('dirname', __dirname)
 // console.log('test chemin',chemin )
 
 app.get('/resetPassword/:token', (req, res) => {
-  console.log("Route resetPassword appelée avec le token:", req.params.token);
+  //console.log("Route resetPassword appelée avec le token:", req.params.token);
   res.sendFile(path.join(__dirname, './fonctions/resetpassword.html'));
 });
 
@@ -43,11 +46,19 @@ app.post("/welcome", auth, (req, res) => {
 });
 
 //app.listen(8080, () => console.log('connexion !!'))
-const server = app.listen(8080, () => {
-  console.log('connexion !!');
+
+// let NODEJS_URL = "localhost";
+// let NODEJS_PORT;
+
+// if (process.env.NODE_ENV === 'preprod') {
+//   NODEJS_PORT = "8090"
+// } else {
+//   NODEJS_PORT = "8080"
+// }
+
+const server = app.listen(NODEJS_PORT, () => {
+  console.log(`Lancement serveur ${NODEJS_URL}:${NODEJS_PORT}`);
 });
-
-
 
 const wss = new WebSocket.Server({server})
 const { updateStatus, allOrders}  = require('./controllers/order_ctrl.js')

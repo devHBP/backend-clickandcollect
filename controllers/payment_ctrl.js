@@ -1,7 +1,7 @@
 const TestPaymentsV2 = require('../models/TestBDD/__payments')
 
 const stripe = require('stripe')(
-    'sk_test_51NKoFqGnFAjiWNhK8ZUaazl2L6zB7JLsBolTdPnyNo0VrZxsVsKi3997L0WXepSzhCigzdiOluNTq9xUo929Q7KQ00t9aM5khL')
+    '')
 
 const createSession = async (req, res) => {
    
