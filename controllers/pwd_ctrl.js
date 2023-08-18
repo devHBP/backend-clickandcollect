@@ -6,7 +6,8 @@ const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET;
-
+const NODEJS_URL = process.env.NODEJS_URL;
+const NODEJS_PORT = process.env.NODEJS_PORT;
 
 const forgotPassword = async (req, res) => {
     try {
@@ -14,7 +15,7 @@ const forgotPassword = async (req, res) => {
 
         // 1. Vérifiez si l'utilisateur existe
         const user = await Users.findOne({ where: { email: userEmail } });
-        
+        console.log(user)
         if (!user) {
             return res.status(404).send('Aucun utilisateur trouvé avec cette adresse e-mail.');
         }
@@ -24,6 +25,19 @@ const forgotPassword = async (req, res) => {
         
         // 3. Envoyer l'e-mail avec SendGrid
         sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+
+        // const msg = {
+        //     to: userEmail,
+        //     from: 'resetpwdapp@gmail.com',
+        //     subject: 'Réinitialisation de votre mot de passe',
+        //     html: `
+        //         <p>Vous avez demandé la réinitialisation du mot de passe pour votre compte.</p>
+        //         <p>Veuillez cliquer sur le lien suivant ou copiez-le dans votre navigateur pour compléter le processus :</p>
+        //         <br>
+        //         <a href="http://${NODEJS_URL}:${NODEJS_PORT}/resetPassword/${token}">Réinitialiser le mot de passe</a>
+        //         <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail et votre mot de passe restera inchangé.</p>
+        //     `
+        // };
         const msg = {
             to: userEmail,
             from: 'resetpwdapp@gmail.com',
@@ -32,7 +46,7 @@ const forgotPassword = async (req, res) => {
                 <p>Vous avez demandé la réinitialisation du mot de passe pour votre compte.</p>
                 <p>Veuillez cliquer sur le lien suivant ou copiez-le dans votre navigateur pour compléter le processus :</p>
                 <br>
-                <a href="http://localhost:8080/resetPassword/${token}">Réinitialiser le mot de passe</a>
+                <a href="http://10.0.2.2:8080/resetPassword/${token}">Réinitialiser le mot de passe</a>
                 <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail et votre mot de passe restera inchangé.</p>
             `
         };
@@ -48,7 +62,7 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
 
-    console.log('req.body', req.body);
+    //console.log('req.body', req.body);
 
     try {
         const token = req.params.token;
@@ -75,8 +89,9 @@ const resetPassword = async (req, res) => {
         const hashedPassword = bcrypt.hashSync(req.body.newPassword, 10);
         user.password = hashedPassword;
         await user.save();
-
-        return res.status(200).send("Mot de passe mis à jour avec succès");
+        //console.log('redirection')
+        // return res.status(200).send("Mot de passe mis à jour avec succès");
+        return res.redirect('/redirect.html');
     } catch (error) {
         console.log(error);
         return res.status(500).send("Erreur du serveur");
