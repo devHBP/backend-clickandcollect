@@ -50,7 +50,7 @@ TestStoresV2.beforeValidate((store, options) => {
     return TestStoresV2.max('storeId')
       .then((maxId) => {
         lastStoreId = maxId || 0;
-        const reference_magasin = `pdj_00${lastStoreId + 1}`;
+        const reference_magasin = `magasin_00${lastStoreId + 1}`;
         store.reference_magasin = reference_magasin;
       })
       .catch((error) => {
