@@ -39,15 +39,18 @@ const signup = (req, res) => {
   
     const { error } = userValidation(body);
     if (error) {
+      //console.log(' erreur de validation')
       return res.status(400).json({ message: "Validation error", error: error.details });
     }
-  
+    //console.log('pas d erreur de validation')
     bcrypt.hash(req.body.password, 12, (err, passwordHash) => {
+      //console.log(passwordHash)
       if (err) {
         return res.status(500).json({ message: "Could not hash the password", error: err });
       }
   
       const userData = { ...body, password: passwordHash };
+      //console.log('userData:', userData)
       if (req.body.storeId) {
         userData.storeId = req.body.storeId;
       }
@@ -55,7 +58,6 @@ const signup = (req, res) => {
       Users.create(userData)
         .then((user) => {
           const userId = user.userId;
-           console.log('verif id', userData);
           res.status(201).json({ id: userId, message: "User created" });
           
         })
@@ -80,7 +82,7 @@ const login = (req, res) => {
                     if (err){
                         return res.status(202).json({ msg : "error while checkin user password"})
                     } else if (compaRes) {
-                        const token = jwt.sign({email: req.body.email}, 'secret', { expiresIn: '1h'})
+                        const token = jwt.sign({email: req.body.email}, 'secret', { expiresIn: '10d'})
                         //save user token
                        
                         dbUser.token = token
