@@ -5,19 +5,25 @@ const stripe = require('stripe')(
 
 const createSession = async (req, res) => {
    
+    const role = req.body.orderInfo.userRole;
     console.log('req', req.body.orderInfo.cart)
     const lineItems = req.body.orderInfo.cart.map((item) => {
       const { libelle, prix, qty, prix_unitaire } = item;
+      let adjustedPrice = prix || prix_unitaire;
       console.log('item', item)
       console.log('libelle', libelle)
-      console.log('prix_unitaire', prix || prix_unitaire)
+      console.log('prix', adjustedPrice)
+
+      if (role === 'SUNcollaborateur') {
+        adjustedPrice *= 0.80;
+     }
       return {
         price_data: {
           currency: 'eur',
           product_data: {
             name: libelle,
           },
-          unit_amount: Math.round(parseFloat(prix || prix_unitaire) * 100),
+          unit_amount: Math.round(parseFloat(adjustedPrice * 100)),
           //unit_amount: parseFloat(prix_unitaire) * 100, // Assurez-vous de convertir le prix en centimes
         },
         quantity: qty,
@@ -33,8 +39,8 @@ const createSession = async (req, res) => {
         success_url = 'http://10.0.2.2:8080/success';
         cancel_url = 'http://10.0.2.2:8080/cancel';
     } else if (req.body.platform === 'ios' && req.body.isDev) {
-        success_url = 'http://localhost:8080/success-ios-dev';
-        cancel_url = 'http://localhost:8080/cancel-ios-dev';
+        success_url = 'http://localhost:8080/success';
+        cancel_url = 'http://localhost:8080/cancel';
     }
 
     const session = await stripe.checkout.sessions.create({

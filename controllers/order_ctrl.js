@@ -17,6 +17,7 @@ const createOrder = async (req, res) => {
     try {
       // Récupérer les données du corps de la requête
       const {
+        userRole,
         firstname_client,
         lastname_client,
         prix_total,
@@ -39,7 +40,7 @@ const createOrder = async (req, res) => {
         //   // etc.
         // ]
     } = req.body;
-  //  console.log(req.body)
+    console.log(req.body)
     console.log('products', products)
     console.log('prix total', prix_total)
 
@@ -83,6 +84,7 @@ const createOrder = async (req, res) => {
     const paid = false;
     // console.log('test1')
       const order = await Orders.create({
+            userRole,
             firstname_client,
             lastname_client,
             prix_total,
