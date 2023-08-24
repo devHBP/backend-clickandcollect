@@ -33,6 +33,12 @@ app.get('/resetPassword/:token', (req, res) => {
   res.sendFile(path.join(__dirname, './fonctions/resetpassword.html'));
 });
 
+//telechargement du catalogue
+app.get('/download', (req, res) => {
+  const file = path.resolve(__dirname, './public/Catalogue.pdf');
+  res.download(file);  
+});
+
 
 db.sync()
     .then(
