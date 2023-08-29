@@ -10,8 +10,10 @@ const userValidation = ( body) => {
         cp: Joi.number().integer().min(10000).max(99999).required(),
         genre: Joi.string().valid('femme', 'homme', 'nbinaire').required(),
         date_naissance: Joi.date().max('now').message("La date de naissance ne peut pas être dans le futur").allow(null),
-        idSUN: Joi.number().integer().min(10000).max(99999).required(),
-    })
+        idSUN: Joi.alternatives().try(
+            Joi.string().allow('').optional(),
+            Joi.string().regex(/^[0-9]{5}$/).optional()
+        ).label('idSun')        })
     return userSchema.validate(body)
 }
 
