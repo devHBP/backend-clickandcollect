@@ -39,7 +39,8 @@ const createSession = async (req, res) => {
         success_url = 'http://10.0.2.2:8080/success';
         cancel_url = 'http://10.0.2.2:8080/cancel';
     } else if (req.body.platform === 'ios' && req.body.isDev) {
-        success_url = 'http://localhost:8080/success';
+      //test sur iphone
+        success_url = 'http://192.168.1.16:8080/success';
         cancel_url = 'http://localhost:8080/cancel';
     }
 

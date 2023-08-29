@@ -35,33 +35,42 @@ const db = require('../db/db')
 
 const signup = (req, res) => {
     const { body } = req;
-    console.log(req.body);
+    console.log('req',req.body);
   
     const { error } = userValidation(body);
+
     if (error) {
-      //console.log(' erreur de validation')
+      console.log(' erreur de validation')
       return res.status(400).json({ message: "Validation error", error: error.details });
     }
-    //console.log('pas d erreur de validation')
+    console.log('pas d erreur de validation')
     bcrypt.hash(req.body.password, 12, (err, passwordHash) => {
-      //console.log(passwordHash)
+      console.log(passwordHash)
       if (err) {
         return res.status(500).json({ message: "Could not hash the password", error: err });
       }
   
       const userData = { ...body, password: passwordHash };
-      //console.log('userData:', userData)
+      console.log('userData:', userData)
       if (req.body.storeId) {
         userData.storeId = req.body.storeId;
       }
     
+      if (req.body.idSUN === '') {
+        userData.idSUN = null;
+      } else {
+        userData.idSUN = req.body.idSUN;
+      }
+      //console.log('idSun', userData.idSUN)
       Users.create(userData)
         .then((user) => {
+
           const userId = user.userId;
-          res.status(201).json({ id: userId, message: "User created" });
-          
+          res.status(201).json({ id: userId,  message: "User created" });
+
         })
         .catch((error) => {
+          console.log('erreur catch', error)
           res.status(500).json({ message: "Error creating user", error });
         });
     });

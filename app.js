@@ -18,7 +18,7 @@ app.use(routes)
 
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+console.log(path.join(__dirname, 'public'))
 
 // Ici j'utilise un server Static pour les images (en local)
 //a voir par la suite en réel avec peut etre une dropbox ?
