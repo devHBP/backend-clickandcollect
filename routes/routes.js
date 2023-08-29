@@ -1,13 +1,14 @@
 const Router = require('express')
 const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser } = require('../controllers/ctrl')
 const { forgotPassword, resetPassword } = require('../controllers/pwd_ctrl')
-const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct } = require('../controllers/product_ctrl')
+const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct, createFormule, getAllFormules } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
-const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , productsWithFormuleForOrder } = require('../controllers/order_ctrl')
+const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , 
+    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews } = require('../controllers/order_ctrl')
 const router = Router()
 
 
@@ -30,13 +31,22 @@ router.post('/resetPassword/:token', resetPassword);
 router.post('/addProduct',uploadImage, addProduct)
 router.get('/getAllProducts',getAllProducts)
 router.get('/getOneProduct/:id', getOneProduct)
-router.put('/updateProduct/:id', updateProduct);
+// router.put('/updateProduct/:id', updateProduct);
+router.put('/updateProduct/:id', uploadImage, updateProduct);
 router.patch('/updateProduct/:id', updateProduct);
 router.delete('/deleteProduct/:id', deleteProduct);
 router.put('/decreaseStock/:id', decreaseProductStock);
 router.put('/increaseStock/:id', increaseProductStock)
 router.get('/getProductsofOneCategory/:category', getProductsofOneCategory)
 router.get('/getFamillyOfProduct/:id', getFamillyOfProduct)
+
+//REVIEWS
+router.post('/reviews', createReview)
+router.get('/getAllReviews', getAllReviews)
+
+//Formules
+router.post('/formules', createFormule)
+router.get('/getAllFormules', getAllFormules)
 
 //FAMILLES PRODUITS - CATEGORIES
 router.post('/addFamillyProduct', addFamillyProduct)
@@ -73,8 +83,7 @@ router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
 router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 router.post('/cancelOrder', cancelOrder)
 router.get('/productsInFormule/:id/', productsWithFormuleForOrder);
-
-
+router.get('/ordersOfUserWithProducts/:userId', ordersOfUserWithProducts);
 
 
 //router.post('/createOrderAndPayment')

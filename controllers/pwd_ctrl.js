@@ -46,10 +46,13 @@ const forgotPassword = async (req, res) => {
                 <p>Vous avez demandé la réinitialisation du mot de passe pour votre compte.</p>
                 <p>Veuillez cliquer sur le lien suivant ou copiez-le dans votre navigateur pour compléter le processus :</p>
                 <br>
-                <a href="http://10.0.2.2:8080/resetPassword/${token}">Réinitialiser le mot de passe</a>
+                <a href="http://127.0.0.1:8080/resetPassword/${token}">Réinitialiser le mot de passe</a>
                 <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail et votre mot de passe restera inchangé.</p>
             `
         };
+        //Attention ici configuré pour android : 10.0.2.2
+        // <a href="http://10.0.2.2:8080/resetPassword/${token}">Réinitialiser le mot de passe</a>
+
         
         await sgMail.send(msg);
         return res.status(200).send("E-mail envoyé avec succès");

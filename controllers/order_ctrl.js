@@ -8,6 +8,8 @@ const Products = require('../models/TestBDD/_Products')
 //const Ordersproducts = require('../models/TestBDD/__orderproducts')
 const TableOrderProduct = require('../models/TestBDD/___orderproducts')
 const StocksTest = require('../models/TestBDD/Stocks.js')
+const Reviews = require('../models/TestBDD/_reviews'); // ajustez le chemin selon votre structure de projet
+
 const { Op } = require('sequelize');
 
 
@@ -405,6 +407,48 @@ const getOrderProducts = async (req, res) => {
   }
 }
 
+//test requete order
+const ordersOfUserWithProducts = async (req, res) => {
+  try {
+      const userId = req.params.userId;
+      const orders = await Orders.findAll({ where: { userId: userId }});
+
+      if (orders.length === 0) {
+          return res.json([]);
+      }
+
+      const ordersWithProducts = await Promise.all(
+          orders.map(async (order) => {
+              const orderProducts = await TableOrderProduct.findAll({
+                  where: { orderId: order.orderId },
+              });
+
+              const products = await Promise.all(
+                  orderProducts.map(async (orderProduct) => {
+                      const product = await Products.findByPk(orderProduct.productId);
+                      return {
+                          ...product.get(),
+                          quantity: orderProduct.quantity,
+                      };
+                  })
+              );
+
+              return {
+                  ...order.get(),
+                  products,
+              };
+          })
+      );
+
+      res.json(ordersWithProducts);
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while trying to fetch the orders and their products.' });
+  }
+}
+
+
 // Annuler une commande
 const cancelOrder = async (req, res) => {
   try {
@@ -487,7 +531,28 @@ const productsWithFormuleForOrder = async (req, res) => {
   }
 }
 
+//reviews d'une commande
+const createReview = async (req, res) => {
+  try {
+    const reviewData = req.body;
+    const review = await Reviews.create(reviewData);
+    console.log('review', reviewData)
+    res.status(201).json({ message: 'Review enregistrée avec succès.', review });
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors de l'enregistrement de l'avis." });
+  }
+}
+//toutes le sreviews
+const getAllReviews = (req, res) => {
+  Reviews.findAll({
+        attributes : {exclude: ['createdAt', "updatedAt"]}
+    })
+    .then((review) => {
+        res.status(200).json(review)
+    })
+    .catch(error => res.statut(500).json(error))
+}
 
 
-
-  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, productsWithFormuleForOrder }
+  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, 
+    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews}

@@ -6,8 +6,10 @@ const Products = require('../models/TestBDD/_Products.js')
 const TableOrderProduct = require('../models/TestBDD/___orderproducts')
 const FamillyProducts = require('../models/TestBDD/_famille.js')
 const ProductDetail = require('../models/TestBDD/___productDetail.js')
-
+const Formule = require('../models/TestBDD/_formules.js')
 const db = require('../db/db.js')
+const fs = require('fs');
+
 
 //import multer
 const multer = require('multer')
@@ -136,39 +138,52 @@ const addProduct = async (req, res) => {
 //     }
 //   };
   //modifier un produit - verif categorie / nom_famille_produit
-const updateProduct = async (req, res) => {
-  const productId = req.params.id;
-  const updates = req.body;
-
-  try {
-    const product = await Products.findOne({ where: { productId: productId } });
-
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-
-    // Si une nouvelle catégorie est spécifiée, vérifiez qu'elle correspond à la famille de produits
-    if (updates.categorie) {
-      const familleProduit = await FamillyProducts.findOne({ where: { nom_famille_produit: updates.categorie } });
-
-      // Vérifier si la famille de produits existe
-      if (!familleProduit) {
-        return res.status(400).json({ error: "Famille de produit non trouvée" });
+  const updateProduct = async (req, res) => {
+    const productId = req.params.id;
+    const updates = req.body;
+  
+    try {
+      const product = await Products.findOne({ where: { productId: productId } });
+  
+      if (!product) {
+        return res.status(404).json({ error: 'Product not found' });
       }
-
-      // Mettre à jour l'ID de la famille de produits
-      updates.id_famille_produit = familleProduit.id_famille_produit;
+      
+      // Vérification du téléchargement d'une nouvelle image
+      if (req.file) {
+        // Si une ancienne image existe et est présente sur le disque, la supprimer
+        if (product.image && fs.existsSync(product.image)) {
+          fs.unlinkSync(product.image);
+          console.log('Ancienne image supprimée');
+        }
+  
+        // Ajout du nouveau chemin de l'image au produit
+        product.image = req.file.path;
+      }
+  
+      // Si une nouvelle catégorie est spécifiée, vérifiez qu'elle correspond à la famille de produits
+      if (updates.categorie) {
+        const familleProduit = await FamillyProducts.findOne({ where: { nom_famille_produit: updates.categorie } });
+  
+        // Vérifier si la famille de produits existe
+        if (!familleProduit) {
+          return res.status(400).json({ error: "Famille de produit non trouvée" });
+        }
+  
+        // Mettre à jour l'ID de la famille de produits
+        updates.id_famille_produit = familleProduit.id_famille_produit;
+      }
+  
+      // Mettez à jour uniquement les champs spécifiés dans les mises à jour
+      await Products.update(updates, { where: { productId: productId } });
+      await product.save();
+  
+      return res.status(200).json({ msg: 'Product updated successfully' });
+    } catch (error) {
+      return res.status(500).json({ error: 'Failed to update product' });
     }
-
-    // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-    await Products.update(updates, { where: { productId: productId } });
-    console.log(product)
-    return res.status(200).json({ msg: 'Product updated successfully' });
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to update product' });
-  }
-};
-
+  };
+  
 
 
 
@@ -404,6 +419,28 @@ const getFamillyOfProduct = (req, res) => {
 }
 
   
+//creation formule
+const createFormule = async (req, res) => {
+  try {
+    const formuleData = req.body;
+    const formule = await Formule.create(formuleData);
+    console.log('review', formuleData)
+    res.status(201).json({ message: 'Formule enregistrée avec succès.', formule });
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors de la création de la Formule" });
+  }
+}
+//toutes les formules
+const getAllFormules = (req, res) => {
+  Formule.findAll({
+        attributes : {exclude: ['createdAt', "updatedAt"]}
+    })
+    .then((formule) => {
+        res.status(200).json(formule)
+    })
+    .catch(error => res.statut(500).json(error))
+}
+
 
 module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage,
-updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct}
+updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct, createFormule, getAllFormules}
