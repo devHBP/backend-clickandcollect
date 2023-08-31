@@ -1,4 +1,4 @@
-const StocksTest = require('../models/TestBDD/Stocks')
+const StocksTest = require('../models/BDD/Stocks')
 const { Op } = require("sequelize");
 
 //lister tous les stocks

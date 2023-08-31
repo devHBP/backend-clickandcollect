@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize')
 const db = require('../../db/db')
-// const TestOrder = require('./testOrder')
 
 const TestSlot = db.define(
     'TestSlot',

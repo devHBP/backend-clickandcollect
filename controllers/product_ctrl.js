@@ -1,12 +1,10 @@
 //appel du model
-const StocksTest = require('../models/TestBDD/Stocks.js')
-const ProductsTest = require('../models/TestBDD/Products.js')
-const Products = require('../models/TestBDD/_Products.js')
-//const OrdersProducts = require('../models/TestBDD/__orderproducts.js')
-const TableOrderProduct = require('../models/TestBDD/___orderproducts')
-const FamillyProducts = require('../models/TestBDD/_famille.js')
-const ProductDetail = require('../models/TestBDD/___productDetail.js')
-const Formule = require('../models/TestBDD/_formules.js')
+const StocksTest = require('../models/BDD/Stocks.js')
+const Products = require('../models/BDD/Products.js')
+const TableOrderProduct = require('../models/BDD/Orderproducts.js')
+const FamillyProducts = require('../models/BDD/Familles.js')
+const ProductDetail = require('../models/BDD/ProductDetails.js')
+const Formule = require('../models/BDD/Formules.js')
 const db = require('../db/db.js')
 const fs = require('fs');
 

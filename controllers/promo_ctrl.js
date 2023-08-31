@@ -1,4 +1,4 @@
-const TestPromotions = require('../models/TestBDD/_promotions')
+const TestPromotions = require('../models/BDD/Promotions')
 
 const addPromo = async (req, res) => {
   try {

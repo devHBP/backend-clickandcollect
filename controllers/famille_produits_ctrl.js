@@ -1,4 +1,4 @@
-const FamillyProducts = require('../models/TestBDD/_famille')
+const FamillyProducts = require('../models/BDD/Familles')
 
 const addFamillyProduct = async (req, res) => {
     try {

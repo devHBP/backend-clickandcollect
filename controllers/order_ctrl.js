@@ -1,14 +1,11 @@
 const moment = require('moment');
 const TestOrdersV6 = require('../models/TestBDD/_______orders')
-const Orders = require('../models/TestBDD/Orders')
-const TestPaymentsV2 = require('../models/TestBDD/__payments')
-const ProductsTest = require('../models/TestBDD/Products')
-const Products = require('../models/TestBDD/_Products')
-//const OrderProducts = require('../models/TestBDD/OrderProducts.js')
-//const Ordersproducts = require('../models/TestBDD/__orderproducts')
-const TableOrderProduct = require('../models/TestBDD/___orderproducts')
-const StocksTest = require('../models/TestBDD/Stocks.js')
-const Reviews = require('../models/TestBDD/_reviews'); // ajustez le chemin selon votre structure de projet
+const Orders = require('../models/BDD/Orders')
+const TestPaymentsV2 = require('../models/BDD/Payments')
+const Products = require('../models/BDD/Products')
+const TableOrderProduct = require('../models/BDD/Orderproducts')
+const StocksTest = require('../models/BDD/Stocks.js')
+const Reviews = require('../models/BDD/Reviews'); // ajustez le chemin selon votre structure de projet
 
 const { Op } = require('sequelize');
 
@@ -58,10 +55,9 @@ const createOrder = async (req, res) => {
       return accumulator;
     }, []);
 
-    //console.log('aggregatedProducts', aggregatedProducts)
     //mise en tableau
     //const productIds = productIdsString.split(",");
-    //console.log('prod2', productIds)
+
 
       // Validation de la date avec moment
       // const dateIsValid = moment(date, 'YYYY-MM-DD HH:mm:ss', true).isValid();
@@ -80,11 +76,10 @@ const createOrder = async (req, res) => {
       //    console.log('invalide date')
     // return res.status(400).json({ message: 'La date fournie est invalide.' });
     // }
-    // console.log('test3')
     // Par défaut, le statut est "en attente" et paid est false
     const status = 'en attente';
     const paid = false;
-    // console.log('test1')
+
       const order = await Orders.create({
             userRole,
             firstname_client,
@@ -107,8 +102,7 @@ const createOrder = async (req, res) => {
 
     
       });
-       console.log('order', order)
-
+       //console.log('order', order)
 
       // const orderProducts = products.map(product => ({
         const orderProducts = aggregatedProducts.map(product => ({
@@ -196,13 +190,12 @@ const createOrder = async (req, res) => {
 //         res.status(500).json({ message: 'Une erreur est survenue lors de la création de la commande et du paiement' });
 //     }
 // };
+
   //modification du status de la commande
   //si status= livrée, delivery=true
   const updateStatusOrder = async (req, res) => {
     const { orderId } = req.params;
     const { status } = req.body;
-    // console.log('orderId', orderId)
-    // console.log('status', status)
   
     if (!status) {
       return res.status(400).json({ error: 'You must provide a status to update.' });
@@ -291,6 +284,7 @@ const createOrder = async (req, res) => {
   //     res.status(500).json({ error: 'An error occurred while trying to delete the order.' });
   //   }
   // }
+  
 //test suppression commande - stock
 // Suppression d'une commande
 const deleteOneOrder = async (req, res) => {

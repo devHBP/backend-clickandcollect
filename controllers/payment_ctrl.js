@@ -1,64 +1,126 @@
-const TestPaymentsV2 = require('../models/TestBDD/__payments')
+const TestPaymentsV2 = require('../models/BDD/Payments')
+require('dotenv').config();
 
-const stripe = require('stripe')(
-    '')
+
+const stripe = require('stripe')(process.env.STRIPE_KEY_PRIVATE)
+
+// const createSession = async (req, res) => {
+   
+//     const role = req.body.orderInfo.userRole;
+//     console.log('req', req.body.orderInfo.cart)
+//     const lineItems = req.body.orderInfo.cart.map((item) => {
+//       const { libelle, prix, qty, prix_unitaire } = item;
+//       let adjustedPrice = prix || prix_unitaire;
+//       console.log('item', item)
+//       console.log('libelle', libelle)
+//       console.log('prix', adjustedPrice)
+
+//       if (role === 'SUNcollaborateur') {
+//         adjustedPrice *= 0.80;
+//      }
+//       return {
+//         price_data: {
+//           currency: 'eur',
+//           product_data: {
+//             name: libelle,
+//           },
+//           unit_amount: Math.round(parseFloat(adjustedPrice * 100)),
+//           //unit_amount: parseFloat(prix_unitaire) * 100, // Assurez-vous de convertir le prix en centimes
+//         },
+//         quantity: qty,
+//       };
+//     });
+//     console.log('lineItems', lineItems)
+
+//     // adresses pour ios ou android
+//     let success_url = 'http://localhost:8080/success';
+//     let cancel_url = 'http://localhost:8080/cancel';
+    
+//     if (req.body.platform === 'android' && req.body.isDev) {
+//         success_url = 'http://10.0.2.2:8080/success';
+//         cancel_url = 'http://10.0.2.2:8080/cancel';
+//     } else if (req.body.platform === 'ios' && req.body.isDev) {
+//       //test sur iphone
+//         success_url = 'http://192.168.1.16:8080/success';
+//         cancel_url = 'http://localhost:8080/cancel';
+//     }
+
+//     const session = await stripe.checkout.sessions.create({
+//       payment_method_types: ['card'],
+//       line_items: lineItems,
+//       mode: 'payment',
+//       //adresse URL deepLinkg
+//       success_url: success_url,
+//       cancel_url: cancel_url,
+//     });
+//      //console.log('response',res)
+//     const sessionId = session.id;
+//     //console.log("sessionId", sessionId)
+//     //  console.log(res)
+//       res.json({ id: session.id, session: session.url, lineItems });
+      
+// }
 
 const createSession = async (req, res) => {
-   
-    const role = req.body.orderInfo.userRole;
-    console.log('req', req.body.orderInfo.cart)
-    const lineItems = req.body.orderInfo.cart.map((item) => {
-      const { libelle, prix, qty, prix_unitaire } = item;
-      let adjustedPrice = prix || prix_unitaire;
-      console.log('item', item)
-      console.log('libelle', libelle)
-      console.log('prix', adjustedPrice)
+  try {
+      // Valider les entrées
+      if (!req.body.orderInfo || !req.body.orderInfo.cart) {
+          return res.status(400).json({ error: "Informations de commande manquantes." });
+      }
 
-      if (role === 'SUNcollaborateur') {
-        adjustedPrice *= 0.80;
-     }
-      return {
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: libelle,
-          },
-          unit_amount: Math.round(parseFloat(adjustedPrice * 100)),
-          //unit_amount: parseFloat(prix_unitaire) * 100, // Assurez-vous de convertir le prix en centimes
-        },
-        quantity: qty,
-      };
-    });
-    console.log('lineItems', lineItems)
+      const role = req.body.orderInfo.userRole;
+      console.log('req', req.body.orderInfo.cart);
+      const lineItems = req.body.orderInfo.cart.map((item) => {
+          const { libelle, prix, qty, prix_unitaire } = item;
+          let adjustedPrice = prix || prix_unitaire;
+          console.log('item', item);
+          console.log('libelle', libelle);
+          console.log('prix', adjustedPrice);
 
-    // adresses pour ios ou android
-    let success_url = 'http://localhost:8080/success';
-    let cancel_url = 'http://localhost:8080/cancel';
-    
-    if (req.body.platform === 'android' && req.body.isDev) {
-        success_url = 'http://10.0.2.2:8080/success';
-        cancel_url = 'http://10.0.2.2:8080/cancel';
-    } else if (req.body.platform === 'ios' && req.body.isDev) {
-      //test sur iphone
-        success_url = 'http://192.168.1.16:8080/success';
-        cancel_url = 'http://localhost:8080/cancel';
-    }
+          if (role === 'SUNcollaborateur') {
+              adjustedPrice *= 0.80;
+          }
+          return {
+              price_data: {
+                  currency: 'eur',
+                  product_data: {
+                      name: libelle,
+                  },
+                  unit_amount: Math.round(parseFloat(adjustedPrice * 100)),
+              },
+              quantity: qty,
+          };
+      });
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      //adresse URL deepLinkg
-      success_url: success_url,
-      cancel_url: cancel_url,
-    });
-     //console.log('response',res)
-    const sessionId = session.id;
-    //console.log("sessionId", sessionId)
-    //  console.log(res)
+      console.log('lineItems', lineItems);
+
+      let success_url = 'http://localhost:8080/success';
+      let cancel_url = 'http://localhost:8080/cancel';
+
+      if (req.body.platform === 'android' && req.body.isDev) {
+          success_url = 'http://10.0.2.2:8080/success';
+          cancel_url = 'http://10.0.2.2:8080/cancel';
+      } else if (req.body.platform === 'ios' && req.body.isDev) {
+          success_url = 'http://192.168.1.16:8080/success';
+          cancel_url = 'http://localhost:8080/cancel';
+      }
+
+      const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: lineItems,
+          mode: 'payment',
+          success_url: success_url,
+          cancel_url: cancel_url,
+      });
+
       res.json({ id: session.id, session: session.url, lineItems });
-      
+
+  } catch (error) {
+      console.error('Erreur lors de la création de la session:', error);
+      res.status(500).json({ error: "Erreur lors de la création de la session." });
+  }
 }
+
 
 
 const success = (req, res) => {
@@ -79,10 +141,6 @@ const success = (req, res) => {
      </body>
    </html>
  `);
-// res.json({
-//   message: 'Payment successful',
-//   deepLink: 'clickandcollect://success',
-// });
 }
 
 const paiementStatus = async (req, res) => {

@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt')
-const Users = require('../models/TestBDD/__users')
-const nodemailer = require('nodemailer');
+const Users = require('../models/BDD/Users')
+
 const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -65,8 +65,6 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
 
-    //console.log('req.body', req.body);
-
     try {
         const token = req.params.token;
         let decoded;
@@ -92,7 +90,6 @@ const resetPassword = async (req, res) => {
         const hashedPassword = bcrypt.hashSync(req.body.newPassword, 10);
         user.password = hashedPassword;
         await user.save();
-        //console.log('redirection')
         // return res.status(200).send("Mot de passe mis à jour avec succès");
         return res.redirect('/redirect.html');
     } catch (error) {

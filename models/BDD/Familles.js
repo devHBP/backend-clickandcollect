@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize')
-const db = require('../db/db')
-const Product = require('./testProduct.js')
+const db = require('../../db/db')
+const Products = require('./Products')
 
-const famille_produit = db.define('Famille_produit', {
+const FamillyProducts = db.define('FamillyProducts', {
     id_famille_produit: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -14,12 +14,12 @@ const famille_produit = db.define('Famille_produit', {
       }
 })
 
-Product.belongsTo(famille_produit, {
+Products.belongsTo(FamillyProducts, {
   foreignKey: 'id_famille_produit'
 })
-famille_produit.hasMany(Product, {
+FamillyProducts.hasMany(Products, {
   foreignKey:'id_famille_produit'
 })
 
 
-module.exports = famille_produit
+module.exports = FamillyProducts

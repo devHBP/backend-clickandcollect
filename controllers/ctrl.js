@@ -1,129 +1,93 @@
-// const User = require('../models/users')
-//const TestClient = require('../models/testUser.js')
-//const TestUsers = require('../models/TestBDD/_users')
-const Users = require('../models/TestBDD/__users')
+const Users = require('../models/BDD/Users')
 
 const userValidation = require('../validation/uservalidation')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const db = require('../db/db')
+require('dotenv').config();
 
-//enregistrer un user
-// const signup = (req, res) => {
+const signup = async (req, res) => {
+  try {
+      const { body } = req;
+      const { error } = userValidation(body);
 
-//     const { body} = req
-//     console.log(req.body)
- 
-//     const { error } = userValidation(body)
-//     if (error) return res.status(401).json({mssg:"erreur ici"})
-
-
-//     bcrypt.hash(req.body.password, 12, (err, passwordHash) => {
-//         if(err){
-//             return res.status(500).json({msg:"couldnt hash the password"})
-//         } else if( passwordHash){
-//             return User.create({...body, password:passwordHash})
-//                     .then(() => {
-//                     res.status(201).json({ msg: "user created"})
-//                     console.log({...body, password:passwordHash})
-//                     })
-//                     .catch(error => res.status(500).json(error))
-//         }
-//     })
-    
-// }
-
-const signup = (req, res) => {
-    const { body } = req;
-    console.log('req',req.body);
-  
-    const { error } = userValidation(body);
-
-    if (error) {
-      console.log(' erreur de validation')
-      return res.status(400).json({ message: "Validation error", error: error.details });
-    }
-    console.log('pas d erreur de validation')
-    bcrypt.hash(req.body.password, 12, (err, passwordHash) => {
-      console.log(passwordHash)
-      if (err) {
-        return res.status(500).json({ message: "Could not hash the password", error: err });
+      if (error) {
+          throw { status: 400, message: "Validation error", details: error.details };
       }
-  
+
+      const passwordHash = await bcrypt.hash(body.password, 12);
+
       const userData = { ...body, password: passwordHash };
-      console.log('userData:', userData)
-      if (req.body.storeId) {
-        userData.storeId = req.body.storeId;
+
+      if (body.storeId) {
+          userData.storeId = body.storeId;
       }
-    
-      if (req.body.idSUN === '') {
-        userData.idSUN = null;
+
+      if (body.cp === '') {
+        userData.cp = null;
+    } else {
+        userData.cp = body.cp;
+    }
+
+      if (body.idSUN === '') {
+          userData.idSUN = null;
       } else {
-        userData.idSUN = req.body.idSUN;
+          userData.idSUN = body.idSUN;
       }
-      //console.log('idSun', userData.idSUN)
-      Users.create(userData)
-        .then((user) => {
 
-          const userId = user.userId;
-          res.status(201).json({ id: userId,  message: "User created" });
+      const user = await Users.create(userData);
+      const userId = user.userId;
+      res.status(201).json({ id: userId, message: "User created" });
 
-        })
-        .catch((error) => {
-          console.log('erreur catch', error)
-          res.status(500).json({ message: "Error creating user", error });
-        });
-    });
-  };
-  
-  
-  
+  } catch (err) {
+      const status = err.status || 500;
+      res.status(status).json({ message: err.message, details: err.details || undefined });
+  }
+};
 
-//login d'un user
-const login = (req, res) => {
-  Users.findOne({where: {email: req.body.email}})
-        .then(dbUser => {
-            if(!dbUser){
-                return res.status(404).json({message:"user not found (login)"})
-            }
-            else {
-                bcrypt.compare(req.body.password, dbUser.password, (err, compaRes) => {
-                    if (err){
-                        return res.status(202).json({ msg : "error while checkin user password"})
-                    } else if (compaRes) {
-                        const token = jwt.sign({email: req.body.email}, 'secret', { expiresIn: '10d'})
-                        //save user token
-                       
-                        dbUser.token = token
-                        const user = {
-                          userId: dbUser.userId,
-                          storeId: dbUser.storeId,
-                          firstname: dbUser.firstname,
-                          lastname: dbUser.lastname,
-                          email: dbUser.email
-                        };
-                        // res.status(200).json({msg : "user logged in", "token": token, "user": dbUser.firstname})
-                        res.status(200).json({ message: "Utilisateur connecté", token:token, user: user });
-                    } else {
-                        res.status(401).json({msg : "invalid credentials"})
-                    }
-                })
-            }
-        })
-        .catch(err => {
-            console.log(err)
-        })
-}
+  
+const login = async (req, res) => {
+  try {
+      const dbUser = await Users.findOne({ where: { email: req.body.email } });
+      
+      if (!dbUser) {
+          return res.status(404).json({ message: "user not found (login)" });
+      }
+
+      const isValidPassword = await bcrypt.compare(req.body.password, dbUser.password);
+      
+      if (!isValidPassword) {
+          return res.status(401).json({ msg: "invalid credentials" });
+      }
+
+      const token = jwt.sign({ email: req.body.email }, process.env.SECRET, { expiresIn: '10d' });
+      
+      const user = {
+          userId: dbUser.userId,
+          storeId: dbUser.storeId,
+          firstname: dbUser.firstname,
+          lastname: dbUser.lastname,
+          email: dbUser.email
+      };
+
+      res.status(200).json({ message: "Utilisateur connecté", token: token, user: user });
+
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ msg: "Internal server error" });
+  }
+};
+
 
 //lister tous les users
 const getAll = (req, res) => {
   Users.findAll({
-        attributes : {exclude: ['createdAt', "updatedAt"]}
+        attributes : {exclude: ['createdAt', "updatedAt", "password"]}
     })
     .then((users) => {
         res.status(200).json(users)
     })
-    .catch(error => res.statut(500).json(error))
+    .catch(error => res.status(500).json(error))
 }
 
 //lister par id
@@ -135,7 +99,11 @@ const getOne = ( req, res) => {
             if(!user) return res.status(404).json({msg:"user not found"})
             res.status(200).json(user)
         })
-        .catch(error => res.statut(500).json(error))
+        .catch(error => {
+          console.error(error); 
+          res.status(500).json(error)
+        })
+          
 }
 
 //supprimer un user
@@ -146,7 +114,7 @@ const deleteOne = (req, res) => {
         if(user === 0) return res.status(404).json({msg:"not found"})
         res.status(200).json({msg:"User deleted"})
     })
-    .catch(error => res.statut(500).json(error))
+    .catch(error => res.status(500).json(error))
 }
 
 //update le magasin rattaché au user
@@ -206,7 +174,7 @@ const verifyToken = (req, res) => {
   
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
 
-  jwt.verify(token, 'secret', (err, decoded) => {
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
       if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
 
       // if everything good, save to request for use in other routes

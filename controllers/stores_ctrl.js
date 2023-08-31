@@ -1,4 +1,4 @@
-const TestStoresV2 = require('../models/TestBDD/__stores')
+const TestStoresV2 = require('../models/BDD/Stores')
 
 
 //Créer un magasin
