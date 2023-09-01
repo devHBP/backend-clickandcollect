@@ -5,6 +5,7 @@ const TableOrderProduct = require('../models/BDD/Orderproducts.js')
 const FamillyProducts = require('../models/BDD/Familles.js')
 const ProductDetail = require('../models/BDD/ProductDetails.js')
 const Formule = require('../models/BDD/Formules.js')
+const FormuleProduct = require('../models/BDD/FormuleProduct.js')
 const db = require('../db/db.js')
 const fs = require('fs');
 
@@ -472,43 +473,132 @@ const getAllFormules = (req, res) => {
     .catch(error => res.statut(500).json(error))
 }
 
-let dessertIds = []
-let boissonIds = []
 
 //créer la liste des desserts pour les formules
-const addDessertIds = (req, res) => {
-  const { ids: newIds } = req.body;
-  dessertIds = [...dessertIds, ...newIds];
-  res.status(200).json(dessertIds);
+const addDessertIds = async (req, res) => {
+  try {
+    const { ids: newIds } = req.body;
+
+    // Convertir les ids en chaîne
+    const newIdsString = newIds.join(",");
+
+    // Vérifier si un enregistrement existe
+    let record = await FormuleProduct.findOne();
+
+    if (record) {
+      // Mettre à jour l'enregistrement existant
+      record.dessert = newIdsString;
+      await record.save();
+    } else {
+      // Créer un nouvel enregistrement
+      await FormuleProduct.create({ dessert: newIdsString });
+    }
+
+    res.status(200).json(newIds);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
+  }
 };
+
+
 
 //afficher la liste des desserts
-const getDessertIds = (req, res) => {
-  res.json(dessertIds);
+const getDessertIds = async (req, res) => {
+  try {
+      // Ici, j'assume que vous avez un seul enregistrement pour les desserts. Si ce n'est pas le cas, ajustez en conséquence
+      const record = await FormuleProduct.findOne();
+
+      if (!record) {
+          return res.status(404).json({ message: "Pas d'IDs trouvés" });
+      }
+
+      // Convertissez la chaîne en tableau
+      const idsArray = record.dessert.split(",").map(Number);
+      
+      res.json(idsArray);
+  } catch (error) {
+      res.status(500).json({ message: "Erreur serveur", error });
+  }
 };
 
+
 //reset la liste
-const resetDessertIds = (req, res) => {
-  dessertIds = [];
-  res.status(200).json({ message: "Dessert list has been reset." });
+const resetDessertIds = async (req, res) => {
+  try {
+      // Ici, j'assume que vous mettez à jour un enregistrement existant. Si ce n'est pas le cas, ajustez en conséquence
+      const record = await FormuleProduct.findOne();
+
+      if (!record) {
+          return res.status(404).json({ message: "Pas d'IDs trouvés à réinitialiser" });
+      }
+
+      record.dessert = "";
+      await record.save();
+      
+      res.status(200).json({ message: "La liste des desserts a été réinitialisée." });
+  } catch (error) {
+      res.status(500).json({ message: "Erreur serveur", error });
+  }
 };
+
 
 //créer la liste des boissons pour les formules
-const addBoissonIds = (req, res) => {
-  const { ids: newIds } = req.body;
-  boissonIds = [...boissonIds, ...newIds];
-  res.status(200).json(boissonIds);
+const addBoissonIds = async (req, res) => {
+  try {
+    const { ids: newIds } = req.body;
+
+    // Convertir les ids en chaîne
+    const newIdsString = newIds.join(",");
+
+    // Vérifier si un enregistrement existe
+    let record = await FormuleProduct.findOne();
+
+    if (record) {
+      // Mettre à jour l'enregistrement existant
+      record.boisson = newIdsString;
+      await record.save();
+    } else {
+      // Créer un nouvel enregistrement
+      await FormuleProduct.create({ boisson: newIdsString });
+    }
+
+    res.status(200).json(newIds);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
+  }
 };
 
 //afficher la liste des desserts
-const getBoissonIds = (req, res) => {
-  res.json(boissonIds);
+const getBoissonIds = async (req, res) => {
+  const record = await FormuleProduct.findOne();
+
+      if (!record) {
+          return res.status(404).json({ message: "Pas d'IDs trouvés" });
+      }
+
+      // Convertissez la chaîne en tableau
+      const idsArray = record.boisson.split(",").map(Number);
+      
+      res.json(idsArray);
 };
 
 //reset la liste
-const resetBoissonIds = (req, res) => {
-  boissonIds = [];
-  res.status(200).json({ message: "Boisson list has been reset." });
+const resetBoissonIds = async (req, res) => {
+  try {
+    // Ici, j'assume que vous mettez à jour un enregistrement existant. Si ce n'est pas le cas, ajustez en conséquence
+    const record = await FormuleProduct.findOne();
+
+    if (!record) {
+        return res.status(404).json({ message: "Pas d'IDs trouvés à réinitialiser" });
+    }
+
+    record.boisson = "";
+    await record.save();
+    
+    res.status(200).json({ message: "La liste des desserts a été réinitialisée." });
+} catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
+}
 };
 
 
