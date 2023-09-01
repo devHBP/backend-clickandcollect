@@ -1,6 +1,6 @@
 //appel du model
 const StocksTest = require('../models/BDD/Stocks.js')
-const Products = require('../models/BDD/Products.js')
+const Products = require('../models/BDD/Produits.js')
 const TableOrderProduct = require('../models/BDD/Orderproducts.js')
 const FamillyProducts = require('../models/BDD/Familles.js')
 const ProductDetail = require('../models/BDD/ProductDetails.js')
@@ -76,7 +76,11 @@ const addProduct = async (req, res) => {
       stock: req.body.stock,
       id_famille_produit: familleProduit.id_famille_produit, // Utiliser l'ID de la famille de produits trouvée
       offre: req.body.offre,
-      reference_fournisseur: req.body.reference_fournisseur
+      reference_fournisseur: req.body.reference_fournisseur,
+      clickandcollect: req.body.clickandcollect,
+      antigaspi: req.body.antigaspi,
+      stockantigaspi: req.body.stockantigaspi,
+
     };
     console.log('product', product)
 
@@ -224,6 +228,35 @@ const addProduct = async (req, res) => {
         res.status(500).json(error);
       }
     };
+    const getAllProductsClickandCollect = async (req, res) => {
+      try {
+        // Récupérer tous les produits où clickandcollect est vrai
+        const products = await Products.findAll({
+          where: {
+            clickandcollect: true
+          },
+          attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+    
+        // Récupérer tous les détails des produits
+        const productDetails = await ProductDetail.findAll();
+    
+        // Combiner les produits et leurs détails
+        const combined = products.map(product => {
+          const details = productDetails.find(detail => detail.productId === product.productId);
+          return {
+            ...product.dataValues,
+            descriptionProduit: details ? details.descriptionProduit : null,
+            ingredients: details ? details.ingredients : null,
+          };
+        });
+    
+        res.status(200).json(combined);
+      } catch (error) {
+        res.status(500).json(error);
+      }
+    };
+    
     
 //lister un produit par id
 const getOneProduct =  ( req, res) => {
@@ -439,6 +472,47 @@ const getAllFormules = (req, res) => {
     .catch(error => res.statut(500).json(error))
 }
 
+let dessertIds = []
+let boissonIds = []
 
-module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage,
+//créer la liste des desserts pour les formules
+const addDessertIds = (req, res) => {
+  const { ids: newIds } = req.body;
+  dessertIds = [...dessertIds, ...newIds];
+  res.status(200).json(dessertIds);
+};
+
+//afficher la liste des desserts
+const getDessertIds = (req, res) => {
+  res.json(dessertIds);
+};
+
+//reset la liste
+const resetDessertIds = (req, res) => {
+  dessertIds = [];
+  res.status(200).json({ message: "Dessert list has been reset." });
+};
+
+//créer la liste des boissons pour les formules
+const addBoissonIds = (req, res) => {
+  const { ids: newIds } = req.body;
+  boissonIds = [...boissonIds, ...newIds];
+  res.status(200).json(boissonIds);
+};
+
+//afficher la liste des desserts
+const getBoissonIds = (req, res) => {
+  res.json(boissonIds);
+};
+
+//reset la liste
+const resetBoissonIds = (req, res) => {
+  boissonIds = [];
+  res.status(200).json({ message: "Boisson list has been reset." });
+};
+
+
+
+
+module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage,getAllProductsClickandCollect,addDessertIds,getDessertIds,resetDessertIds,addBoissonIds, getBoissonIds,resetBoissonIds,
 updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct, createFormule, getAllFormules}

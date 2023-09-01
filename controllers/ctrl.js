@@ -67,7 +67,8 @@ const login = async (req, res) => {
           storeId: dbUser.storeId,
           firstname: dbUser.firstname,
           lastname: dbUser.lastname,
-          email: dbUser.email
+          email: dbUser.email,
+          role: dbUser.role
       };
 
       res.status(200).json({ message: "Utilisateur connecté", token: token, user: user });

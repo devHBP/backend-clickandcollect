@@ -163,6 +163,18 @@ const Products = db.define('Products', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    clickandcollect: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true, 
+    },
+    antigaspi: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true, 
+    },
+    stockantigaspi: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
 
 })
 
