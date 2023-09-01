@@ -63,6 +63,30 @@ const getAllStores = ( req, res ) => {
     .catch(error => res.statut(500).json(error))
 }
 
+//Stocker les magasins par rôle
+const ROLE_STORES = {
+    SUNcollaborateur: [3,4,5],  
+    client: [1, 2]      
+};
+
+// Lister tous les magasins en fonction du rôle
+const getStoresByRole = ( req, res ) => {
+    const role = req.body.role; // obtenir le rôle depuis le corps de la requête
+
+    if (!ROLE_STORES[role]) {
+        return res.status(400).json({ error: 'Role not found' });
+    }
+
+    TestStoresV2.findAll({
+        where: { storeId: ROLE_STORES[role] },
+        attributes : { exclude: ['createdAt', 'updatedAt'] }
+    })
+    .then((stores) => {
+        res.status(200).json(stores);
+    })
+    .catch(error => res.status(500).json(error));
+}
+
 
 //Chercher un magasin
 const getOneStore = ( req, res ) => {
@@ -82,6 +106,26 @@ const deleteStore = ( req, res ) => {
 
 }
 
+//attribuer des magasins aux rôles
+
+//je definis les magasins ici
+// const ROLE_STORES = {
+//     SUNcollaborateur: [3,4,5],
+//     client: [1, 2]
+// };
+
+// const getStoresByRole = (req, res) => {
+//     const roleName = req.params.roleName;
+
+//     if (!ROLE_STORES[roleName]) {
+//         return res.status(404).json({ error: 'Role not found' });
+//     }
+
+//     res.json({
+//         role: roleName,
+//         storeIds: ROLE_STORES[roleName]
+//     });
+// };
 
 
-module.exports = { addStore, updateStore, getOneStore, getAllStores, deleteStore }
+module.exports = { addStore, updateStore, getOneStore, getAllStores, deleteStore, getStoresByRole }

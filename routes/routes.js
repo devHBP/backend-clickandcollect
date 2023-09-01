@@ -1,9 +1,10 @@
 const Router = require('express')
 const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser } = require('../controllers/ctrl')
 const { forgotPassword, resetPassword } = require('../controllers/pwd_ctrl')
-const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct, createFormule, getAllFormules } = require('../controllers/product_ctrl')
+const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
+     getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds, } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct } = require('../controllers/famille_produits_ctrl')
-const { addStore, getAllStores, getOneStore, updateStore } = require('../controllers/stores_ctrl')
+const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
@@ -30,6 +31,7 @@ router.post('/resetPassword/:token', resetPassword);
 //PRODUCTS
 router.post('/addProduct',uploadImage, addProduct)
 router.get('/getAllProducts',getAllProducts)
+router.get('/getAllProductsClickandCollect',getAllProductsClickandCollect)
 router.get('/getOneProduct/:id', getOneProduct)
 // router.put('/updateProduct/:id', updateProduct);
 router.put('/updateProduct/:id', uploadImage, updateProduct);
@@ -39,6 +41,13 @@ router.put('/decreaseStock/:id', decreaseProductStock);
 router.put('/increaseStock/:id', increaseProductStock)
 router.get('/getProductsofOneCategory/:category', getProductsofOneCategory)
 router.get('/getFamillyOfProduct/:id', getFamillyOfProduct)
+router.post('/addDessertIds/ids', addDessertIds)
+router.get('/getDessertIds/ids', getDessertIds);
+router.post('/resetDessertIds', resetDessertIds);
+router.post('/addBoissonIds/ids', addBoissonIds)
+router.get('/getBoissonIds/ids', getBoissonIds);
+router.post('/resetBoissonIds', resetBoissonIds);
+
 
 //REVIEWS
 router.post('/reviews', createReview)
@@ -56,9 +65,12 @@ router.get('/getOneFamillyProduct/:id', getOneFamillyProduct)
 
 //STORES
 router.post('/addStore', addStore)
-router.get('/getAllStores', getAllStores)
+ router.get('/getAllStores', getAllStores)
+router.post('/getStoresByRole', getStoresByRole)
 router.get('/getOneStore/:id', getOneStore)
 router.put('/updateStore/:id', updateStore)
+// router.get('/:roleName/stores', getStoresByRole);
+
 
 //PROMOS
 router.post('/promocodes',addPromo )
