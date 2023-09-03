@@ -1,1 +1,15 @@
 # backend-clickandcollect
+
+## Sample file .env
+
+```
+STRIPE_KEY_PUBLIC=
+STRIPE_KEY_PRIVATE=
+SENDGRID_API_KEY=
+SECRET=
+NODEJS_URL=
+NODEJS_PORT=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+```
