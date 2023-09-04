@@ -38,11 +38,11 @@ const getAllStocks = (req, res) => {
     console.log('productId', productId)
     console.log('qty', quantityPurchased)
     try {
-        const product = await Products.findById(productId);
-        if (!product) {
-          console.log('produit non trouvé')
-            return res.status(404).json({ message: 'Produit non trouvé.' });
-        }
+      const product = await Products.findByPk(productId);
+      console.log('product', product)
+      if (!product) {
+          return res.status(404).json({ message: 'Produit non trouvé.' });
+      }
         console.log('produit trouvé')
 
         product.stockantigaspi -= quantityPurchased;
