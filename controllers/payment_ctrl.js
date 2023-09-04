@@ -77,7 +77,7 @@ const createSession = async (req, res) => {
           console.log('libelle', libelle);
           console.log('prix', adjustedPrice);
 
-          if (user.role === 'SUNcollaborateur' && !antigaspi) {
+          if (role === 'SUNcollaborateur' && !antigaspi) {
             adjustedPrice *= 0.80; 
         }
           return {
