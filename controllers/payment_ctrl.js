@@ -94,7 +94,7 @@ const createSession = async (req, res) => {
 
       console.log('lineItems', lineItems);
 
-      let success_url = `${process.env.API_BASE_URL}/success`;
+      let success_url = `http://localhost:8080/success`;
       let cancel_url = 'http://localhost:8080/cancel';
 
       // if (req.body.platform === 'android' && req.body.isDev) {
