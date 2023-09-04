@@ -1,4 +1,6 @@
 const StocksTest = require('../models/BDD/Stocks')
+const Products = require('../models/BDD/Produits.js')
+
 const { Op } = require("sequelize");
 
 //lister tous les stocks
@@ -30,5 +32,24 @@ const getAllStocks = (req, res) => {
     }
   };
 
+  //stockantigaspi
+  const getUpdateStockAntigaspi = async (req, res) => {
+    const { productId, quantityPurchased } = req.body;
+
+    try {
+        const product = await Products.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Produit non trouvé.' });
+        }
+
+        product.stockantigaspi -= quantityPurchased;
+        await product.save();
+
+        res.status(200).json({ message: 'Stock antigaspi mis à jour avec succès.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la mise à jour du stock.' });
+    }
+}
+
   
-  module.exports = { getAllStocks, getStockByProduct }
+  module.exports = { getAllStocks, getStockByProduct, getUpdateStockAntigaspi }

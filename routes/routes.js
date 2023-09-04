@@ -6,7 +6,7 @@ const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, d
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
-const { getAllStocks, getStockByProduct } = require('../controllers/stock_ctrl')
+const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews } = require('../controllers/order_ctrl')
@@ -82,6 +82,8 @@ router.delete('/deletepromocodes/:id', deletePromo)
 //STOCKS
 router.get('/allStocks', getAllStocks)
 router.get('/getStockByProduct/:productId', getStockByProduct)
+router.put('/getUpdateStockAntigaspi', getUpdateStockAntigaspi)
+
 
 
 //ORDERS
