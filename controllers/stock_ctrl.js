@@ -35,14 +35,18 @@ const getAllStocks = (req, res) => {
   //stockantigaspi
   const getUpdateStockAntigaspi = async (req, res) => {
     const { productId, quantityPurchased } = req.body;
-
+    console.log('productId', productId)
+    console.log('qty', quantityPurchased)
     try {
         const product = await Products.findById(productId);
         if (!product) {
+          console.log('produit non trouvé')
             return res.status(404).json({ message: 'Produit non trouvé.' });
         }
+        console.log('produit trouvé')
 
         product.stockantigaspi -= quantityPurchased;
+        console.log('new product', product)
         await product.save();
 
         res.status(200).json({ message: 'Stock antigaspi mis à jour avec succès.' });
