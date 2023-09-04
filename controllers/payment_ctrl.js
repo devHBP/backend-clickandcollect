@@ -71,15 +71,15 @@ const createSession = async (req, res) => {
       const role = req.body.orderInfo.userRole;
       console.log('req', req.body.orderInfo.cart);
       const lineItems = req.body.orderInfo.cart.map((item) => {
-          const { libelle, prix, qty, prix_unitaire } = item;
+          const { libelle, prix, qty, prix_unitaire, antigaspi } = item;
           let adjustedPrice = prix || prix_unitaire;
           console.log('item', item);
           console.log('libelle', libelle);
           console.log('prix', adjustedPrice);
 
-          if (role === 'SUNcollaborateur') {
-              adjustedPrice *= 0.80;
-          }
+          if (user.role === 'SUNcollaborateur' && !antigaspi) {
+            adjustedPrice *= 0.80; 
+        }
           return {
               price_data: {
                   currency: 'eur',
@@ -94,16 +94,16 @@ const createSession = async (req, res) => {
 
       console.log('lineItems', lineItems);
 
-      let success_url = 'http://localhost:8080/success';
+      let success_url = `${process.env.API_BASE_URL}/success`;
       let cancel_url = 'http://localhost:8080/cancel';
 
-      if (req.body.platform === 'android' && req.body.isDev) {
-          success_url = 'http://10.0.2.2:8080/success';
-          cancel_url = 'http://10.0.2.2:8080/cancel';
-      } else if (req.body.platform === 'ios' && req.body.isDev) {
-          success_url = 'http://192.168.1.16:8080/success';
-          cancel_url = 'http://localhost:8080/cancel';
-      }
+      // if (req.body.platform === 'android' && req.body.isDev) {
+      //     success_url = 'http://10.0.2.2:8080/success';
+      //     cancel_url = 'http://10.0.2.2:8080/cancel';
+      // } else if (req.body.platform === 'ios' && req.body.isDev) {
+      //     success_url = 'http://192.168.1.16:8080/success';
+      //     cancel_url = 'http://localhost:8080/cancel';
+      // }
 
       const session = await stripe.checkout.sessions.create({
           payment_method_types: ['card'],
