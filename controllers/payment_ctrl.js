@@ -93,9 +93,13 @@ const createSession = async (req, res) => {
       });
 
       console.log('lineItems', lineItems);
+     
 
-      let success_url = `http://localhost:8080/success`;
-      let cancel_url = 'http://localhost:8080/cancel';
+      let success_url = ` https://preprod.lepaindujour.io/success/`;
+      let cancel_url = ` https://preprod.lepaindujour.io/cancel/`;
+      // let success_url = `http://localhost:8080/success`;
+      // let cancel_url = 'http://localhost:8080/cancel';
+      
 
       // if (req.body.platform === 'android' && req.body.isDev) {
       //     success_url = 'http://10.0.2.2:8080/success';
