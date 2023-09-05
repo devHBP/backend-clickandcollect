@@ -176,11 +176,30 @@ const addProduct = async (req, res) => {
         // Mettre à jour l'ID de la famille de produits
         updates.id_famille_produit = familleProduit.id_famille_produit;
       }
+
   
       // Mettez à jour uniquement les champs spécifiés dans les mises à jour
       await Products.update(updates, { where: { productId: productId } });
       await product.save();
-  
+
+
+  // Mise à jour des détails du produit
+      const productDetails = await ProductDetail.findOne({ where: { productId: productId } });
+      if (productDetails) {
+        // Si les détails du produit existent, mettez-les à jour
+        await ProductDetail.update({
+          descriptionProduit: req.body.descriptionProduit,
+          ingredients: req.body.ingredients
+        }, { where: { productId: productId } });
+      } else {
+        // Sinon, créez une nouvelle entrée dans la table ProductDetail
+        await ProductDetail.create({
+          productId: productId,
+          descriptionProduit: req.body.descriptionProduit,
+          ingredients: req.body.ingredients
+        });
+      }
+      
       return res.status(200).json({ msg: 'Product updated successfully' });
     } catch (error) {
       return res.status(500).json({ error: 'Failed to update product' });
