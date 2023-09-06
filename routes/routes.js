@@ -3,7 +3,7 @@ const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, ver
 const { forgotPassword, resetPassword } = require('../controllers/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds, } = require('../controllers/product_ctrl')
-const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct } = require('../controllers/famille_produits_ctrl')
+const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi } = require('../controllers/stock_ctrl')
@@ -61,7 +61,7 @@ router.get('/getAllFormules', getAllFormules)
 router.post('/addFamillyProduct', addFamillyProduct)
 router.get('/getAllFamillyProducts', getAllFamillyProducts)
 router.get('/getOneFamillyProduct/:id', getOneFamillyProduct)
-
+router.delete('/famille/:id', deleteFamillyProduct);
 
 //STORES
 router.post('/addStore', addStore)

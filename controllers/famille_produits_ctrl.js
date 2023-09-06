@@ -45,5 +45,20 @@ const getOneFamillyProduct = async (req, res) => {
     }
   };
   
-  
-  module.exports = { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct}
+  const deleteFamillyProduct = async (req, res) => {
+    try {
+      const id = req.params.id; // Récupérer l'ID de la famille de produits à partir des paramètres de la requête
+      const familleProduit = await FamillyProducts.findByPk(id);
+      if (familleProduit) {
+        await familleProduit.destroy();
+        res.status(200).json({ msg: "Famille de produit supprimée avec succès" });
+      } else {
+        res.status(404).json({ error: "Famille de produit non trouvée" });
+      }
+    } catch (error) {
+      console.error('erreur', error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+  module.exports = { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct}
