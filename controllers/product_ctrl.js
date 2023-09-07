@@ -621,7 +621,5 @@ const resetBoissonIds = async (req, res) => {
 };
 
 
-
-
 module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage,getAllProductsClickandCollect,addDessertIds,getDessertIds,resetDessertIds,addBoissonIds, getBoissonIds,resetBoissonIds,
 updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct, createFormule, getAllFormules}

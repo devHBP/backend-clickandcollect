@@ -148,8 +148,10 @@ const success = (req, res) => {
 }
 
 const paiementStatus = async (req, res) => {
+  console.log('test boucle 1')
   try {
     const sessionId = req.query.sessionId;
+    console.log('test boucle 2')
 
     // Obtenez la session de paiement à partir de l'ID de session
     const session = await stripe.checkout.sessions.retrieve(sessionId);
