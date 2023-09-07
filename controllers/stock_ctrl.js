@@ -23,7 +23,7 @@ const getAllStocks = (req, res) => {
         where: { productId }, // Utilisation de l'ID du produit pour filtrer les résultats
         attributes: ['productId', 'quantite'], // Sélection des attributs à récupérer
       });
-      console.log(stockByProduct);
+      //console.log(stockByProduct);
   
       res.json(stockByProduct); // Envoi des données en réponse
     } catch (error) {
