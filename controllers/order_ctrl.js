@@ -331,7 +331,7 @@ const deleteOneOrder = async (req, res) => {
    
 
     try {
-      console.log(`Fetching orders for userId: ${userId}`);
+      console.log(`boucle ICI`);
       const userId = req.params.userId;
       const orders = await Orders.findAll({ where: { userId: userId }});
   
