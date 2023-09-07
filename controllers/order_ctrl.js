@@ -328,6 +328,8 @@ const deleteOneOrder = async (req, res) => {
 
   //lister les commandes d'un utilisateur
   const ordersOfUser = async (req, res) => {
+    console.log(`Fetching orders for userId: ${userId}`);
+
     try {
       const userId = req.params.userId;
       const orders = await Orders.findAll({ where: { userId: userId }});
