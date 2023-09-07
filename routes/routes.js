@@ -23,7 +23,7 @@ router.put('/updateOneUser/:id', updateOneUser)
 router.put('/updateRole/:id', updateRole)
 router.get('/verifyToken', verifyToken)
 router.patch('/modifyUser/:userId', modifyUser)
-router.delete('deleteUser/:id', deleteUser)
+router.delete('/deleteUser/:id', deleteUser)
 
 //PASSWORD
 router.post('/forgotPassword', forgotPassword)
