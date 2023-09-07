@@ -119,31 +119,51 @@ const deleteOne = (req, res) => {
 }
 
 //update le magasin rattaché au user
-const updateOneUser = (req, res) => {
+// const updateOneUser = (req, res) => {
+//     const { id } = req.params;
+//     const { storeId } = req.body;
+  
+//     Users.findByPk(id)
+//       .then((user) => {
+//         console.log('User found !!')
+//         if (!user) {
+//           console.log('error')
+//           return res.status(404).json({ msg: "User not found (updateone)" });
+//         }
+  
+//         user
+//           .update({ storeId })
+//           .then(() => {
+//             res.status(200).json({ msg: "Magasin modifié"});
+//           })
+//           .catch((error) => {
+//             res.status(500).json({ error: "Error updating user" });
+//           });
+//       })
+//       .catch((error) => {
+//         res.status(500).json({ error: "Error finding user" });
+//       });
+//   };
+  const updateOneUser = (req, res) => {
     const { id } = req.params;
     const { storeId } = req.body;
   
-    Users.findByPk(id)
-      .then((user) => {
-        console.log('User found !!')
-        if (!user) {
-          console.log('error')
+    // Mettez à jour directement le storeId de l'utilisateur en utilisant l'ID fourni
+    Users.update({ storeId: storeId }, { where: { userId: id } })
+      .then((result) => {
+        // result est un tableau avec le nombre de lignes affectées
+        if (result[0] === 0) {
+          // Si aucune ligne n'a été affectée, cela signifie que l'utilisateur n'a pas été trouvé
           return res.status(404).json({ msg: "User not found (updateone)" });
         }
-  
-        user
-          .update({ storeId })
-          .then(() => {
-            res.status(200).json({ msg: "Magasin modifié"});
-          })
-          .catch((error) => {
-            res.status(500).json({ error: "Error updating user" });
-          });
+        console.log('User found and updated !!');
+        res.status(200).json({ msg: "Magasin modifié" });
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error finding user" });
+        res.status(500).json({ error: "Error updating user" });
       });
-  };
+};
+
 
 // Modifier le rôle d'un utilisateur
 const updateRole = (req, res) => {
