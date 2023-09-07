@@ -9,7 +9,7 @@ const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , 
-    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews } = require('../controllers/order_ctrl')
+    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder } = require('../controllers/order_ctrl')
 const router = Router()
 
 
@@ -99,7 +99,7 @@ router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 router.post('/cancelOrder', cancelOrder)
 router.get('/productsInFormule/:id/', productsWithFormuleForOrder);
 router.get('/ordersOfUserWithProducts/:userId', ordersOfUserWithProducts);
-
+router.get('/statusLastOrder/:userId', statusLastOrder)
 
 //router.post('/createOrderAndPayment')
 

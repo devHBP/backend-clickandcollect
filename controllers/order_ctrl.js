@@ -348,6 +348,27 @@ const deleteOneOrder = async (req, res) => {
     }
   }
 
+  //derniere commande
+  const statusLastOrder = async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const latestOrder = await Orders.findOne({
+        where: { userId: userId },
+        order: [['orderId', 'DESC']] // Assumant que 'orderId' est un auto-increment
+      });
+  
+      if (latestOrder) {
+        res.json({ status: latestOrder.status });
+      } else {
+        res.json({ status: null });
+      }
+    } catch (error) {
+      console.error("Une erreur s'est produite lors de la récupération du statut de la commande :", error);
+      res.status(500).json({ error: 'An error occurred while trying to fetch the order status.' });
+    }
+  }
+  
+
   const updateOrder = async (req, res) => {
     try {
         // Récupérez le numéro de commande, le nouveau statut et l'ID du paiement à partir du corps de la requête
@@ -552,4 +573,4 @@ const getAllReviews = (req, res) => {
 
 
   module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, 
-    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews}
+    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder}
