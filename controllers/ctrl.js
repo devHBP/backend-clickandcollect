@@ -210,11 +210,33 @@ const modifyUser = async (req, res) => {
     return res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur' });
   }
 }
+//supprimer un compte
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id; 
+
+    // Trouvez l'utilisateur par son ID
+    const user = await Users.findByPk(userId);
+
+    if (!user) {
+      throw { status: 404, message: "User not found" };
+    }
+
+    // Supprimez l'utilisateur
+    await user.destroy();
+
+    res.status(200).json({ message: "User deleted successfully" });
+
+  } catch (err) {
+    const status = err.status || 500;
+    res.status(status).json({ message: err.message, details: err.details || undefined });
+  }
+};
 
 
 
   
-module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser };
+module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser};
   
 
 
