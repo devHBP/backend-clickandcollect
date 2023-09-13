@@ -279,15 +279,42 @@ const addProduct = async (req, res) => {
     
     
 //lister un produit par id
-const getOneProduct =  ( req, res) => {
-    const { id } = req.params
-    Products.findByPk(id)
-        .then( product => {
-            if(!product) return res.status(404).json({msg:"product not found"})
-            res.status(200).json(product)
-        })
-        .catch(error => res.statut(500).json(error))
-}
+// const getOneProduct =  ( req, res) => {
+//     const { id } = req.params
+//     Products.findByPk(id)
+//         .then( product => {
+//             if(!product) return res.status(404).json({msg:"product not found"})
+//             res.status(200).json(product)
+//         })
+//         .catch(error => res.statut(500).json(error))
+// }
+const getOneProduct = (req, res) => {
+  const { id } = req.params;
+
+  // Récupérez le produit par son ID
+  Products.findByPk(id)
+      .then(product => {
+          if (!product) return res.status(404).json({ msg: "product not found" });
+
+          // Récupérez les détails du produit
+          ProductDetail.findOne({ where: { productId: product.productId } })
+              .then(detail => {
+                  // Si les détails existent, combinez-les avec le produit
+                  if (detail) {
+                      res.status(200).json({
+                          ...product.dataValues,
+                          descriptionProduit: detail.descriptionProduit,
+                          ingredients: detail.ingredients
+                      });
+                  } else {
+                      res.status(200).json(product);
+                  }
+              })
+              .catch(error => res.status(500).json(error));
+      })
+      .catch(error => res.status(500).json(error));
+};
+
 
 //lister les produits d'une catégorie
 const getProductsofOneCategory = async (req, res) => {
