@@ -17,4 +17,13 @@ const userValidation = ( body) => {
     return userSchema.validate(body)
 }
 
-module.exports = userValidation
+const passwordUpdateValidation = (data) => {
+    const schema = Joi.object({
+        userId: Joi.number().required(),
+        newPassword: Joi.string().pattern(new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,30}$')).required(),
+    });
+
+    return schema.validate(data);
+};
+
+module.exports = {userValidation, passwordUpdateValidation } 

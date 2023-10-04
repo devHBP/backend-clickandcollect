@@ -1,6 +1,6 @@
 const Router = require('express')
 const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser, deleteUser } = require('../controllers/ctrl')
-const { forgotPassword, resetPassword } = require('../controllers/pwd_ctrl')
+const { forgotPassword, resetPassword , updatePassword} = require('../controllers/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds, } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
@@ -28,6 +28,7 @@ router.delete('/deleteUser/:id', deleteUser)
 //PASSWORD
 router.post('/forgotPassword', forgotPassword)
 router.post('/resetPassword/:token', resetPassword);
+router.put('/updatePassword', updatePassword)
 
 //PRODUCTS
 router.post('/addProduct',uploadImage, addProduct)

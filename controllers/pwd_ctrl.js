@@ -8,6 +8,8 @@ const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET;
 const NODEJS_URL = process.env.NODEJS_URL;
 const NODEJS_PORT = process.env.NODEJS_PORT;
+const { passwordUpdateValidation } = require('../validation/uservalidation');
+
 
 const forgotPassword = async (req, res) => {
     try {
@@ -98,5 +100,38 @@ const resetPassword = async (req, res) => {
     }
 }
 
-module.exports = {forgotPassword, resetPassword }
+const updatePassword = async (req, res) => {
+    try {
+        const { body } = req;
+        const { userId, newPassword } = body;
+  
+        const { error } = passwordUpdateValidation(body);
+  
+        if (error) {
+            throw { status: 400, message: "Validation error", details: error.details };
+        }
+  
+        // Trouvez l'utilisateur par son ID
+        const user = await Users.findByPk(userId);
+  
+        if (!user) {
+            throw { status: 404, message: "User not found" };
+        }
+  
+        // Hasher le nouveau mot de passe et mettre à jour dans la base de données
+        const passwordHash = await bcrypt.hash(newPassword, 12);
+        user.password = passwordHash;
+  
+        await user.save();
+  
+        res.status(200).json({ message: "Password updated successfully" });
+  
+    } catch (err) {
+        const status = err.status || 500;
+        res.status(status).json({ message: err.message, details: err.details || undefined });
+    }
+  };
+  
+
+module.exports = {forgotPassword, resetPassword , updatePassword}
 
