@@ -8,7 +8,19 @@ const Users = require('../../models/BDD/Users')
 const confirmOrder = async (req, res) => {
 
     try {
-        const { email, firstname , numero_commande} = req.body;
+        const { email, firstname , numero_commande, date} = req.body;
+
+        // Extraction des composants de la date
+        const day = String(date.getUTCDate()).padStart(2, '0'); // Jour
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Mois
+        const year = date.getUTCFullYear(); // Année
+        // Concaténation sous le format JJ-MM-AAAA
+        const formattedDate = `${day}-${month}-${year}`;
+        console.log(formattedDate); // Affiche : 06-10-2023
+
+        //pour l'instant le numero_commande est sous ce format
+        //magasin_001_05102023_00041
+        //il faudra reformater le format pour avoir un numero exploitable
 
         // 1. Vérifiez si l'utilisateur existe
         //const user = await Users.findOne({ where: { email: userEmail } });   
@@ -26,6 +38,7 @@ const confirmOrder = async (req, res) => {
              <br>
              <p>Amusez-vous bien,</p>
              <p>Votre numero de commande ${numero_commande}</p>
+             <p>Date souhaitée: ${formattedDate}</p>
              <p>L'équipe du Pain du Jour</p>
             `
         };
