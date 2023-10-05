@@ -74,8 +74,8 @@ const ROLE_STORES = {
 const getStoresByRole = ( req, res ) => {
     const role = req.body.role; // obtenir le rôle depuis le corps de la requête
 
-    if (!ROLE_STORES[role]) {
-        return res.status(400).json({ error: 'Role not found' });
+    if (!role || !ROLE_STORES[role]) {
+        role = 'client';
     }
 
     TestStoresV2.findAll({
