@@ -1,6 +1,6 @@
 const Users = require('../models/BDD/Users')
 
-const {userValidation} = require('../validation/userValidation')
+const {userValidation} = require('../validation/uservalidation')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const db = require('../db/db')
