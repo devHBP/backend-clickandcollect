@@ -36,10 +36,10 @@ const signup = async (req, res) => {
           userData.idSUN = body.idSUN;
       }
 
-      if (body.date_naissance === '') {
-        userData.date_naissance = null;
+      if (body.date === '') {
+        userData.date = null;
     } else {
-        userData.date_naissance = body.date_naissance;
+        userData.date = body.date;
     }
       const user = await Users.create(userData);
       const userId = user.userId;
