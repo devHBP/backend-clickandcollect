@@ -9,7 +9,7 @@ const userValidation = ( body) => {
         storeId: Joi.number().allow(null), 
         cp: Joi.number().integer().min(10000).max(99999).allow(null),
         genre: Joi.string().valid('femme', 'homme', 'nbinaire').required(),
-        date_naissance: Joi.date().max('now').message("La date de naissance ne peut pas être dans le futur").allow(null),
+        date_naissance: Joi.date().allow("", null).max('now').message("La date de naissance ne peut pas être dans le futur"),
         idSUN: Joi.alternatives().try(
             Joi.string().allow('').optional(),
             Joi.string().regex(/^[0-9]{5}$/).optional()
