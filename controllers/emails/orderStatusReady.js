@@ -11,7 +11,7 @@ const orderStatusReady = async (req, res) => {
         const { email, firstname } = req.body;
 
         // Conversion de la chaîne date en objet Date
-        const dateObj = new Date(date);
+        // const dateObj = new Date(date);
 
         // // Vérification de la validité de la date
         // if (isNaN(dateObj.getTime())) {
