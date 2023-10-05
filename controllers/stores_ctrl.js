@@ -58,7 +58,7 @@ const getAllStores = ( req, res ) => {
     })
     .then((stores) => {
         res.status(200).json(stores)
-        console.log(stores)
+        //console.log(stores)
     })
     .catch(error => res.statut(500).json(error))
 }
@@ -66,7 +66,7 @@ const getAllStores = ( req, res ) => {
 //Stocker les magasins par rôle
 const ROLE_STORES = {
     SUNcollaborateur: [1],  
-    client: [],
+    client: [2],
     invite:[2]      
 };
 
