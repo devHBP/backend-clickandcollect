@@ -48,12 +48,15 @@ const signup = async (req, res) => {
       const userId = user.userId;
       res.status(201).json({ id: userId, message: "User created" });
 
-  }catch (err) {
-    const status = err.status || 500;
-    console.error("Erreur de signup :", err.message);
-    console.error("Détails :", err.details);
-    res.status(status).json({ message: err.message, details: err.details || undefined });
-}
+    } catch (err) {
+      const status = err.status || 500;
+      console.error("Erreur de signup :", err.message);
+      console.error("Détails :", err.details);
+      console.error("Erreur complète :", err);  // Ajouté pour afficher l'erreur complète
+      console.error("Stack Trace:", err.stack); // Ajouté pour afficher le stack trace
+      res.status(status).json({ message: err.message, details: err.details || undefined });
+  }
+  
 };
 
   
