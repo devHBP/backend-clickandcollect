@@ -21,7 +21,7 @@ const sendWelcomeEmail = async (req, res) => {
         // <p>Amusez-vous bien,</p>
         // <p>L'équipe du Pain du Jour</p>
 
-        
+
         // Message de bienvenue
         const msg = {
             to: email, 
@@ -531,7 +531,7 @@ const sendWelcomeEmail = async (req, res) => {
 <body>
 <div class="confirmation-de-commande">
   <div class="rectangle-6"></div>
-  <div class="bonjour-pr-nom-du-client">Bonjour<br />[Prénom du Client]</div>
+  <div class="bonjour-pr-nom-du-client">Bonjour<br />${firstname}</div>
   <div class="merci-pour-ta-commande">Merci pour ta commande !</div>
   <div class="frame-5">
     <div class="nos-quipes-vont-la-pr-parer-pour">
