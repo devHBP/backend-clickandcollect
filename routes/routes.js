@@ -10,6 +10,7 @@ const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi } = require('..
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder } = require('../controllers/order_ctrl')
+const {sendWelcomeEmail } = require('../controllers/emails')
 const router = Router()
 
 
@@ -50,7 +51,6 @@ router.post('/addBoissonIds/ids', addBoissonIds)
 router.get('/getBoissonIds/ids', getBoissonIds);
 router.post('/resetBoissonIds', resetBoissonIds);
 
-
 //REVIEWS
 router.post('/reviews', createReview)
 router.get('/getAllReviews', getAllReviews)
@@ -86,8 +86,6 @@ router.get('/allStocks', getAllStocks)
 router.get('/getStockByProduct/:productId', getStockByProduct)
 router.put('/getUpdateStockAntigaspi', getUpdateStockAntigaspi)
 
-
-
 //ORDERS
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
 router.put('/updateStatusOrder/:orderId', updateStatusOrder)
@@ -104,13 +102,15 @@ router.get('/statusLastOrder/:userId', statusLastOrder)
 
 //router.post('/createOrderAndPayment')
 
-
-
 //PAYMENTS
 router.post('/checkout_session', createSession )
 router.get('/success', success)
 router.get('/paiementStatus', paiementStatus)
 router.post('/createPaiement', createPaiement) //paiement sur place, seuleulement le paiement ici
+
+//EMAILS
+router.post('/sendWelcomeEmail', sendWelcomeEmail)
+
 
 
 module.exports = router
