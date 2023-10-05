@@ -36,11 +36,11 @@ const signup = async (req, res) => {
           userData.idSUN = body.idSUN;
       }
 
-      if (body.date === '') {
-        userData.date = null;
-    } else {
-        userData.date = body.date;
-    }
+      if (body.date_naissance === '') {
+        userData.date_naissance = null;
+      } else {
+        userData.date_naissance = body.date_naissance;
+      }
       const user = await Users.create(userData);
       const userId = user.userId;
       res.status(201).json({ id: userId, message: "User created" });
