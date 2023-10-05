@@ -1,6 +1,6 @@
 const Router = require('express')
 const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser, deleteUser } = require('../controllers/ctrl')
-const { forgotPassword, resetPassword , updatePassword} = require('../controllers/pwd_ctrl')
+const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds, } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
@@ -11,6 +11,7 @@ const { createSession, success, paiementStatus, createPaiement,  } = require('..
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
+const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const router = Router()
 
 
@@ -110,7 +111,7 @@ router.post('/createPaiement', createPaiement) //paiement sur place, seuleulemen
 
 //EMAILS
 router.post('/sendWelcomeEmail', sendWelcomeEmail)
-
+router.post('/confirmOrder', confirmOrder)
 
 
 module.exports = router

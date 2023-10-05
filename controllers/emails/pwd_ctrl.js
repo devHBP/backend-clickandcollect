@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt')
-const Users = require('../models/BDD/Users')
+const Users = require('../../models/BDD/Users')
 
 const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET;
 const NODEJS_URL = process.env.NODEJS_URL;
 const NODEJS_PORT = process.env.NODEJS_PORT;
-const { passwordUpdateValidation } = require('../validation/uservalidation');
+const { passwordUpdateValidation } = require('../../validation/uservalidation');
 
 
 const forgotPassword = async (req, res) => {
