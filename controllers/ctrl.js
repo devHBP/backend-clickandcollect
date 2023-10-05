@@ -52,8 +52,8 @@ const signup = async (req, res) => {
       const status = err.status || 500;
       console.error("Erreur de signup :", err.message);
       console.error("Détails :", err.details);
-      console.error("Erreur complète :", err);  // Ajouté pour afficher l'erreur complète
-      console.error("Stack Trace:", err.stack); // Ajouté pour afficher le stack trace
+      console.error("Erreur complète :", err); //erreur complète
+      console.error("Stack Trace:", err.stack); //stack trace
       res.status(status).json({ message: err.message, details: err.details || undefined });
   }
   

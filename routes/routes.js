@@ -10,7 +10,7 @@ const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi } = require('..
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder } = require('../controllers/order_ctrl')
-const {sendWelcomeEmail } = require('../controllers/emails')
+const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const router = Router()
 
 
