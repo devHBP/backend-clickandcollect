@@ -10,13 +10,24 @@ const confirmOrder = async (req, res) => {
     try {
         const { email, firstname , numero_commande, date} = req.body;
 
+        // Conversion de la chaîne date en objet Date
+        const dateObj = new Date(date);
+
+        // Vérification de la validité de la date
+        if (isNaN(dateObj.getTime())) {
+            console.error('Invalid date received:', date);
+            res.status(400).send('Invalid date format received');
+            return;
+        }
+
         // Extraction des composants de la date
-        const day = String(date.getUTCDate()).padStart(2, '0'); // Jour
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Mois
-        const year = date.getUTCFullYear(); // Année
+        const day = String(dateObj.getUTCDate()).padStart(2, '0'); 
+        const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); 
+        const year = dateObj.getUTCFullYear(); 
+
         // Concaténation sous le format JJ-MM-AAAA
         const formattedDate = `${day}-${month}-${year}`;
-        console.log(formattedDate); // Affiche : 06-10-2023
+        console.log(formattedDate); 
 
         //pour l'instant le numero_commande est sous ce format
         //magasin_001_05102023_00041
