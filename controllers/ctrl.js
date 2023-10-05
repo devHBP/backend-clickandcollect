@@ -9,6 +9,7 @@ require('dotenv').config();
 const signup = async (req, res) => {
   try {
       const { body } = req;
+      console.log('req', req)
       const { error } = userValidation(body);
 
       if (error) {
@@ -35,6 +36,11 @@ const signup = async (req, res) => {
           userData.idSUN = body.idSUN;
       }
 
+      if (body.date_naissance === '') {
+        userData.date_naissance = null;
+    } else {
+        userData.date_naissance = body.date_naissance;
+    }
       const user = await Users.create(userData);
       const userId = user.userId;
       res.status(201).json({ id: userId, message: "User created" });
