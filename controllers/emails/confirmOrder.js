@@ -8,7 +8,7 @@ const Users = require('../../models/BDD/Users')
 const confirmOrder = async (req, res) => {
 
     try {
-        const { email, firstname } = req.body;
+        const { email, firstname , numero_commande} = req.body;
 
         // 1. Vérifiez si l'utilisateur existe
         //const user = await Users.findOne({ where: { email: userEmail } });   
@@ -25,6 +25,7 @@ const confirmOrder = async (req, res) => {
              <p>Commencez à explorer dès maintenant et découvrez toutes les fonctionnalités disponibles pour vous.</p>
              <br>
              <p>Amusez-vous bien,</p>
+             <p>Votre numero de commande ${numero_commande}</p>
              <p>L'équipe du Pain du Jour</p>
             `
         };
