@@ -13,8 +13,9 @@ const signup = async (req, res) => {
       const { error } = userValidation(body);
 
       if (error) {
-          throw { status: 400, message: "Validation error", details: error.details };
-      }
+        console.error("Erreur de validation :", error.details);
+        throw { status: 400, message: "Validation error", details: error.details };
+    }
 
       const passwordHash = await bcrypt.hash(body.password, 12);
 
@@ -45,10 +46,12 @@ const signup = async (req, res) => {
       const userId = user.userId;
       res.status(201).json({ id: userId, message: "User created" });
 
-  } catch (err) {
-      const status = err.status || 500;
-      res.status(status).json({ message: err.message, details: err.details || undefined });
-  }
+  }catch (err) {
+    const status = err.status || 500;
+    console.error("Erreur de signup :", err.message);
+    console.error("Détails :", err.details);
+    res.status(status).json({ message: err.message, details: err.details || undefined });
+}
 };
 
   
