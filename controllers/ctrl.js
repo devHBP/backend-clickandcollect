@@ -5,12 +5,15 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const db = require('../db/db')
 require('dotenv').config();
+const moment = require('moment');
+
 
 const signup = async (req, res) => {
   try {
       const { body } = req;
       console.log('req', req)
       const { error } = userValidation(body);
+
 
       if (error) {
         console.error("Erreur de validation :", error.details);
@@ -37,11 +40,10 @@ const signup = async (req, res) => {
           userData.idSUN = body.idSUN;
       }
 
-      if (body.date_naissance === '') {
-        userData.date_naissance = null;
-      } else {
-        userData.date_naissance = body.date_naissance;
-      }
+      const formattedDate = moment(req.body.date_naissance, "DD/MM/YYYY").toISOString();
+
+      userData.date_naissance = body.date_naissance === '' ? null : formattedDate;
+
       const user = await Users.create(userData);
       const userId = user.userId;
       res.status(201).json({ id: userId, message: "User created" });
