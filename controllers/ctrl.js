@@ -272,7 +272,7 @@ const getEmailByUserId = async (req, res) => {
 const getUserByEmail = async (req, res) => {
   try {
 
-    const { email } = req.query;
+    const { email } = req.params;
     if (!email) {
       return res.status(400).json({ error: 'Email parameter is required' });
   }

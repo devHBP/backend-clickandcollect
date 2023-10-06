@@ -28,7 +28,7 @@ router.get('/verifyToken', verifyToken)
 router.patch('/modifyUser/:userId', modifyUser)
 router.delete('/deleteUser/:id', deleteUser)
 router.get('/getEmailByUserId/:userId/email', getEmailByUserId)
-router.get('/getUserByEmail', getUserByEmail)
+router.get('/getUserByEmail/:email', getUserByEmail);
 
 //PASSWORD
 router.post('/forgotPassword', forgotPassword)
