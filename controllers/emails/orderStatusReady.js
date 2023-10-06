@@ -9,7 +9,6 @@ const orderStatusReady = async (req, res) => {
 
     try {
         const { email, firstname, numero_commande, date, point_de_vente } = req.body;
-        console.log('num', `${process.env.NUMERO_SERVICE_CLIENT}`)
 
         // Conversion de la chaîne date en objet Date
         // const dateObj = new Date(date);
@@ -62,6 +61,12 @@ const orderStatusReady = async (req, res) => {
                         color: #273545;
                         text-decoration: underline;
                     }
+                    a:visited {
+                        color: #273545
+                    }
+                    a:link {
+                        color: #273545
+                    }
                     .button {
                         background-color: #E9520E;
                         color: #FFFFFF;
@@ -92,7 +97,7 @@ const orderStatusReady = async (req, res) => {
                                         <p style="font-size: 16px; margin-bottom: 20px;">Nos équipes se tiennent à ta disposition <strong>${date}</strong> pour récupérer ta commande au <strong>${point_de_vente}</strong>.</p>
                                         <!-- Button Y Aller -->
                                         <a href="https://maps.app.goo.gl/PV6tgGWPnaNPnodq7" class="button" target="_blank">Y Aller</a>
-                                        <p style="font-size: 16px; margin-top: 20px;">Si vous avez des questions ou des demandes spécifiques concernant votre commande, n'hésitez pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>${process.env.NUMERO_SERVICE_CLIENT}</strong>.</p>
+                                        <p style="font-size: 16px; margin-top: 20px;">Si vous avez des questions ou des demandes spécifiques concernant votre commande, n'hésitez pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>04 68 84 46 01</strong>.</p>
                                         <h2 style="font-size: 18px; margin-bottom: 10px;">Comment retirer votre commande ?</h2>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
                                             1. Se munir de l'application Click and Collect Pain du Jour<br>
@@ -111,7 +116,8 @@ const orderStatusReady = async (req, res) => {
                                             <tr>
                                                 <!-- Icon 1: Paiement Sécurisé -->
                                                 <td align="center" style="padding: 10px;">
-                                                    <img src="[URL_ICONE_PAIEMENT_PNG]" alt="Paiement Sécurisé" style="width: 40px; height: auto;">
+                                                    <!--  <img src="[URL_ICONE_PAIEMENT_PNG]" alt="Paiement Sécurisé" style="width: 40px; height: auto;"> -->
+                                                    <iconify-icon icon="ri:secure-payment-fill"></iconify-icon>
                                                     <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Paiement Sécurisé</p>
                                                 </td>
                                                 <!-- Icon 2: Service Client -->
