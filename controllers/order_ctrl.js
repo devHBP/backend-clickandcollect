@@ -5,7 +5,9 @@ const TestPaymentsV2 = require('../models/BDD/Payments')
 const Products = require('../models/BDD/Produits')
 const TableOrderProduct = require('../models/BDD/Orderproducts')
 const StocksTest = require('../models/BDD/Stocks.js')
-const Reviews = require('../models/BDD/Reviews'); // ajustez le chemin selon votre structure de projet
+const Reviews = require('../models/BDD/Reviews'); 
+const Users = require('../models/BDD/Users')
+
 
 const { Op } = require('sequelize');
 
@@ -569,6 +571,7 @@ const getAllReviews = (req, res) => {
     })
     .catch(error => res.statut(500).json(error))
 }
+
 
 
   module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, 
