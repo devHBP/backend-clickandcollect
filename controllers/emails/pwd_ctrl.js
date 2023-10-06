@@ -16,7 +16,9 @@ const forgotPassword = async (req, res) => {
         const { email: userEmail, firstname: userFirstname } = req.body;
         const lien_application_android = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
         const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999"
-        const paiement = "https://preprod.lepaindujour.io/public/paiement.png"
+        const paiement = "https://preprod.lepaindujour.io/paiement.png"
+        const sav = "https://preprod.lepaindujour.io/sav.png"
+        const location = "https://preprod.lepaindujour.io/location.png"
 
         // 1. Vérifiez si l'utilisateur existe
         const user = await Users.findOne({ where: { email: userEmail } });
@@ -138,12 +140,12 @@ const forgotPassword = async (req, res) => {
                                                 </td>
                                                 <!-- Icon 2: Service Client -->
                                                 <td align="center" style="padding: 10px;">
-                                                    <img src="[URL_ICONE_SERVICE_CLIENT_PNG]" alt="Service Client" style="width: 40px; height: auto;">
+                                                    <img src=${sav} alt="Service Client" style="width: 40px; height: auto;">
                                                     <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Service Client 8H-20H</p>
                                                 </td>
                                                 <!-- Icon 3: Localisation -->
                                                 <td align="center" style="padding: 10px;">
-                                                    <img src="[URL_ICONE_LOCALISATION_PNG]" alt="Localisation" style="width: 40px; height: auto;">
+                                                    <img src=${location} alt="Localisation" style="width: 40px; height: auto;">
                                                     <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Localisation</p>
                                                 </td>
                                             </tr>
