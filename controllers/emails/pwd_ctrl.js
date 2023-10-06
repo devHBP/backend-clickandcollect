@@ -17,7 +17,7 @@ const forgotPassword = async (req, res) => {
 
         // 1. Vérifiez si l'utilisateur existe
         const user = await Users.findOne({ where: { email: userEmail } });
-        console.log(user)
+  
         if (!user) {
             return res.status(404).send('Aucun utilisateur trouvé avec cette adresse e-mail.');
         }
@@ -40,16 +40,133 @@ const forgotPassword = async (req, res) => {
         //         <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail et votre mot de passe restera inchangé.</p>
         //     `
         // };
+
+
         const msg = {
             to: userEmail,
             from: 'resetpwdapp@gmail.com',
             subject: 'Réinitialisation de votre mot de passe',
             html: `
-                <p>Vous avez demandé la réinitialisation du mot de passe pour votre compte.</p>
-                <p>Veuillez cliquer sur le lien suivant ou copiez-le dans votre navigateur pour compléter le processus :</p>
-                <br>
-                <a href="http://127.0.0.1:8080/resetPassword/${token}">Réinitialiser le mot de passe</a>
-                <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail et votre mot de passe restera inchangé.</p>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Le Pain du Jour - Réinitialisation du Mot de Passe</title>
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@400&display=swap" rel="stylesheet">
+                <style>
+                    body {
+                        font-family: 'Montserrat', sans-serif;
+                        color: #273545;
+                    }
+                    h1, h2 {
+                        font-family: 'Poppins', sans-serif;
+                        color: #E9520E;
+                    }
+                    a {
+                        color: #273545;
+                        text-decoration: underline;
+                    }
+                    .button {
+                        display: inline-block;
+                        background-color: #E9520E;
+                        color: #FFFFFF;
+                        padding: 10px 20px;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        text-decoration: none;
+                        margin-top: 10px;
+                    }
+                </style>
+            </head>
+            <body style="margin: 0; padding: 0; box-sizing: border-box; background-color: #ECECEC;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="center" style="padding: 20px 0; background-color: #273545;">
+                            <!-- Logo -->
+                            <img src="https://www.lepaindujour.io/wp-content/uploads/2023/10/logo.png" alt="Le Pain du Jour" style="width: 100px; height: auto;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding: 20px;">
+                            <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #fff; border-radius: 8px; overflow: hidden;">
+                                <tr>
+                                    <td align="center" style="padding: 40px;">
+                                        <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour [Prénom],</h1>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous avons reçu une demande de réinitialisation du mot de passe pour votre compte sur l'application Click & Collect Pain du Jour.</p>
+                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Instructions pour Réinitialiser Votre Mot de Passe :</h2>
+                                        <p style="font-size: 16px; margin-bottom: 10px;">
+                                            Cliquez sur le lien ci-dessous pour accéder à la page de réinitialisation du mot de passe :
+                                        </p>
+                                        <a href="http://127.0.0.1:8080/resetPassword/${token}" class="button" target="_blank">Réinitialiser le mot de passe</a>
+
+                                        <p style="font-size: 16px; margin-top: 20px;">
+                                            ou utilisez le code : [Code]
+                                        </p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">
+                                            Sur la page de réinitialisation du mot de passe, suivez les instructions pour créer un nouveau mot de passe sécurisé.<br>
+                                            Assurez-vous que votre nouveau mot de passe soit suffisamment fort en utilisant une combinaison de lettres majuscules, de lettres minuscules, de chiffres et de caractères spéciaux.
+                                        </p>
+                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Pourquoi Vous Devez Réinitialiser Votre Mot de Passe :</h2>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">
+                                            La sécurité de ton compte est une priorité pour nous, et la réinitialisation du mot de passe est une mesure de sécurité essentielle pour protéger tes informations personnelles.<br>
+                                            En réinitialisant ton mot de passe, tu assures la confidentialité et la sécurité de ton compte.
+                                        </p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">
+                                            Si tu n'as pas demandé la réinitialisation du mot de passe ou si tu rencontres des problèmes avec cette procédure, n'hésites pas à nous contacter immédiatement en répondant à cet e-mail ou en utilisant nos informations de contact ci-dessous.<br>
+                                            Nous sommes là pour t'aider.
+                                        </p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">
+                                            Nous espérons que tu pourras rapidement retrouver l'accès à ton compte et continuer à profiter de notre application click and collect Pain du Jour.
+                                        </p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Merci pour votre confiance et nous aider à préserver la sécurité de ton compte !</p>
+                                    </td>
+                                </tr>
+                                <!-- New Bandeau -->
+                                <tr>
+                                    <td align="center" style="padding: 20px; background-color: #273545; background-image: url('https://www.lepaindujour.io/wp-content/uploads/2023/10/Group-2.png'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+                                        <table width="80%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <!-- Icon 1: Paiement Sécurisé -->
+                                                <td align="center" style="padding: 10px;">
+                                                    <img src="[URL_ICONE_PAIEMENT_PNG]" alt="Paiement Sécurisé" style="width: 40px; height: auto;">
+                                                    <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Paiement Sécurisé</p>
+                                                </td>
+                                                <!-- Icon 2: Service Client -->
+                                                <td align="center" style="padding: 10px;">
+                                                    <img src="[URL_ICONE_SERVICE_CLIENT_PNG]" alt="Service Client" style="width: 40px; height: auto;">
+                                                    <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Service Client 8H-20H</p>
+                                                </td>
+                                                <!-- Icon 3: Localisation -->
+                                                <td align="center" style="padding: 10px;">
+                                                    <img src="[URL_ICONE_LOCALISATION_PNG]" alt="Localisation" style="width: 40px; height: auto;">
+                                                    <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Localisation</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <p style="margin: 20px 0; font-size: 14px;">
+                                            <a href="https://apps.apple.com/app/idXXXXXXXXX" target="_blank" style="color: #FFFFFF; text-decoration: underline;">Télécharger dans l'App Store</a> | 
+                                            <a href="https://play.google.com/store/apps/details?id=com.example" target="_blank" style="color: #FFFFFF; text-decoration: underline;">Disponible sur Google Play</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <!-- Footer -->
+                                <tr>
+                                    <td align="center" style="padding: 20px; background-color: #D9D9D9; color: #273545;">
+                                        <p style="margin: 0;">START FOOD - LE PAIN DU JOUR - MAS GUERIDO</p>
+                                        <p style="margin: 0;">Numéro de téléphone : 04 68 84 46 01</p>
+                                        <p style="margin: 0;">Adresse e-mail de Contact : <a href="mailto:contact@lepaindujour.io">contact@lepaindujour.io</a></p>
+                                        <p style="margin: 0;">Capital : 00000 €</p>
+                                        <p style="margin: 0;">SIRET 919 823 054 00011</p>
+                                        <p style="margin: 10px 0;"><a href="[LIEN_RGPD]" target="_blank">RGPD</a> | <a href="[LIEN_DESABONNEMENT]" target="_blank">Se désabonner</a></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </body>
+            </html>
             `
         };
         //Attention ici configuré pour android : 10.0.2.2
