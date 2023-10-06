@@ -268,11 +268,30 @@ const getEmailByUserId = async (req, res) => {
       res.status(500).json({ msg: "An error occurred", error });
   }
 }
+//recuperer le firstname via l'email
+const getUserByEmail = async (req, res) => {
+  try {
+    // Trouver l'utilisateur avec l'e-mail spécifié
+    const user = await Users.findOne({
+        where: {
+            email: email
+        },
+        attributes: ['firstname'] 
+    });
 
+    // Vérifier si l'utilisateur a été trouvé
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ firstname: user.firstname });
+
+} catch (error) {
+    console.error('Error fetching user:', error);
+    return null;
+}
+}
 
   
-module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser, getEmailByUserId};
+module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser, getEmailByUserId, getUserByEmail};
   
-
-
-// module.exports =  { signup,login,  getAll, getOne, deleteOne, updateOneUser }

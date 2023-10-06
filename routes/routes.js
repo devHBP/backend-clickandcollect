@@ -1,5 +1,5 @@
 const Router = require('express')
-const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser, deleteUser, getEmailByUserId } = require('../controllers/ctrl')
+const { signup, getAll, getOne, deleteOne, login, updateOneUser, updateRole, verifyToken, modifyUser, deleteUser, getEmailByUserId, getUserByEmail } = require('../controllers/ctrl')
 const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds, } = require('../controllers/product_ctrl')
@@ -28,6 +28,7 @@ router.get('/verifyToken', verifyToken)
 router.patch('/modifyUser/:userId', modifyUser)
 router.delete('/deleteUser/:id', deleteUser)
 router.get('/getEmailByUserId/:userId/email', getEmailByUserId)
+router.get('/getUserByEmail/:email', getUserByEmail)
 
 //PASSWORD
 router.post('/forgotPassword', forgotPassword)
