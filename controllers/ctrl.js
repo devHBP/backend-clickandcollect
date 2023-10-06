@@ -247,10 +247,31 @@ const deleteUser = async (req, res) => {
   }
 };
 
+//Récupérer l'email via le UserId
+const getEmailByUserId = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+      // Récupérer l'utilisateur par userId
+      const user = await Users.findByPk(userId, {
+          attributes: ['email'] 
+      });
+
+      if (!user) {
+          return res.status(404).json({ msg: "User not found" });
+      }
+
+      res.status(200).json({ email: user.email });
+      
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ msg: "An error occurred", error });
+  }
+}
 
 
   
-module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser};
+module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser, getEmailByUserId};
   
 
 
