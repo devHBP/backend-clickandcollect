@@ -70,6 +70,9 @@ const orderStatusReady = async (req, res) => {
                     a:active {
                         color: #273545;
                     }
+                    .ii a[href] {
+                        color: #273545;
+                    }
                     .button {
                         background-color: #E9520E;
                         color: #FFFFFF;
