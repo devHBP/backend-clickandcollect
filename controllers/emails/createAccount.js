@@ -14,6 +14,8 @@ const { passwordUpdateValidation } = require('../../validation/uservalidation');
 const createAccountEmail = async (req, res) => {
     try {
         const { email, firstname, date } = req.body;
+        const nom_application = "Le Pain du Jour - ClickAndCollect"
+        const lien_application = ""
 
         sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
@@ -82,7 +84,7 @@ const createAccountEmail = async (req, res) => {
                                 <tr>
                                     <td align="center" style="padding: 40px;">
                                         <h1 style="font-size: 24px; margin-bottom: 20px;">Bienvenue ${firstname},</h1>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous sommes ravis de vous accueillir sur [Nom de Votre Application] ! Ton compte a été créé avec succès, et nous sommes impatients de t'offrir une expérience exceptionnelle.</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous sommes ravis de vous accueillir sur ${nom_application} ! Ton compte a été créé avec succès, et nous sommes impatients de t'offrir une expérience exceptionnelle.</p>
                                         <h2 style="font-size: 18px; margin-bottom: 10px;">Détails de Ton Compte :</h2>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
                                             <strong>Nom d'Utilisateur :</strong> ${email}<br>
@@ -95,13 +97,13 @@ const createAccountEmail = async (req, res) => {
                                             <li>Personnalisation : Nous adaptons nos offres et nos recommandations en fonction de tes préférences pour t'offrir une expérience sur mesure.</li>
                                         </ul>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
-                                            Téléchargez notre application <a href="[LIEN_VERS_APPLICATION]" target="_blank" class="button">ici</a>.
+                                        <p>Téléchargez notre application <a href="#" target="_blank" id="downloadLink" class="button">ici</a></p>
                                         </p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
                                             Connectez-vous à votre compte en utilisant les informations d'identification que vous avez fournies lors de la création de votre compte.
                                         </p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
-                                            Parcourez notre gamme de produits/services et commencez à profiter de tout ce que [Nom de Votre Application] a à offrir !
+                                            Parcourez notre gamme de produits/services et commencez à profiter de tout ce que ${nom_application} a à offrir !
                                         </p>
                                         <p class="thank-you" style="font-size: 16px; margin-bottom: 20px;">Merci pour ta confiance et nous sommes impatients de pouvoir te régaler !</p>
                                         <!-- New Bandeau -->
@@ -144,6 +146,19 @@ const createAccountEmail = async (req, res) => {
                 </td>
             </tr>
                 </table>
+
+                <script>
+                const linkElement = document.getElementById('downloadLink');
+                const userAgent = navigator.userAgent || navigator.vendor;
+
+                if (/android/i.test(userAgent)) {
+                    linkElement.href = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
+                } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                    linkElement.href = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999";
+                } else {
+                    linkElement.href = "Votre_lien_page_de_téléchargement_general"; // ou garder un des liens par défaut
+                }
+            </script>
             </body>
             </html>
             `
