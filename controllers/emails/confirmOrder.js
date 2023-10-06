@@ -10,6 +10,7 @@ const confirmOrder = async (req, res) => {
     try {
         const { email, firstname , numero_commande, date, point_de_vente} = req.body;
         const numero_service_client = "04 68 84 46 01"
+        const numeroCommande = numero_commande.substring(numero_commande.length - 5);
 
         // Conversion de la chaîne date en objet Date
         const dateObj = new Date(date);
@@ -78,7 +79,7 @@ const confirmOrder = async (req, res) => {
                                 <tr>
                                     <td align="center" style="padding: 40px;">
                                         <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour ${firstname},</h1>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Merci pour ta commande <strong>${numero_commande}</strong> !</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Merci pour ta commande <strong>${numeroCommande}</strong> !</p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">Nos équipes vont la préparer pour <strong>${formattedDate}</strong>, nous te tiendrons informé de sa disponibilité de retrait au <strong>${point_de_vente}</strong>.</p>
                                         <h2 style="font-size: 18px; margin-bottom: 10px;">[BON DE COMMANDE]</h2>
                                         <!-- Image 1 -->
