@@ -15,16 +15,7 @@ const createAccountEmail = async (req, res) => {
     try {
         const { email, firstname, date } = req.body;
 
-        // 1. Vérifiez si l'utilisateur existe
-        const user = await Users.findOne({ where: { email: email } });
-  
-        if (!user) {
-            return res.status(404).send('Aucun utilisateur trouvé avec cette adresse e-mail.');
-        }
-        
-        // 3. Envoyer l'e-mail avec SendGrid
         sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
-
 
         const msg = {
             to: email,
