@@ -271,11 +271,14 @@ const getEmailByUserId = async (req, res) => {
 //recuperer le firstname via l'email
 const getUserByEmail = async (req, res) => {
   try {
+
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({ error: 'Email parameter is required' });
+  }
     // Trouver l'utilisateur avec l'e-mail spécifié
     const user = await Users.findOne({
-        where: {
-            email: email
-        },
+        where: {email},
         attributes: ['firstname'] 
     });
 
