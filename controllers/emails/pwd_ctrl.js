@@ -44,7 +44,7 @@ const forgotPassword = async (req, res) => {
 
         const msg = {
             to: userEmail,
-            from: 'resetpwdapp@gmail.com',
+            from: 'contact@lepaindujour.io',
             subject: 'Réinitialisation de votre mot de passe',
             html: `
             <!DOCTYPE html>
@@ -169,9 +169,6 @@ const forgotPassword = async (req, res) => {
             </html>
             `
         };
-        //Attention ici configuré pour android : 10.0.2.2
-        // <a href="http://10.0.2.2:8080/resetPassword/${token}">Réinitialiser le mot de passe</a>
-
         
         await sgMail.send(msg);
         return res.status(200).send("E-mail envoyé avec succès");
