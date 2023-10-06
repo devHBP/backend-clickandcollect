@@ -16,7 +16,7 @@ const forgotPassword = async (req, res) => {
         const { email: userEmail, firstname: userFirstname } = req.body;
         const lien_application_android = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
         const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999"
-        const paiement = process.env.PAIEMENT
+        const paiement = "https://preprod.lepaindujour.io/paiement.png"
         const sav = "https://preprod.lepaindujour.io/sav.png"
         const location = "https://preprod.lepaindujour.io/location.png"
 
