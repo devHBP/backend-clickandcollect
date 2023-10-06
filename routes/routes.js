@@ -13,6 +13,7 @@ const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser,
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
+const { createAccountEmail} = require('../controllers/emails/createAccount')
 const router = Router()
 
 
@@ -116,6 +117,8 @@ router.post('/createPaiement', createPaiement) //paiement sur place, seuleulemen
 router.post('/sendWelcomeEmail', sendWelcomeEmail)
 router.post('/confirmOrder', confirmOrder)
 router.post('/orderStatusReady', orderStatusReady)
+router.post('/createAccountEmail', createAccountEmail)
+
 
 
 
