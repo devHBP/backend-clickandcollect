@@ -67,6 +67,9 @@ const orderStatusReady = async (req, res) => {
                     a:link {
                         color: #273545
                     }
+                    a:active {
+                        color: #273545;
+                    }
                     .button {
                         background-color: #E9520E;
                         color: #FFFFFF;
@@ -116,8 +119,7 @@ const orderStatusReady = async (req, res) => {
                                             <tr>
                                                 <!-- Icon 1: Paiement Sécurisé -->
                                                 <td align="center" style="padding: 10px;">
-                                                    <!--  <img src="[URL_ICONE_PAIEMENT_PNG]" alt="Paiement Sécurisé" style="width: 40px; height: auto;"> -->
-                                                    <iconify-icon icon="ri:secure-payment-fill"></iconify-icon>
+                                                    <img src="[URL_ICONE_PAIEMENT_PNG]" alt="Paiement Sécurisé" style="width: 40px; height: auto;">
                                                     <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Paiement Sécurisé</p>
                                                 </td>
                                                 <!-- Icon 2: Service Client -->
