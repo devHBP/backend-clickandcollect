@@ -9,6 +9,7 @@ const orderStatusReady = async (req, res) => {
 
     try {
         const { email, firstname, numero_commande, date, point_de_vente } = req.body;
+        const numeroCommande = numero_commande.substring(orderNumber.length - 5);
 
         // Conversion de la chaîne date en objet Date
         // const dateObj = new Date(date);
@@ -99,10 +100,9 @@ const orderStatusReady = async (req, res) => {
                                 <tr>
                                     <td align="center" style="padding: 40px;">
                                         <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour ${firstname},</h1>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous avons une super nouvelle... Ta commande <strong>${numero_commande}</strong> est prête !</p>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Nos équipes se tiennent à ta disposition <strong>${date}</strong> pour récupérer ta commande au <strong>${point_de_vente}</strong>.</p>
-                                        <!-- Button Y Aller -->
-                                        <a href="https://maps.app.goo.gl/PV6tgGWPnaNPnodq7" class="button" target="_blank">Y Aller</a>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous avons une super nouvelle... Ta commande <strong>${numeroCommande}</strong> a été préparée !</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Elle te sera livrée le <strong>${date}</strong> à <strong>${point_de_vente}</strong>.</p>
+                                     
                                         <p style="font-size: 16px; margin-top: 20px;">Si vous avez des questions ou des demandes spécifiques concernant votre commande, n'hésitez pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>04 68 84 46 01</strong>.</p>
                                         <h2 style="font-size: 18px; margin-bottom: 10px;">Comment retirer votre commande ?</h2>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
