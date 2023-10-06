@@ -16,6 +16,7 @@ const forgotPassword = async (req, res) => {
         const { email: userEmail, firstname: userFirstname } = req.body;
         const lien_application_android = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
         const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999"
+        const paiement = "https://preprod.lepaindujour.io/public/paiement.png"
 
         // 1. Vérifiez si l'utilisateur existe
         const user = await Users.findOne({ where: { email: userEmail } });
@@ -132,9 +133,7 @@ const forgotPassword = async (req, res) => {
                                             <tr>
                                                 <!-- Icon 1: Paiement Sécurisé -->
                                                 <td align="center" style="padding: 10px;">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="m11.005 2l7.298 2.28a1 1 0 0 1 .702.955V7h2a1
-                                                     1 0 0 1 1 1v2h-13V8a1 1 0 0 1 1-1h7V5.97l-6-1.876l-6 1.876v7.404a4 4 0 0 0 1.558 3.169l.189.136l4.253 2.9L14.787 17h-4.782a1 1 0 0 1-1-1v-4h13v4a1 1 0 0
-                                                      1-1 1l-3.22.001c-.387.51-.857.96-1.4 1.33L11.005 22l-5.38-3.668a6 6 0 0 1-2.62-4.958V5.235a1 1 0 0 1 .702-.954L11.005 2Z"/></svg>
+                                                    <img src=${paiement} alt="Paiement Sécurisé" style="width: 40px; height: auto;">
                                                     <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Paiement Sécurisé</p>
                                                 </td>
                                                 <!-- Icon 2: Service Client -->
