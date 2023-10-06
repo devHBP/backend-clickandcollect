@@ -13,7 +13,7 @@ const { passwordUpdateValidation } = require('../../validation/uservalidation');
 
 const forgotPassword = async (req, res) => {
     try {
-        const userEmail = req.body.email;
+        const { email: userEmail, firstname: userFirstname } = req.body;
 
         // 1. Vérifiez si l'utilisateur existe
         const user = await Users.findOne({ where: { email: userEmail } });
@@ -92,16 +92,16 @@ const forgotPassword = async (req, res) => {
                             <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #fff; border-radius: 8px; overflow: hidden;">
                                 <tr>
                                     <td align="center" style="padding: 40px;">
-                                        <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour [Prénom],</h1>
+                                        <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour ${userFirstname},</h1>
                                         <p style="font-size: 16px; margin-bottom: 20px;">Nous avons reçu une demande de réinitialisation du mot de passe pour votre compte sur l'application Click & Collect Pain du Jour.</p>
                                         <h2 style="font-size: 18px; margin-bottom: 10px;">Instructions pour Réinitialiser Votre Mot de Passe :</h2>
                                         <p style="font-size: 16px; margin-bottom: 10px;">
                                             Cliquez sur le lien ci-dessous pour accéder à la page de réinitialisation du mot de passe :
                                         </p>
-                                        <a href="http://127.0.0.1:8080/resetPassword/${token}" class="button" target="_blank">Réinitialiser le mot de passe</a>
+                                        <a href="https://preprod.lepaindujour.io/resetPassword/${token}" class="button" target="_blank">Réinitialiser le mot de passe</a>
 
                                         <p style="font-size: 16px; margin-top: 20px;">
-                                            ou utilisez le code : [Code]
+                                            ou utilisez le code : https://preprod.lepaindujour.io/resetPassword/${token}
                                         </p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
                                             Sur la page de réinitialisation du mot de passe, suivez les instructions pour créer un nouveau mot de passe sécurisé.<br>
