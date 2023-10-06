@@ -9,7 +9,7 @@ const orderStatusReady = async (req, res) => {
 
     try {
         const { email, firstname, numero_commande, date, point_de_vente } = req.body;
-        console.log('num', process.env.NUMERO_SERVICE_CLIENT)
+        console.log('num', `${process.env.NUMERO_SERVICE_CLIENT}`)
 
         // Conversion de la chaîne date en objet Date
         // const dateObj = new Date(date);
