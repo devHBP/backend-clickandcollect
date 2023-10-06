@@ -9,7 +9,7 @@ const orderStatusReady = async (req, res) => {
 
     try {
         const { email, firstname, numero_commande, date, point_de_vente } = req.body;
-        const numeroCommande = numero_commande.substring(orderNumber.length - 5);
+        const numeroCommande = numero_commande.substring(numero_commande.length - 5);
 
         // Conversion de la chaîne date en objet Date
         // const dateObj = new Date(date);
