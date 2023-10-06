@@ -15,14 +15,15 @@ const createAccountEmail = async (req, res) => {
     try {
         const { email, firstname, date } = req.body;
         const nom_application = "Le Pain du Jour - ClickAndCollect"
-        const lien_application = ""
+        const lien_application_android = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
+        const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999"
 
         sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
         const msg = {
             to: email,
             from: 'contact@lepaindujour.io',
-            subject: 'Réinitialisation de votre mot de passe',
+            subject: `Bienvenue chez ${nom_application}`,
             html: `
                         <!DOCTYPE html>
             <html>
@@ -97,7 +98,9 @@ const createAccountEmail = async (req, res) => {
                                             <li>Personnalisation : Nous adaptons nos offres et nos recommandations en fonction de tes préférences pour t'offrir une expérience sur mesure.</li>
                                         </ul>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
-                                        <p>Téléchargez notre application <a href="#" target="_blank" id="downloadLink" class="button">ici</a></p>
+                                        <p>Téléchargez notre application: </p>
+                                        <a href=${lien_application_android} target="_blank" class="button">Sur Android</a>
+                                        <a href=${lien_application_ios} target="_blank" class="button">Sur iOS</a>                       
                                         </p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
                                             Connectez-vous à votre compte en utilisant les informations d'identification que vous avez fournies lors de la création de votre compte.
@@ -147,18 +150,7 @@ const createAccountEmail = async (req, res) => {
             </tr>
                 </table>
 
-                <script>
-                const linkElement = document.getElementById('downloadLink');
-                const userAgent = navigator.userAgent || navigator.vendor;
 
-                if (/android/i.test(userAgent)) {
-                    linkElement.href = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
-                } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                    linkElement.href = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999";
-                } else {
-                    linkElement.href = "Votre_lien_page_de_téléchargement_general"; // ou garder un des liens par défaut
-                }
-            </script>
             </body>
             </html>
             `
