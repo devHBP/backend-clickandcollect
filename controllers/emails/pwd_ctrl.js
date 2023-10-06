@@ -14,6 +14,8 @@ const { passwordUpdateValidation } = require('../../validation/uservalidation');
 const forgotPassword = async (req, res) => {
     try {
         const { email: userEmail, firstname: userFirstname } = req.body;
+        const lien_application_android = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
+        const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999"
 
         // 1. Vérifiez si l'utilisateur existe
         const user = await Users.findOne({ where: { email: userEmail } });
@@ -93,33 +95,34 @@ const forgotPassword = async (req, res) => {
                                 <tr>
                                     <td align="center" style="padding: 40px;">
                                         <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour ${userFirstname},</h1>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous avons reçu une demande de réinitialisation du mot de passe pour votre compte sur l'application Click & Collect Pain du Jour.</p>
-                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Instructions pour Réinitialiser Votre Mot de Passe :</h2>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous avons reçu une demande de réinitialisation du mot de passe pour ton compte sur l'application Click & Collect Pain du Jour.</p>
+                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Instructions pour Réinitialiser Ton Mot de Passe :</h2>
                                         <p style="font-size: 16px; margin-bottom: 10px;">
-                                            Cliquez sur le lien ci-dessous pour accéder à la page de réinitialisation du mot de passe :
+                                            Clique sur le lien ci-dessous pour accéder à la page de réinitialisation du mot de passe :
                                         </p>
                                         <a href="https://preprod.lepaindujour.io/resetPassword/${token}" class="button" target="_blank">Réinitialiser le mot de passe</a>
 
                                         <p style="font-size: 16px; margin-top: 20px;">
-                                            ou utilisez le code : https://preprod.lepaindujour.io/resetPassword/${token}
+                                            ou utilise le code : https://preprod.lepaindujour.io/resetPassword/${token}
                                         </p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
-                                            Sur la page de réinitialisation du mot de passe, suivez les instructions pour créer un nouveau mot de passe sécurisé.<br>
-                                            Assurez-vous que votre nouveau mot de passe soit suffisamment fort en utilisant une combinaison de lettres majuscules, de lettres minuscules, de chiffres et de caractères spéciaux.
+                                            Sur la page de réinitialisation du mot de passe, suit les instructions pour créer un nouveau mot de passe sécurisé.<br>
+                                            Assures-toi que ton nouveau mot de passe soit suffisamment fort en utilisant une combinaison de lettres majuscules, de lettres minuscules, de chiffres et de caractères spéciaux.
                                         </p>
-                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Pourquoi Vous Devez Réinitialiser Votre Mot de Passe :</h2>
+                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Pourquoi Tu Dois Réinitialiser Ton Mot de Passe :</h2>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
                                             La sécurité de ton compte est une priorité pour nous, et la réinitialisation du mot de passe est une mesure de sécurité essentielle pour protéger tes informations personnelles.<br>
                                             En réinitialisant ton mot de passe, tu assures la confidentialité et la sécurité de ton compte.
                                         </p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
-                                            Si tu n'as pas demandé la réinitialisation du mot de passe ou si tu rencontres des problèmes avec cette procédure, n'hésites pas à nous contacter immédiatement en répondant à cet e-mail ou en utilisant nos informations de contact ci-dessous.<br>
+                                           <i> Si tu n'as pas demandé la réinitialisation du mot de passe ou si tu rencontres des problèmes avec cette procédure, n'hésites pas à nous contacter immédiatement en répondant à cet e-mail ou en utilisant nos informations de contact ci-dessous.<br>
                                             Nous sommes là pour t'aider.
+                                            </i>
                                         </p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">
-                                            Nous espérons que tu pourras rapidement retrouver l'accès à ton compte et continuer à profiter de notre application click and collect Pain du Jour.
+                                            Nous espérons que tu pourras rapidement retrouver l'accès à ton compte et continuer à profiter de notre application Click & Collect Pain du Jour.
                                         </p>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Merci pour votre confiance et nous aider à préserver la sécurité de ton compte !</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Merci pour ta confiance et nous aider à préserver la sécurité de ton compte !</p>
                                     </td>
                                 </tr>
                                 <!-- New Bandeau -->
@@ -129,7 +132,9 @@ const forgotPassword = async (req, res) => {
                                             <tr>
                                                 <!-- Icon 1: Paiement Sécurisé -->
                                                 <td align="center" style="padding: 10px;">
-                                                    <img src="[URL_ICONE_PAIEMENT_PNG]" alt="Paiement Sécurisé" style="width: 40px; height: auto;">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="m11.005 2l7.298 2.28a1 1 0 0 1 .702.955V7h2a1
+                                                     1 0 0 1 1 1v2h-13V8a1 1 0 0 1 1-1h7V5.97l-6-1.876l-6 1.876v7.404a4 4 0 0 0 1.558 3.169l.189.136l4.253 2.9L14.787 17h-4.782a1 1 0 0 1-1-1v-4h13v4a1 1 0 0
+                                                      1-1 1l-3.22.001c-.387.51-.857.96-1.4 1.33L11.005 22l-5.38-3.668a6 6 0 0 1-2.62-4.958V5.235a1 1 0 0 1 .702-.954L11.005 2Z"/></svg>
                                                     <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Paiement Sécurisé</p>
                                                 </td>
                                                 <!-- Icon 2: Service Client -->
@@ -145,8 +150,8 @@ const forgotPassword = async (req, res) => {
                                             </tr>
                                         </table>
                                         <p style="margin: 20px 0; font-size: 14px;">
-                                            <a href="https://apps.apple.com/app/idXXXXXXXXX" target="_blank" style="color: #FFFFFF; text-decoration: underline;">Télécharger dans l'App Store</a> | 
-                                            <a href="https://play.google.com/store/apps/details?id=com.example" target="_blank" style="color: #FFFFFF; text-decoration: underline;">Disponible sur Google Play</a>
+                                            <a href=${lien_application_ios} target="_blank" style="color: #FFFFFF; text-decoration: underline;">Télécharger dans l'App Store</a> | 
+                                            <a href=${lien_application_android} target="_blank" style="color: #FFFFFF; text-decoration: underline;">Disponible sur Google Play</a>
                                         </p>
                                     </td>
                                 </tr>
