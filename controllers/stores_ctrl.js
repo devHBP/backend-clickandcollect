@@ -65,7 +65,7 @@ const getAllStores = ( req, res ) => {
 
 //Stocker les magasins par rôle
 const ROLE_STORES = {
-    SUNcollaborateur: [1],  
+    SUNcollaborateur: [1,3],  
     client: [2],
     invite:[2]      
 };
