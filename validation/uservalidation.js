@@ -14,7 +14,7 @@ const userValidation = ( body) => {
             Joi.string().allow('').optional(),
             Joi.string().regex(/^[0-9]{5}$/).optional()
         ).label('idSun'),
-        role: Joi.string().valid('client', 'SUNcollaborateur', 'invite').required(),
+        role: Joi.string().valid('client', 'SUNcollaborateur', 'invite','gestionnaire','employe').required(),
     })
     return userSchema.validate(body)
 }
