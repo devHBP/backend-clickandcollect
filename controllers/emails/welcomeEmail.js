@@ -7,7 +7,10 @@ const sendWelcomeEmail = async (req, res) => {
     const { email, firstname, date } = req.body;
     const nom_application = "Le Pain du Jour - ClickAndCollect"
     const lien_application_android = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
-    const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999"
+    const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999";
+    const paiement = "https://preprod.lepaindujour.io/paiement.png"
+    const sav = "https://preprod.lepaindujour.io/sav.png"
+    const location = "https://preprod.lepaindujour.io/location.png"
 
     sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
@@ -76,7 +79,7 @@ const sendWelcomeEmail = async (req, res) => {
                             <tr>
                                 <td align="center" style="padding: 40px;">
                                     <h1 style="font-size: 24px; margin-bottom: 20px;">Bienvenue ${firstname},</h1>
-                                    <p style="font-size: 16px; margin-bottom: 20px;">Nous sommes ravis de vous accueillir sur ${nom_application} ! Ton compte a été créé avec succès, et nous sommes impatients de t'offrir une expérience exceptionnelle.</p>
+                                    <p style="font-size: 16px; margin-bottom: 20px;">Nous sommes ravis de t'accueillir sur ${nom_application} ! Ton compte a été créé avec succès, et nous sommes impatients de t'offrir une expérience exceptionnelle.</p>
                                     <h2 style="font-size: 18px; margin-bottom: 10px;">Détails de Ton Compte :</h2>
                                     <p style="font-size: 16px; margin-bottom: 20px;">
                                         <strong>Nom d'Utilisateur :</strong> ${email}<br>
@@ -107,17 +110,17 @@ const sendWelcomeEmail = async (req, res) => {
                                                 <tr>
                                                     <!-- Icon 1: Paiement Sécurisé -->
                                                     <td align="center" style="padding: 10px;">
-                                                        <img src="[URL_ICONE_PAIEMENT_PNG]" alt="Paiement Sécurisé" style="width: 40px; height: auto;">
+                                                        <img src=${paiement} alt="Paiement Sécurisé" style="width: 40px; height: auto;">
                                                         <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Paiement Sécurisé</p>
                                                     </td>
                                                     <!-- Icon 2: Service Client -->
                                                     <td align="center" style="padding: 10px;">
-                                                        <img src="[URL_ICONE_SERVICE_CLIENT_PNG]" alt="Service Client" style="width: 40px; height: auto;">
+                                                        <img src=${sav} alt="Service Client" style="width: 40px; height: auto;">
                                                         <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Service Client 8H-20H</p>
                                                     </td>
                                                     <!-- Icon 3: Localisation -->
                                                     <td align="center" style="padding: 10px;">
-                                                        <img src="[URL_ICONE_LOCALISATION_PNG]" alt="Localisation" style="width: 40px; height: auto;">
+                                                        <img src=${location} alt="Localisation" style="width: 40px; height: auto;">
                                                         <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Localisation</p>
                                                     </td>
                                                 </tr>
