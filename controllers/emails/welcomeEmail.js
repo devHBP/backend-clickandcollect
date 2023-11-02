@@ -97,10 +97,10 @@ const sendWelcomeEmail = async (req, res) => {
                                     <a href=${lien_application_ios} target="_blank" class="button">Sur iOS</a>                       
                                     </p>
                                     <p style="font-size: 16px; margin-bottom: 20px;">
-                                        Connectez-vous à votre compte en utilisant les informations d'identification que vous avez fournies lors de la création de votre compte.
+                                        Connecte toi à ton compte en utilisant tes informations d'identification que tu as fournies lors de la création de ton compte.
                                     </p>
                                     <p style="font-size: 16px; margin-bottom: 20px;">
-                                        Parcourez notre gamme de produits/services et commencez à profiter de tout ce que ${nom_application} a à offrir !
+                                        Parcours notre gamme de produits/services et commence à profiter de tout ce que ${nom_application} a à offrir !
                                     </p>
                                     <p class="thank-you" style="font-size: 16px; margin-bottom: 20px;">Merci pour ta confiance et nous sommes impatients de pouvoir te régaler !</p>
                                     <!-- New Bandeau -->
@@ -139,7 +139,7 @@ const sendWelcomeEmail = async (req, res) => {
                 <p style="margin: 0;">Adresse e-mail de Contact : <a href="mailto:contact@lepaindujour.io">contact@lepaindujour.io</a></p>
                 <p style="margin: 0;">Capital : 00000 €</p>
                 <p style="margin: 0;">SIRET 919 823 054 00011</p>
-                <p style="margin: 10px 0;"><a href="[LIEN_RGPD]" target="_blank">RGPD</a> | <a href="[LIEN_DESABONNEMENT]" target="_blank">Se désabonner</a></p>
+                <p style="margin: 10px 0;"><a href="https://www.lepaindujour.io/page-de-confidentialite/" target="_blank">RGPD</a> | <a href="https://www.lepaindujour.io/formulaire-de-suppression-des-donnees-personnelles/" target="_blank">Se désabonner</a></p>
             </td>
         </tr>
             </table>
