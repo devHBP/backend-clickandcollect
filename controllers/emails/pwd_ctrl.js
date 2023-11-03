@@ -19,6 +19,8 @@ const forgotPassword = async (req, res) => {
         const paiement = "https://preprod.lepaindujour.io/paiement.png"
         const sav = "https://preprod.lepaindujour.io/sav.png"
         const location = "https://preprod.lepaindujour.io/location.png"
+        const lienRGPD = "https://www.lepaindujour.io/page-de-confidentialite/";
+        const desabonnement = "https://www.lepaindujour.io/formulaire-de-suppression-des-donnees-personnelles/"
 
         // 1. Vérifiez si l'utilisateur existe
         const user = await Users.findOne({ where: { email: userEmail } });
@@ -157,16 +159,16 @@ const forgotPassword = async (req, res) => {
                                     </td>
                                 </tr>
                                 <!-- Footer -->
-                                <tr>
-                                    <td align="center" style="padding: 20px; background-color: #D9D9D9; color: #273545;">
-                                        <p style="margin: 0;">START FOOD - LE PAIN DU JOUR - MAS GUERIDO</p>
-                                        <p style="margin: 0;">Numéro de téléphone : 04 68 84 46 01</p>
-                                        <p style="margin: 0;">Adresse e-mail de Contact : <a href="mailto:contact@lepaindujour.io">contact@lepaindujour.io</a></p>
-                                        <p style="margin: 0;">Capital : 00000 €</p>
-                                        <p style="margin: 0;">SIRET 919 823 054 00011</p>
-                                        <p style="margin: 10px 0;"><a href="[LIEN_RGPD]" target="_blank">RGPD</a> | <a href="[LIEN_DESABONNEMENT]" target="_blank">Se désabonner</a></p>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td align="center" style="padding: 20px; background-color: #D9D9D9; color: #273545;">
+                                            <p style="margin: 0;">START FOOD - LE PAIN DU JOUR - MAS GUERIDO</p>
+                                            <p style="margin: 0;">Numéro de téléphone : 04 68 84 46 01</p>
+                                            <p style="margin: 0;">Adresse e-mail de Contact : <a href="mailto:contact@lepaindujour.io">contact@lepaindujour.io</a></p>
+                                            <p style="margin: 0;">Capital : 00000 €</p>
+                                            <p style="margin: 0;">SIRET 919 823 054 00011</p>
+                                            <p style="margin: 10px 0;"><a href=${lienRGPD} target="_blank">RGPD</a> | <a href=${desabonnement} target="_blank">Se désabonner</a></p>
+                                        </td>
+                                    </tr>
                             </table>
                         </td>
                     </tr>
