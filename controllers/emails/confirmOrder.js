@@ -90,16 +90,18 @@ const confirmOrder = async (req, res) => {
                                         <p style="font-size: 16px; margin-bottom: 20px;">Nos équipes vont la préparer pour <strong>${formattedDate}</strong>, nous te tiendrons informé de sa disponibilité de retrait au <strong>${point_de_vente}</strong>.</p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">Si tu as des questions ou des demandes spécifiques concernant ta commande, n'hésites pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>${numero_service_client}</strong>.</p>
                                         <h2 style="font-size: 18px; margin-bottom: 10px;">Comment retirer ta commande ?</h2>
-                                        <ol style="font-size: 16px; margin-bottom: 20px; padding-left: 0; list-style-position: inside;">
-                                            <li>Se munir de l'application Click and Collect Pain du Jour</li>
-                                            <li>Se rendre au point de retrait</li>
-                                            <li>Présenter le bon de commande</li>
-                                        </ol>
-
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Merci pour ta confiance et à très vite !</p>
-                                        <!-- Add more content as per your requirement -->
-                                    </td>
-                                </tr>
+                            </td>
+                            <td align="left" style="padding: 20px;">
+                                <ol style="font-size: 16px; margin-bottom: 20px; padding-left: 0; list-style-position: inside;">
+                                <li>Se munir de l'application Click and Collect Pain du Jour</li>
+                                <li>Se rendre au point de retrait</li>
+                                <li>Présenter le bon de commande</li>
+                                </ol>
+                            </td>
+                            <td align="center" style="padding: 40px;">
+                                <p style="font-size: 16px; margin-bottom: 20px;">Merci pour ta confiance et à très vite !</p>
+                            </td>
+                        </tr>
                                 <!-- Add more sections as per your requirement -->
             <!-- New Bandeau -->
             <!-- New Bandeau -->
