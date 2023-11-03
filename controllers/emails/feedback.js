@@ -17,6 +17,7 @@ const feedback = async (req, res) => {
         const location = "https://preprod.lepaindujour.io/location.png"
         const lien_application_android = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
         const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999";
+        const lien_formulaire = "https://forms.clickup.com/2591148/f/2f2dc-36622/L9MYLWOX44AWZ320Z7"
 
         // Conversion de la chaîne date en objet Date
         // const dateObj = new Date(date);
@@ -49,12 +50,12 @@ const feedback = async (req, res) => {
         const msg = {
             to: email,
             from: 'contact@lepaindujour.io',
-            subject: 'Votre feedback',
+            subject: 'Partage ton expérience',
             html: `
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Le Pain du Jour - Notification de Disponibilité</title>
+                <title>Le Pain du Jour - Demande de Feedback</title>
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@400&display=swap" rel="stylesheet">
                 <style>
                     body {
@@ -68,18 +69,6 @@ const feedback = async (req, res) => {
                     a {
                         color: #273545;
                         text-decoration: underline;
-                    }
-                    a:visited {
-                        color: #273545
-                    }
-                    a:link {
-                        color: #273545
-                    }
-                    a:active {
-                        color: #273545;
-                    }
-                    .ii a[href] {
-                        color: #273545;
                     }
                     .button {
                         background-color: #E9520E;
@@ -106,49 +95,51 @@ const feedback = async (req, res) => {
                             <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #fff; border-radius: 8px; overflow: hidden;">
                                 <tr>
                                     <td align="center" style="padding: 40px;">
-                                        <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour ${firstname},</h1>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous avons une super nouvelle... Ta commande <strong>${numeroCommande}</strong> a été préparée !</p>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Elle te sera livrée le <strong>${date}</strong> à <strong>${point_de_vente}</strong>.</p>
-                                     
-                                        <p style="font-size: 16px; margin-top: 20px;">Si tu as des questions ou des demandes spécifiques concernant ta commande, n'hésites pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>04 68 84 46 01</strong>.</p>
-                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Comment retirer ta commande ?</h2>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">
-                                            1. Se munir de l'application Click and Collect Pain du Jour<br>
-                                            2. Se rendre au point de retrait<br>
-                                            3. Présenter le bon de commande
-                                        </p>
+                                        <h1 style="font-size: 24px; margin-bottom: 20px;">${firstname},</h1>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Ta commande <strong>${numeroCommande}</strong> a bien été récupérée !</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Tout s'est bien passé ?</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Dit-nous !</p>
+                                        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+                                        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+                                        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+                                        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+                                        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+                                        
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Cela dure quelques instants pour nous faire ton retour d'expérience suite à ta commande et ça nous aide énormément !</p>
+                                        <!-- Button Je Donne Mon Avis -->
+                                        <a href=${lien_formulaire} class="button" target="_blank">Je Donne Mon Avis</a>
                                         <p style="font-size: 16px; margin-top: 20px;">Merci pour ta confiance et à très vite !</p>
                                     </td>
                                 </tr>
                                 <!-- New Bandeau -->
-                                <tr>
-                                    <td align="center" style="padding: 20px; background-color: #273545; background-image: url('https://www.lepaindujour.io/wp-content/uploads/2023/10/Group-2.png'); background-size: contain; background-position: center; background-repeat: no-repeat;">
-                                        <table width="80%" border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                            <!-- Icon 1: Paiement Sécurisé -->
-                                            <td align="center" style="padding: 10px;">
-                                                <img src=${paiement} alt="Paiement Sécurisé" style="width: 40px; height: auto;">
-                                                <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Paiement Sécurisé</p>
-                                            </td>
-                                            <!-- Icon 2: Service Client -->
-                                            <td align="center" style="padding: 10px;">
-                                                <img src=${sav} alt="Service Client" style="width: 40px; height: auto;">
-                                                <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Service Client 8H-20H</p>
-                                            </td>
-                                            <!-- Icon 3: Localisation -->
-                                            <td align="center" style="padding: 10px;">
-                                                <img src=${location} alt="Localisation" style="width: 40px; height: auto;">
-                                                <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Localisation</p>
-                                            </td>
-                                        </tr>
-                                        </table>
-                                        <p style="margin: 20px 0; font-size: 14px;">
+                                    <tr>
+                                        <td align="center" style="padding: 20px; background-color: #273545; background-image: url('https://www.lepaindujour.io/wp-content/uploads/2023/10/Group-2.png'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+                                            <table width="80%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <!-- Icon 1: Paiement Sécurisé -->
+                                                    <td align="center" style="padding: 10px;">
+                                                        <img src=${paiement} alt="Paiement Sécurisé" style="width: 40px; height: auto;">
+                                                        <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Paiement Sécurisé</p>
+                                                    </td>
+                                                    <!-- Icon 2: Service Client -->
+                                                    <td align="center" style="padding: 10px;">
+                                                        <img src=${sav} alt="Service Client" style="width: 40px; height: auto;">
+                                                        <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Service Client 8H-20H</p>
+                                                    </td>
+                                                    <!-- Icon 3: Localisation -->
+                                                    <td align="center" style="padding: 10px;">
+                                                        <img src=${location} alt="Localisation" style="width: 40px; height: auto;">
+                                                        <p style="margin: 10px 0; font-size: 14px; color: #FFFFFF;">Localisation</p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <p style="margin: 20px 0; font-size: 14px;">
                                                 <a href=${lien_application_ios} target="_blank" style="color: #FFFFFF; text-decoration: underline;">Télécharger dans l'App Store</a> | 
                                                 <a href=${lien_application_android} target="_blank" style="color: #FFFFFF; text-decoration: underline;">Disponible sur Google Play</a>
                                             </p>
-                                    </td>
-                                </tr>
-                                <!-- Footer -->
+                                        </td>
+                                    </tr>
+                                    <!-- Footer -->
                                     <tr>
                                         <td align="center" style="padding: 20px; background-color: #D9D9D9; color: #273545;">
                                             <p style="margin: 0;">START FOOD - LE PAIN DU JOUR - MAS GUERIDO</p>
@@ -165,6 +156,7 @@ const feedback = async (req, res) => {
                 </table>
             </body>
             </html>
+
             `
         };
        
