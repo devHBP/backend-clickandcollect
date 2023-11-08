@@ -396,6 +396,7 @@ const deleteOneOrder = async (req, res) => {
     }
 }
 
+//recupérer une commande
 const getOrderProducts = async (req, res) => {
   const { orderId } = req.params;
 
@@ -572,36 +573,5 @@ const getAllReviews = (req, res) => {
     .catch(error => res.statut(500).json(error))
 }
 
-// Récupérer les détails d'une commande spécifique
-const getOrderDetails = async (req, res) => {
-  try {
-    const { orderId } = req.params; // Récupérer l'ID de la commande des paramètres de l'URL
-    const order = await Orders.findOne({ where: { orderId: orderId }});
-
-
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found.' });
-    }
-
-    // Si vous avez besoin de plus de détails sur les produits, vous pouvez les récupérer ici
-    const products = await Promise.all(order.orderProducts.map(async (orderProduct) => {
-      const product = await Products.findByPk(orderProduct.productId);
-      return {
-        ...product.get(),
-        quantity: orderProduct.quantity,
-      };
-    }));
-
-    res.json({ ...order.get(), products });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'An error occurred while retrieving the order details.' });
-  }
-};
-
-
-
-
   module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, 
-    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder, getOrderDetails}
+    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder}
