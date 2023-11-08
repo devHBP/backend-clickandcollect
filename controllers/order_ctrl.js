@@ -576,12 +576,8 @@ const getAllReviews = (req, res) => {
 const getOrderDetails = async (req, res) => {
   try {
     const { orderId } = req.params; // Récupérer l'ID de la commande des paramètres de l'URL
-    const order = await Orders.findByPk(orderId, {
-      include: [{
-        model: TableOrderProduct,
-        as: 'TableOrderProduct', // Ce 'as' doit correspondre à la relation définie dans votre modèle Sequelize
-      }],
-    });
+    const order = await Orders.findOne({ where: { orderId: orderId }});
+
 
     if (!order) {
       return res.status(404).json({ error: 'Order not found.' });
