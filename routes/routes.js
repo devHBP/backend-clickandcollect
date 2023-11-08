@@ -104,8 +104,6 @@ router.post('/cancelOrder', cancelOrder)
 router.get('/productsInFormule/:id/', productsWithFormuleForOrder);
 router.get('/ordersOfUserWithProducts/:userId', ordersOfUserWithProducts);
 router.get('/statusLastOrder/:userId', statusLastOrder)
-router.get('/orderDetails/:orderId', getOrderDetails);
-
 
 //router.post('/createOrderAndPayment')
 
