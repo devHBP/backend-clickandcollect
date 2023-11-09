@@ -9,13 +9,13 @@ const userValidation = ( body) => {
         storeId: Joi.number().allow(null), 
         cp: Joi.number().integer().min(10000).max(99999).allow(null, ''),
         genre: Joi.string().valid('femme', 'homme', 'nbinaire').required(),
-        date_naissance: Joi.date().allow("", null).max('now').message("La date de naissance ne peut pas être dans le futur"),
+        date_naissance: Joi.date().allow("", null).max('now'),
         idSUN: Joi.alternatives().try(
             Joi.string().allow('').optional(),
             Joi.string().regex(/^[0-9]{5}$/).optional()
         ).label('idSun'),
         role: Joi.string().valid('client', 'SUNcollaborateur', 'invite','gestionnaire','employe').required(),
-        telephone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required().message( "Le numéro de téléphone doit comporter 10 chiffres"),
+        telephone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required()
     })
     return userSchema.validate(body)
 }
