@@ -8,7 +8,7 @@ const userValidation = ( body) => {
         password: Joi.string().pattern(new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,30}$')).required(),
         storeId: Joi.number().allow(null), 
         cp: Joi.number().integer().min(10000).max(99999).allow(null, ''),
-        genre: Joi.string().valid('femme', 'homme', 'nbinaire'),
+        genre: Joi.string().valid('femme', 'homme', 'nbinaire').allow(null, ''),
         date_naissance: Joi.date().allow("", null).max('now'),
         idSUN: Joi.alternatives().try(
             Joi.string().allow('').optional(),

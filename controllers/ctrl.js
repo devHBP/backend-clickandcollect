@@ -40,6 +40,12 @@ const signup = async (req, res) => {
           userData.idSUN = body.idSUN;
       }
 
+      if (body.genre === '') {
+        userData.genre = null;
+    } else {
+        userData.genre = body.genre;
+    }
+
       const formattedDate = moment(req.body.date_naissance, "DD/MM/YYYY").toISOString();
 
       userData.date_naissance = body.date_naissance === '' ? null : formattedDate;
