@@ -15,6 +15,7 @@ const userValidation = ( body) => {
             Joi.string().regex(/^[0-9]{5}$/).optional()
         ).label('idSun'),
         role: Joi.string().valid('client', 'SUNcollaborateur', 'invite','gestionnaire','employe').required(),
+        telephone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required().message( "Le numéro de téléphone doit comporter 10 chiffres"),
     })
     return userSchema.validate(body)
 }
