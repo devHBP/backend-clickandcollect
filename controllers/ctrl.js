@@ -46,15 +46,9 @@ const signup = async (req, res) => {
         userData.genre = body.genre;
     }
 
-      // const formattedDate = moment(req.body.date_naissance, "DD/MM/YYYY").toISOString();
-
-      // userData.date_naissance = body.date_naissance === '' ? null : formattedDate;
-
-      if (body.date_naissance instanceof Date && !isNaN(body.date_naissance)) {
-        userData.date_naissance = body.date_naissance
-      } else {
-        userData.date_naissance = '';
-    }
+      const formattedDate = moment(req.body.date_naissance, "DD/MM/YYYY").toISOString();
+    console.log('formateedDate', formattedDate)
+      userData.date_naissance = body.date_naissance === '' ? null : formattedDate;
 
       const user = await Users.create(userData);
       const userId = user.userId;
