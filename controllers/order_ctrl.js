@@ -46,8 +46,8 @@ const createOrder = async (req, res) => {
     const cartString = JSON.stringify(cart);
     console.log('cart backend', cartString)
     console.log('req', req.body)
-    console.log('products', products)
-    console.log('prix total', prix_total)
+    //console.log('products', products)
+    //console.log('prix total', prix_total)
 
     const aggregatedProducts = products.reduce((accumulator, currentProduct) => {
       const existingProduct = accumulator.find(p => p.productId === currentProduct.productId);
@@ -105,10 +105,9 @@ const createOrder = async (req, res) => {
             //productIds:productIdsString,
             // productIds: products.map(product => product.productId).join(","),
             productIds: aggregatedProducts.map(product => product.productId).join(","),
-
-    
+            cartString,
       });
-       //console.log('order', order)
+       console.log('order', order)
 
       // const orderProducts = products.map(product => ({
         const orderProducts = aggregatedProducts.map(product => ({
@@ -117,9 +116,10 @@ const createOrder = async (req, res) => {
           quantity: product.quantity,
           offre: product.offre,
           formule: product.formule,
-          category: product.category
+          category: product.category,
+          option: order.cartString
       }));
-     //console.log('orderProducts', orderProducts)
+     console.log('orderProducts', orderProducts)
 
     await TableOrderProduct.bulkCreate(orderProducts);
 
