@@ -7,17 +7,10 @@
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
-  "test": {
-    "username": "root",
-    "password": "torototo",
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
   "production": {
-    "username": "root",
+    "username": "clickandcollect",
     "password": "torototo",
-    "database": "database_production",
+    "database": "clickandcollect",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
