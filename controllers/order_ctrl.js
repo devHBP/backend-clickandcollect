@@ -16,8 +16,10 @@ const { Op } = require('sequelize');
 //creation commande (sans le paiement, par exemple pour prendre en compte le paiement sur place plus tard)
 const createOrder = async (req, res) => {
     try {
+
       // Récupérer les données du corps de la requête
       const {
+        cart,
         userRole,
         firstname_client,
         lastname_client,
@@ -41,7 +43,9 @@ const createOrder = async (req, res) => {
         //   // etc.
         // ]
     } = req.body;
-    console.log(req.body)
+    const cartString = JSON.stringify(cart);
+    console.log('cart backend', cartString)
+    console.log('req', req.body)
     console.log('products', products)
     console.log('prix total', prix_total)
 
