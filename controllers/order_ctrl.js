@@ -105,7 +105,6 @@ const createOrder = async (req, res) => {
             //productIds:productIdsString,
             // productIds: products.map(product => product.productId).join(","),
             productIds: aggregatedProducts.map(product => product.productId).join(","),
-            cartString,
       });
        console.log('order', order)
 
