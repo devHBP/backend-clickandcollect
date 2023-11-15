@@ -77,6 +77,10 @@ const Orders = db.define('Orders', {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
+  cartString: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false
