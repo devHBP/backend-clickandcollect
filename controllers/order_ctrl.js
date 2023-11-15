@@ -117,7 +117,6 @@ const createOrder = async (req, res) => {
           offre: product.offre,
           formule: product.formule,
           category: product.category,
-          option: order.cartString
       }));
      console.log('orderProducts', orderProducts)
 
