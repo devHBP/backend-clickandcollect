@@ -83,7 +83,7 @@ const addProduct = async (req, res) => {
       stockantigaspi: req.body.stockantigaspi,
 
     };
-    console.log('product', product)
+    //console.log('product', product)
 
     const createdProduct = await Products.create(product);
 
@@ -97,8 +97,8 @@ const addProduct = async (req, res) => {
     });
     console.log('productStock', productStock)
 
-    console.log(createdProduct);
-    console.log(productStock);
+    //console.log(createdProduct);
+   // console.log(productStock);
 
     //table produtDetails
     let productDetails = {
