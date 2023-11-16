@@ -594,4 +594,4 @@ const getAllReviews = (req, res) => {
   }
 
   module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, 
-    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder}
+    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder, tableOrderProduct}
