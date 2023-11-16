@@ -579,7 +579,7 @@ const getAllReviews = (req, res) => {
   //lister toutes les commandes
   const tableOrderProduct = async (req, res) => {
     try {
-      const orders = await tableOrderProduct.findAll();
+      const orders = await TableOrderProduct.findAll();
   
       if (!orders || orders.length === 0) {
         return res.status(404).json({ error: 'No orders found.' });
