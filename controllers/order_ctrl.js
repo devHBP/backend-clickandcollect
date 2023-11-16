@@ -576,5 +576,22 @@ const getAllReviews = (req, res) => {
     .catch(error => res.statut(500).json(error))
 }
 
+  //lister toutes les commandes
+  const tableOrderProduct = async (req, res) => {
+    try {
+      const orders = await tableOrderProduct.findAll();
+  
+      if (!orders || orders.length === 0) {
+        return res.status(404).json({ error: 'No orders found.' });
+      }
+  
+      res.json({ orders });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while retrieving the orders.' });
+    }
+  }
+
   module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, 
     productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder}
