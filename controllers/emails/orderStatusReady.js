@@ -49,7 +49,7 @@ const orderStatusReady = async (req, res) => {
         const msg = {
             to: email,
             from: 'contact@lepaindujour.io',
-            subject: 'Votre commande est prête',
+            subject: 'Ta commande est prête',
             html: `
             <!DOCTYPE html>
             <html>

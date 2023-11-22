@@ -50,7 +50,7 @@ const confirmOrder = async (req, res) => {
         const msg = {
             to: email,
             from: 'contact@lepaindujour.io',
-            subject: 'Confirmation de votre commande',
+            subject: 'Confirmation de ta commande',
             html: `
             <!DOCTYPE html>
             <html>

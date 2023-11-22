@@ -52,7 +52,7 @@ const forgotPassword = async (req, res) => {
         const msg = {
             to: userEmail,
             from: 'contact@lepaindujour.io',
-            subject: 'Réinitialisation de votre mot de passe',
+            subject: 'Réinitialisation de ton mot de passe',
             html: `
             <!DOCTYPE html>
             <html>
