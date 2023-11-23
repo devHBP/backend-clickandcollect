@@ -6,14 +6,21 @@ const path = require('path')
 const auth = require("./middleware/auth");
 const NODEJS_PORT = process.env.NODEJS_PORT;
 const NODEJS_URL = process.env.NODEJS_URL;
+const socketIo = require('socket.io')
+const http = require('http');
+
 
 const bodyParser = require('body-parser');
 
 const app = express()
+
+
+const server = http.createServer(app); 
+const io = socketIo(server); 
+
 app.use(cors())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(routes)
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -37,7 +44,20 @@ app.get('/download', (req, res) => {
   const file = path.resolve(__dirname, './public/Catalogue.pdf');
   res.download(file);  
 });
+app.post("/welcome", auth, (req, res) => {
+  res.status(200).send("Welcome 🙌 ");
+});
 
+
+app.use(routes)
+
+io.on('connection', (socket) => {
+  console.log('Un client est connecté');
+
+  socket.on('disconnect', () => {
+    console.log('Un client est déconnecté');
+  });
+});
 
 db.sync()
     .then(
@@ -46,11 +66,8 @@ db.sync()
     .catch(error => console.log(error))
 
 
-app.post("/welcome", auth, (req, res) => {
-  res.status(200).send("Welcome 🙌 ");
-});
 
-const server = app.listen(NODEJS_PORT, () => {
+server.listen(NODEJS_PORT, () => {
   console.log(`Lancement serveur ${NODEJS_URL}:${NODEJS_PORT}`);
 });
 
