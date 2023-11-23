@@ -45,7 +45,7 @@ db.sync()
   .then(console.log("connexion à la base de données"))
   .catch((error) => console.log(error));
 
-server.listen(NODEJS_PORT, () => {
+app.listen(NODEJS_PORT, () => {
   console.log(`Lancement serveur ${NODEJS_URL}:${NODEJS_PORT}`);
 });
 
