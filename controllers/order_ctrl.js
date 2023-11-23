@@ -372,32 +372,6 @@ const deleteOneOrder = async (req, res) => {
     }
   }
   
-
-//   const updateOrder = async (req, res) => {
-//     try {
-//         // Récupérez le numéro de commande, le nouveau statut et l'ID du paiement à partir du corps de la requête
-//         const { numero_commande, status, paymentId } = req.body;
-
-//         // Trouvez la commande correspondante dans la base de données
-//         const order = await Orders.findOne({ where: { numero_commande: numero_commande } });
-
-//         // Si aucune commande n'est trouvée, renvoyez une erreur
-//         if (!order) {
-//             return res.status(404).json({ message: 'Commande non trouvée' });
-//         }
-
-//         // Mettez à jour le statut de la commande et l'ID du paiement
-//         order.status = 'en attente';
-//         order.paymentId = paymentId;
-//         order.paid = true;
-//         await order.save();
-
-//         res.status(200).json(order); 
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Une erreur est survenue lors de la mise à jour du statut de la commande' });
-//     }
-// }
 const updateOrder = async (req, res) => {
   try {
       const { numero_commande } = req.body;
