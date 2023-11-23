@@ -49,7 +49,7 @@ app.listen(NODEJS_PORT, () => {
   console.log(`Lancement serveur ${NODEJS_URL}:${NODEJS_PORT}`);
 });
 
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ app });
 
 wss.on("connection", (socket) => {
   console.log("WebSocket connection established.");
