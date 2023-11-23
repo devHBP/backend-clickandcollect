@@ -41,15 +41,17 @@ app.post("/welcome", auth, (req, res) => {
 
 app.use(routes);
 
+const server = require('http').createServer(app);
+
 db.sync()
   .then(console.log("connexion à la base de données"))
   .catch((error) => console.log(error));
 
-app.listen(NODEJS_PORT, () => {
+server.listen(NODEJS_PORT, () => {
   console.log(`Lancement serveur ${NODEJS_URL}:${NODEJS_PORT}`);
 });
 
-const wss = new WebSocket.Server({ app });
+const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (socket) => {
   console.log("WebSocket connection established.");
