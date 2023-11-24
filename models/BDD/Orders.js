@@ -99,7 +99,7 @@ const Orders = db.define('Orders', {
 
 // generéation numéro de commande
 Orders.beforeValidate((order, options) => {
-    if (!order.numero_commande) {
+  if (!order.numero_commande) {
         return TestStoresV2.findOne({ where: { storeId: order.storeId } }) // Récupérer le magasin associé
         .then(store => {
           if(!store) {

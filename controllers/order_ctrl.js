@@ -597,5 +597,30 @@ const getAllReviews = (req, res) => {
     }
   }
 
+  const updateViewStatus = async (req, res) => {
+    const orderId = req.params.orderId;
+  
+    try {
+      // Récupérer l'instance de la commande
+      const order = await Orders.findByPk(orderId);
+  
+      if (!order) {
+        return res.status(404).send('Commande non trouvée.');
+      }
+  
+      // Modifier la valeur de 'view'
+      order.view = true;
+  
+      // Sauvegarder les modifications
+      await order.save();
+  
+      res.status(200).send('Le statut de vue de la commande a été mis à jour avec succès.');
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut de vue :', error);
+      res.status(500).send('Erreur lors de la mise à jour du statut de vue.');
+    }
+  };
+  
+
   module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, 
-    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder, tableOrderProduct}
+    productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus}
