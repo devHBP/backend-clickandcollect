@@ -88,7 +88,13 @@ const Orders = db.define('Orders', {
   cartString: {
     type: DataTypes.TEXT,
     allowNull: true,
+  },
+  view: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    defaultValue: false
   }
+
 });
 
 // generéation numéro de commande

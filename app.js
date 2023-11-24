@@ -6,7 +6,7 @@ const path = require("path");
 const auth = require("./middleware/auth");
 const NODEJS_PORT = process.env.NODEJS_PORT;
 const NODEJS_URL = process.env.NODEJS_URL;
-const WebSocket = require("ws");
+// const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 
 const app = express();
@@ -41,21 +41,26 @@ app.post("/welcome", auth, (req, res) => {
 
 app.use(routes);
 
-const server = require('http').createServer(app);
+//create websocket server
+// const server = require('http').createServer(app);
 
 db.sync()
   .then(console.log("connexion à la base de données"))
   .catch((error) => console.log(error));
 
-server.listen(NODEJS_PORT, () => {
+app.listen(NODEJS_PORT, () => {
   console.log(`Lancement serveur ${NODEJS_URL}:${NODEJS_PORT}`);
 });
 
-const wss = new WebSocket.Server({ server });
+// const wss = new WebSocket.Server({ server });
 
-wss.on("connection", (socket) => {
-  console.log("WebSocket connection established.");
-  socket.on("message", (message) => {
-    console.log(`Reçu: ${message}`);
-  });
-});
+// wss.on("connection", (ws) => {
+//   console.log("A new client connected");
+//   ws.send('Welcome new client')
+
+//   //the server received message from any client
+//   ws.on("message", (message) => {
+//     console.log(`Reçu: ${message}`);
+//     ws.send('Message bien recu' + message)
+//   });
+// });
