@@ -20,16 +20,16 @@ const router = Router()
 //USERS
 router.post('/signup', signup)
 router.post('/login', login)
-router.get('/getAll', getAll)
-router.get('/getOne/:id', getOne)
-router.delete('/deleteOne/:id', deleteOne)
-router.put('/updateOneUser/:id', updateOneUser)
-router.put('/updateRole/:id', updateRole)
+router.get('/getAll', verifyToken, getAll)
+router.get('/getOne/:id', verifyToken, getOne)
+router.delete('/deleteOne/:id', verifyToken,  deleteOne)
+router.put('/updateOneUser/:id', verifyToken,  updateOneUser)
+router.put('/updateRole/:id', verifyToken, updateRole)
 router.get('/verifyToken', verifyToken)
-router.patch('/modifyUser/:userId', modifyUser)
-router.delete('/deleteUser/:id', deleteUser)
-router.get('/getEmailByUserId/:userId/email', getEmailByUserId)
-router.get('/getUserByEmail/:email', getUserByEmail);
+router.patch('/modifyUser/:userId', verifyToken,  modifyUser)
+router.delete('/deleteUser/:id', verifyToken,  deleteUser)
+router.get('/getEmailByUserId/:userId/email', verifyToken, getEmailByUserId)
+router.get('/getUserByEmail/:email', verifyToken, getUserByEmail);
 
 //PASSWORD
 router.post('/forgotPassword', forgotPassword)
@@ -94,7 +94,7 @@ router.put('/getUpdateStockAntigaspi', getUpdateStockAntigaspi)
 //ORDERS
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
 router.put('/updateStatusOrder/:orderId', updateStatusOrder)
-router.get('/allOrders', allOrders)
+router.get('/allOrders',verifyToken,  allOrders)
 router.delete('/deleteOneOrder/:id', deleteOneOrder)
 router.get('/ordersOfUser/:userId', ordersOfUser)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 

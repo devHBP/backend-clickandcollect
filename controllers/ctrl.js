@@ -190,20 +190,27 @@ const updateRole = (req, res) => {
       });
 };
 
-const verifyToken = (req, res) => {
+
+const verifyToken = (req, res, next) => {
   const token = req.headers['x-access-token'];
-  
-  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+
+  if (!token) {
+    return res.status(401).send({ auth: false, message: 'No token provided.' });
+  }
 
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+    if (err) {
+      return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+    }
 
-      // if everything good, save to request for use in other routes
-      req.userId = decoded.id;
+    // if everything is good, save to request for use in other routes
+    req.userId = decoded.id;
 
-      res.status(200).send({ auth: true, message: 'Token is valid.' });
+    // call next to pass control to the next middleware/function
+    next();
   });
-}
+};
+
 
 //modification du user
 const modifyUser = async (req, res) => {
