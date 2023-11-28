@@ -213,18 +213,18 @@ const verifyToken = (req, res, next) => {
   }
 
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
-    if (err) {console.log(err.name)
+    if (err) {
+      
+      console.log(err.name)
 
       if (err.name === 'TokenExpiredError') {
-        console.log('erreur 401')
+        console.log('erreur 401 - token expiré')
         return res.status(401).send({ auth: false, message: 'Token expired.' });
       }
       return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
     }
-    // if everything is good, save to request for use in other routes
     req.userId = decoded.id;
 
-    // call next to pass control to the next middleware/function
     next();
   });
 };
