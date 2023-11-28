@@ -94,7 +94,7 @@ router.put('/getUpdateStockAntigaspi', getUpdateStockAntigaspi)
 //ORDERS
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
 router.put('/updateStatusOrder/:orderId', updateStatusOrder)
-router.get('/allOrders', verifyToken, allOrders)
+router.get('/allOrders', allOrders)
 router.delete('/deleteOneOrder/:id', deleteOneOrder)
 router.get('/ordersOfUser/:userId', ordersOfUser)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 
@@ -102,7 +102,7 @@ router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
 router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 router.post('/cancelOrder', cancelOrder)
 router.get('/productsInFormule/:id/', productsWithFormuleForOrder);
-router.get('/ordersOfUserWithProducts/:userId', ordersOfUserWithProducts);
+router.get('/ordersOfUserWithProducts/:userId',verifyToken,  ordersOfUserWithProducts);
 router.get('/statusLastOrder/:userId', statusLastOrder)
 router.get('/tableOrderProduct', tableOrderProduct)
 router.put('/updateViewStatus/:orderId',updateViewStatus )
