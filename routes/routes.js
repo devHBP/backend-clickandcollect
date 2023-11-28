@@ -36,7 +36,7 @@ router.get('/getUserByEmail/:email',  getUserByEmail);
 //PASSWORD
 router.post('/forgotPassword', forgotPassword)
 router.post('/resetPassword/:token', resetPassword);
-router.put('/updatePassword', updatePassword)
+router.put('/updatePassword',verifyToken, updatePassword)
 
 //PRODUCTS
 router.post('/addProduct',uploadImage, addProduct)
