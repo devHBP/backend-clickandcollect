@@ -214,17 +214,15 @@ const verifyToken = (req, res, next) => {
 
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
     if (err) {
-      return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+      if (err.name === 'TokenExpiredError') {
+        return res.status(401).send({ auth: false, message: 'Token expired.' });
+      }
+      return res.status(403).send({ auth: false, message: 'Failed to authenticate token.' });
     }
-
-    // if everything is good, save to request for use in other routes
     req.userId = decoded.id;
-
-    // call next to pass control to the next middleware/function
     next();
   });
-};
-
+}
 
 //modification du user
 const modifyUser = async (req, res) => {
