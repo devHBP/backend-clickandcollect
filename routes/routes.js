@@ -94,7 +94,7 @@ router.put('/getUpdateStockAntigaspi', getUpdateStockAntigaspi)
 //ORDERS
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
 router.put('/updateStatusOrder/:orderId', updateStatusOrder)
-router.get('/allOrders', allOrders)
+router.get('/allOrders', verifyToken, allOrders)
 router.delete('/deleteOneOrder/:id', deleteOneOrder)
 router.get('/ordersOfUser/:userId', ordersOfUser)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 
