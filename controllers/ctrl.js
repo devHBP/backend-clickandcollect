@@ -65,7 +65,6 @@ const signup = async (req, res) => {
   
 };
 
-  
 const login = async (req, res) => {
   try {
       const dbUser = await Users.findOne({ where: { email: req.body.email } });
@@ -99,22 +98,21 @@ const login = async (req, res) => {
       res.status(500).json({ msg: "Internal server error" });
   }
 };
-
 //refresh token
-const refreshToken  = (req, res) => {
-  const { refreshToken } = req.body;
+// const refreshToken  = (req, res) => {
+//   const { refreshToken } = req.body;
 
-  // Vérifier si le refresh token est valide et n'a pas expiré
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if (err) {
-      return res.sendStatus(403); 
-    }
+//   // Vérifier si le refresh token est valide et n'a pas expiré
+//   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+//     if (err) {
+//       return res.sendStatus(403); 
+//     }
 
-    // Le refresh token est valide, émettre un nouvel access token
-    const newAccessToken = jwt.sign({ username: user.name, role: user.role }, process.env.SECRET, { expiresIn: '15m' });
-    res.json({ newAccessToken });
-  });
-}
+//     // Le refresh token est valide, émettre un nouvel access token
+//     const newAccessToken = jwt.sign({ username: user.name, role: user.role }, process.env.SECRET, { expiresIn: '15m' });
+//     res.json({ newAccessToken });
+//   });
+// }
 
 
 //lister tous les users
@@ -326,5 +324,5 @@ const getUserByEmail = async (req, res) => {
 }
 
   
-module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, refreshToken, modifyUser , deleteUser, getEmailByUserId, getUserByEmail};
+module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser, getEmailByUserId, getUserByEmail};
   
