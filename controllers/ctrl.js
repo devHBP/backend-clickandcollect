@@ -80,7 +80,6 @@ const login = async (req, res) => {
       }
 
       const token = jwt.sign({ email: req.body.email }, process.env.SECRET, { expiresIn: '1m' });
-      const refreshToken = jwt.sign({ email: req.body.email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' }); 
       
       const user = {
           userId: dbUser.userId,
@@ -91,7 +90,7 @@ const login = async (req, res) => {
           role: dbUser.role
       };
 
-      res.status(200).json({ message: "Utilisateur connecté", token: token,refreshToken: refreshToken, user: user });
+      res.status(200).json({ message: "Utilisateur connecté", token: token, user: user });
 
   } catch (err) {
       console.error(err);
