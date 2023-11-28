@@ -141,16 +141,16 @@ const getOne = ( req, res) => {
           
 }
 
-//supprimer un user
-const deleteOne = (req, res) => {
-    const { id} = req.params
-    Users.destroy({where : {id : id}})
-    .then( user => {
-        if(user === 0) return res.status(404).json({msg:"not found"})
-        res.status(200).json({msg:"User deleted"})
-    })
-    .catch(error => res.status(500).json(error))
-}
+// //supprimer un user
+// const deleteOne = (req, res) => {
+//     const { id} = req.params
+//     Users.destroy({where : {id : id}})
+//     .then( user => {
+//         if(user === 0) return res.status(404).json({msg:"not found"})
+//         res.status(200).json({msg:"User deleted"})
+//     })
+//     .catch(error => res.status(500).json(error))
+// }
 
 //update le magasin rattaché au user
 const updateOneUser = (req, res) => {

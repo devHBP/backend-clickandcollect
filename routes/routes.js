@@ -14,6 +14,7 @@ const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
 const {feedback} = require('../controllers/emails/feedback')
+const { verify } = require('jsonwebtoken')
 const router = Router()
 
 
@@ -22,15 +23,15 @@ router.post('/signup', signup)
 router.post('/login', login)
 router.get('/getAll', getAll)
 router.get('/getOne/:id', verifyToken, getOne)
-router.delete('/deleteOne/:id',  deleteOne)
 router.put('/updateOneUser/:id',  updateOneUser)
 router.put('/updateRole/:id',  updateRole)
 router.get('/verifyToken', verifyToken)
-// router.post('/refreshToken', refreshToken)
 router.patch('/modifyUser/:userId',   modifyUser)
-router.delete('/deleteUser/:id',  deleteUser)
+router.delete('/deleteUser/:id', verifyToken,  deleteUser)
 router.get('/getEmailByUserId/:userId/email', getEmailByUserId)
 router.get('/getUserByEmail/:email',  getUserByEmail);
+// router.delete('/deleteOne/:id', deleteOne)
+// router.post('/refreshToken', refreshToken)
 
 //PASSWORD
 router.post('/forgotPassword', forgotPassword)
