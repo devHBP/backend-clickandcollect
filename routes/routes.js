@@ -104,7 +104,7 @@ router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
 router.post('/cancelOrder', cancelOrder)
 router.get('/productsInFormule/:id/', productsWithFormuleForOrder);
 router.get('/ordersOfUserWithProducts/:userId',verifyToken,  ordersOfUserWithProducts);
-router.get('/statusLastOrder/:userId', statusLastOrder)
+router.get('/statusLastOrder/:userId',verifyToken, statusLastOrder)
 router.get('/tableOrderProduct', tableOrderProduct)
 router.put('/updateViewStatus/:orderId',updateViewStatus )
 // router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
