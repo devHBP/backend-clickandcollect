@@ -231,28 +231,28 @@ const createOrder = async (req, res) => {
   }
 
   //updatestatus pour websocket
-  const updateStatus = async (orderId, status) => {
-    if (!status) {
-      throw new Error('You must provide a status to update.');
-    }
+  // const updateStatus = async (orderId, status) => {
+  //   if (!status) {
+  //     throw new Error('You must provide a status to update.');
+  //   }
   
-    const order = await Orders.findByPk(orderId);
+  //   const order = await Orders.findByPk(orderId);
   
-    if (!order) {
-      throw new Error('Order not found.');
-    }
+  //   if (!order) {
+  //     throw new Error('Order not found.');
+  //   }
   
-    order.status = status;
+  //   order.status = status;
   
-    // If status is set to "delivered", also set delivery to true.
-    if (status.toLowerCase() === 'livree') {
-      order.delivery = true;
-    }
+  //   // If status is set to "delivered", also set delivery to true.
+  //   if (status.toLowerCase() === 'livree') {
+  //     order.delivery = true;
+  //   }
   
-    await order.save();
+  //   await order.save();
   
-    return order;
-  };
+  //   return order;
+  // };
 
   //lister toutes les commandes
   const allOrders = async (req, res) => {
@@ -622,5 +622,5 @@ const getAllReviews = (req, res) => {
   };
   
 
-  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, updateStatus, cancelOrder, 
+  module.exports = { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder, getOrderProducts, cancelOrder, 
     productsWithFormuleForOrder, ordersOfUserWithProducts , createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus}

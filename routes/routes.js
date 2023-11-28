@@ -8,7 +8,7 @@ const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole } = re
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi } = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
-const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , updateStatus, cancelOrder , 
+const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
@@ -26,7 +26,7 @@ router.get('/getOne/:id', verifyToken, getOne)
 router.put('/updateOneUser/:id',  updateOneUser)
 router.put('/updateRole/:id',  updateRole)
 router.get('/verifyToken', verifyToken)
-router.patch('/modifyUser/:userId',   modifyUser)
+router.patch('/modifyUser/:userId', verifyToken, modifyUser)
 router.delete('/deleteUser/:id', verifyToken,  deleteUser)
 router.get('/getEmailByUserId/:userId/email', getEmailByUserId)
 router.get('/getUserByEmail/:email',  getUserByEmail);
@@ -101,15 +101,13 @@ router.delete('/deleteOneOrder/:id', deleteOneOrder)
 router.get('/ordersOfUser/:userId', ordersOfUser)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 
 router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
-router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 router.post('/cancelOrder', cancelOrder)
 router.get('/productsInFormule/:id/', productsWithFormuleForOrder);
 router.get('/ordersOfUserWithProducts/:userId',verifyToken,  ordersOfUserWithProducts);
 router.get('/statusLastOrder/:userId', statusLastOrder)
 router.get('/tableOrderProduct', tableOrderProduct)
 router.put('/updateViewStatus/:orderId',updateViewStatus )
-
-
+// router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 //router.post('/createOrderAndPayment')
 
 //PAYMENTS
