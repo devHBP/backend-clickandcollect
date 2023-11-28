@@ -326,5 +326,5 @@ const getUserByEmail = async (req, res) => {
 }
 
   
-module.exports = { signup, login, getAll, getOne, deleteOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser, getEmailByUserId, getUserByEmail};
+module.exports = { signup, login, getAll, getOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser, getEmailByUserId, getUserByEmail};
   
