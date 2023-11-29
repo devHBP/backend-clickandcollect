@@ -229,6 +229,18 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+const verifyHeader = (req, res, next) => {
+  const securityHeader = req.headers['x-access-header'];
+
+  if (!securityHeader) {
+    return res.status(403).send({ auth: false, message: 'No approved request.' });
+  }
+  if (securityHeader != "hbpclickandcollect") {
+    return res.status(403).send({ auth: false, message: 'No approved request (bad value).' });
+  }
+  next();
+};
+
 //modification du user
 const modifyUser = async (req, res) => {
   try {
@@ -326,5 +338,5 @@ const getUserByEmail = async (req, res) => {
 }
 
   
-module.exports = { signup, login, getAll, getOne, updateOneUser, updateRole, verifyToken, modifyUser , deleteUser, getEmailByUserId, getUserByEmail};
+module.exports = { signup, login, getAll, getOne, updateOneUser, updateRole, verifyToken, verifyHeader, modifyUser , deleteUser, getEmailByUserId, getUserByEmail};
   
