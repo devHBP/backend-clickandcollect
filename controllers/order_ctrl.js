@@ -260,7 +260,7 @@ const createOrder = async (req, res) => {
       const orders = await Orders.findAll();
   
       if (!orders || orders.length === 0) {
-        return res.status(404).json({ error: 'No orders found.' });
+        return res.status(200).json({ orders: [] });
       }
   
       res.json({ orders });
