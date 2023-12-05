@@ -200,8 +200,11 @@ const addProduct = async (req, res) => {
         });
       }
       
-      return res.status(200).json({ msg: 'Product updated successfully' });
-    } catch (error) {
+      return res.status(200).json({
+        msg: 'Product updated successfully',
+        image: req.file.path 
+      });
+          } catch (error) {
       return res.status(500).json({ error: 'Failed to update product' });
     }
   };
