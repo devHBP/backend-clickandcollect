@@ -200,10 +200,17 @@ const addProduct = async (req, res) => {
         });
       }
       
-      return res.status(200).json({
-        msg: 'Product updated successfully',
-        image: req.file.path 
-      });
+    
+    const response = { 
+      msg: 'Product updated successfully',
+      ...req.file && { image: req.file.path } // Inclure l'image seulement si elle est présente
+    };
+    return res.status(200).json(response);
+
+      // return res.status(200).json({
+      //   msg: 'Product updated successfully',
+      //   image: req.file.path 
+      // });
           } catch (error) {
       return res.status(500).json({ error: 'Failed to update product' });
     }
