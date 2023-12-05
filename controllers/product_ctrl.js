@@ -210,6 +210,34 @@ const addProduct = async (req, res) => {
   };
   
 
+  //clickandcollect et antigaspi
+  // Dans votre fichier de contrôleurs (par exemple, productController.js)
+
+const updateStatusProduct = async (req, res) => {
+  const { id } = req.params; // L'ID du produit à mettre à jour
+  const { status } = req.body; // Le nouveau statut à appliquer
+
+  try {
+      // Trouver le produit par ID
+      const product = await Products.findOne({ where: { productId: id } });
+
+      if (!product) {
+          return res.status(404).json({ error: 'Product not found' });
+      }
+
+      // Mettre à jour le statut du produit
+      product.status = status;
+      await product.save();
+
+      // Renvoyer une réponse de succès
+      res.status(200).json({ msg: 'Product status updated successfully' });
+
+  } catch (error) {
+      // Gérer les erreurs potentielles
+      res.status(500).json({ error: 'Failed to update product status' });
+  }
+};
+
 
 
 //lister tous les produits
@@ -652,4 +680,4 @@ const resetBoissonIds = async (req, res) => {
 
 
 module.exports = { addProduct, getAllProducts, getOneProduct, uploadImage,getAllProductsClickandCollect,addDessertIds,getDessertIds,resetDessertIds,addBoissonIds, getBoissonIds,resetBoissonIds,
-updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct, createFormule, getAllFormules}
+updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory, getFamillyOfProduct, createFormule, getAllFormules, updateStatusProduct}

@@ -2,7 +2,7 @@ const Router = require('express')
 const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, verifyHeader, modifyUser, deleteUser, getEmailByUserId, getUserByEmail } = require('../controllers/ctrl')
 const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
-     getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds, } = require('../controllers/product_ctrl')
+     getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
@@ -46,6 +46,7 @@ router.get('/getOneProduct/:id', getOneProduct)
 // router.put('/updateProduct/:id', updateProduct);
 router.put('/updateProduct/:id', uploadImage, updateProduct);
 router.patch('/updateProduct/:id', updateProduct);
+router.put('/updateStatusProduct/:id', updateStatusProduct);
 router.delete('/deleteProduct/:id', deleteProduct);
 router.put('/decreaseStock/:id', decreaseProductStock);
 router.put('/increaseStock/:id', increaseProductStock)
