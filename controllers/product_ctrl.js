@@ -214,19 +214,19 @@ const addProduct = async (req, res) => {
   // Dans votre fichier de contrôleurs (par exemple, productController.js)
 
 const updateStatusProduct = async (req, res) => {
-  const { id } = req.params; // L'ID du produit à mettre à jour
-  const { status } = req.body; // Le nouveau statut à appliquer
+  const productId = req.params.id;
+  const updates = req.body;
 
   try {
       // Trouver le produit par ID
-      const product = await Products.findOne({ where: { productId: id } });
+      const product = await Products.findOne({ where: { productId: productId } });
 
       if (!product) {
           return res.status(404).json({ error: 'Product not found' });
       }
 
-      // Mettre à jour le statut du produit
-      product.status = status;
+      // Mettez à jour uniquement les champs spécifiés dans les mises à jour
+      await Products.update(updates, { where: { productId: productId } });
       await product.save();
 
       // Renvoyer une réponse de succès
