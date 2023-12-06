@@ -65,6 +65,8 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ error: "Famille de produit non trouvée" });
     }
 
+    const allergenes = req.body.allergenes === '' ? null : req.body.allergenes;
+
     let product = {
       // Vérifier si req.file existe et contient les informations sur le fichier
       image: req.file ? req.file.path : "",
@@ -81,9 +83,10 @@ const addProduct = async (req, res) => {
       clickandcollect: req.body.clickandcollect,
       antigaspi: req.body.antigaspi,
       stockantigaspi: req.body.stockantigaspi,
+      allergenes: allergenes
     };
-    //console.log('product', product)
-
+    console.log('product', product)
+   
     const createdProduct = await Products.create(product);
 
     console.log("createdProduct", createdProduct);
