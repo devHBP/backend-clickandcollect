@@ -468,6 +468,7 @@ const desactiveProduct = async (req, res) => {
       }
 
       // Supprimer le produit
+      await ProductDetail.destroy({ where: { productId: productId } });
       await product.destroy();
 
       return res.status(200).json({ msg: 'Product and associated entries deleted successfully' });
