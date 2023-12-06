@@ -425,7 +425,7 @@ const uploadImage = multer({
 // .array('images', 3) ici 3 nombre d'images
 
 //"supprimer" - rendre indisponible un produit
-const deleteProduct = async (req, res) => {
+const desactiveProduct = async (req, res) => {
   const productId = req.params.id;
 
   try {
@@ -448,34 +448,34 @@ const deleteProduct = async (req, res) => {
 
 //supprimer un produit
 // A NE PAS FAIRE POUR RAISONS DE SECURITE = PLUTOT DESACTIVER UN PRODUIT
-//   const deleteProduct = async (req, res) => {
-//     const productId = req.params.id;
+  const deleteProduct = async (req, res) => {
+    const productId = req.params.id;
 
-//     try {
-//       const product = await Products.findByPk(productId);
+    try {
+      const product = await Products.findByPk(productId);
 
-//       if (!product) {
-//         return res.status(404).json({ error: 'Product not found' });
-//       }
+      if (!product) {
+        return res.status(404).json({ error: 'Product not found' });
+      }
 
-//       // Supprimer les associations avec les commandes
-//       await TableOrderProduct.destroy({ where: { productId: productId } });
+      // Supprimer les associations avec les commandes
+      await TableOrderProduct.destroy({ where: { productId: productId } });
 
-//       // Supprimer le stock associé
-//       const stock = await StocksTest.findOne({ where: { productId: productId } });
-//       if (stock) {
-//         await stock.destroy();
-//       }
+      // Supprimer le stock associé
+      const stock = await StocksTest.findOne({ where: { productId: productId } });
+      if (stock) {
+        await stock.destroy();
+      }
 
-//       // Supprimer le produit
-//       await product.destroy();
+      // Supprimer le produit
+      await product.destroy();
 
-//       return res.status(200).json({ msg: 'Product and associated entries deleted successfully' });
-//     } catch (error) {
-//       console.error('Error:', error);  // Ajout de log d'erreur
-//       return res.status(500).json({ error: 'Failed to delete product and associated entries' });
-//     }
-// };
+      return res.status(200).json({ msg: 'Product and associated entries deleted successfully' });
+    } catch (error) {
+      console.error('Error:', error);  // Ajout de log d'erreur
+      return res.status(500).json({ error: 'Failed to delete product and associated entries' });
+    }
+};
 
 //diminuer un stock
 const decreaseProductStock = async (req, res) => {
@@ -721,6 +721,7 @@ module.exports = {
   resetBoissonIds,
   updateProduct,
   deleteProduct,
+  desactiveProduct,
   decreaseProductStock,
   increaseProductStock,
   getProductsofOneCategory,
