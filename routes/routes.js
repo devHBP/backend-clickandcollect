@@ -15,6 +15,7 @@ const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
 const {feedback} = require('../controllers/emails/feedback')
 const { verify } = require('jsonwebtoken')
+const  { saveToken } = require('../controllers/token')
 const router = Router()
 
 
@@ -124,6 +125,8 @@ router.post('/confirmOrder', confirmOrder)
 router.post('/orderStatusReady', orderStatusReady)
 router.post('/feedback', feedback)
 
+//TOKEN
+router.post('/saveToken', saveToken)
 
 
 module.exports = router
