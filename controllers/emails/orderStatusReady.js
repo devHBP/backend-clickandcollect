@@ -1,14 +1,15 @@
 const sgMail = require('@sendgrid/mail'); 
 const jwt = require('jsonwebtoken'); 
+const admin = require('firebase-admin')
 require('dotenv').config();
 const Users = require('../../models/BDD/Users')
-
+const Token = require('../models/BDD/Token')
 
 
 const orderStatusReady = async (req, res) => {
 
     try {
-        const { email, firstname, numero_commande, date, point_de_vente } = req.body;
+        const { email, firstname, numero_commande, date, point_de_vente, userId } = req.body;
         const numeroCommande = numero_commande.substring(numero_commande.length - 5);
         const lienRGPD = "https://www.lepaindujour.io/page-de-confidentialite/";
         const desabonnement = "https://www.lepaindujour.io/formulaire-de-suppression-des-donnees-personnelles/"
@@ -17,32 +18,7 @@ const orderStatusReady = async (req, res) => {
         const location = "https://preprod.lepaindujour.io/location.png"
         const lien_application_android = "https://play.google.com/store/apps/details?id=com.myappreactnative&pli=1";
         const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999";
-
-        // Conversion de la chaîne date en objet Date
-        // const dateObj = new Date(date);
-
-        // // Vérification de la validité de la date
-        // if (isNaN(dateObj.getTime())) {
-        //     console.error('Invalid date received:', date);
-        //     res.status(400).send('Invalid date format received');
-        //     return;
-        // }
-
-        // // Extraction des composants de la date
-        // const day = String(dateObj.getUTCDate()).padStart(2, '0'); 
-        // const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); 
-        // const year = dateObj.getUTCFullYear(); 
-
-        // // Concaténation sous le format JJ-MM-AAAA
-        // const formattedDate = `${day}-${month}-${year}`;
-        // console.log(formattedDate); 
-
-        //pour l'instant le numero_commande est sous ce format
-        //magasin_001_05102023_00041
-        //il faudra reformater le format pour avoir un numero exploitable
-
-        // 1. Vérifiez si l'utilisateur existe
-        //const user = await Users.findOne({ where: { email: userEmail } });   
+ 
 
         sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
@@ -169,7 +145,20 @@ const orderStatusReady = async (req, res) => {
         };
        
         await sgMail.send(msg);
-        return res.status(200).send("E-mail envoyé avec succès");
+
+        const userToken = await Token.findOne({ where: { userId: userId } });
+        console.log('token', userToken.fcmToken)
+        if (userToken && userToken.fcmToken) {
+            const message = {
+                notification: {
+                    title: "Commande Prête",
+                    body: `Votre commande numéro ${numero_commande} est prête.`
+                },
+                token: userToken.fcmToken
+            };
+            await admin.messaging().send(message);
+        }
+        return res.status(200).send("E-mail et notification envoyés avec succès");
     } catch (error) {
         console.log(error);
         return res.status(500).send("Erreur du serveur");
