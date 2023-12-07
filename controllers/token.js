@@ -24,6 +24,25 @@ const saveToken = async (req, res) => {
       res.status(500).send('Erreur interne du serveur');
     }
   }
+
+  //delete token
+  const deleteToken = async (req, res) => {
+    const { tokenId } = req.params;
+
+    try {
+        const token = await Token.findByPk(tokenId);
+        
+        if (token) {
+            await token.destroy();
+            res.send(`Token avec l'ID ${tokenId} a été supprimé avec succès.`);
+        } else {
+            res.status(404).send(`Token avec l'ID ${tokenId} introuvable.`);
+        }
+    } catch (error) {
+        console.error('Erreur lors de la suppression du token', error);
+        res.status(500).send('Erreur interne du serveur');
+    }
+}
   
 
-module.exports = { saveToken  }
+module.exports = { saveToken, deleteToken }

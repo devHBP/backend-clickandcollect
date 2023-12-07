@@ -15,7 +15,7 @@ const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
 const {feedback} = require('../controllers/emails/feedback')
 const { verify } = require('jsonwebtoken')
-const  { saveToken } = require('../controllers/token')
+const  { saveToken, deleteToken } = require('../controllers/token')
 const router = Router()
 
 
@@ -127,6 +127,6 @@ router.post('/feedback', feedback)
 
 //TOKEN
 router.post('/saveToken', saveToken)
-
+router.delete('/deleteToken/:tokenId', deleteToken)
 
 module.exports = router
