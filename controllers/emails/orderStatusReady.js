@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const admin = require('firebase-admin')
 require('dotenv').config();
 const Users = require('../../models/BDD/Users')
-const Token = require('../models/BDD/Token')
+const Token = require('../../models/BDD/Token')
 
 
 const orderStatusReady = async (req, res) => {
