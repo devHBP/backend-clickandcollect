@@ -87,13 +87,14 @@ const confirmOrder = async (req, res) => {
                                     <td align="center" style="padding: 40px;">
                                         <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour ${firstname},</h1>
                                         <p style="font-size: 16px; margin-bottom: 20px;">Merci pour ta commande <strong>${numeroCommande}</strong> !</p>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Nos équipes vont la préparer pour <strong>${formattedDate}</strong>, nous te tiendrons informé de sa disponibilité de retrait au <strong>${point_de_vente}</strong>.</p>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Si tu as des questions ou des demandes spécifiques concernant ta commande, n'hésites pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>${numero_service_client}</strong>.</p>
-                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Comment retirer ta commande ?</h2>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Nos équipes vont la préparer pour <strong>${formattedDate}</strong>, elle te sera livrée via la navette à ton lieu de travail : <strong>${point_de_vente}</strong>.</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous te tiendrons informé dès que la commande sera livrée. Si tu as des questions ou des demandes spécifiques concernant ta commande, n'hésites pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>${numero_service_client}</strong>.</p>
+                                        <h2 style="font-size: 18px; margin-bottom: 10px;">Comment se passe la livraison de ta commande sur ton lieu de travail ?</h2>
                                         <ol style="font-size: 16px; margin-bottom: 20px; padding-left: 0; list-style-position: inside;">
-                                            <li>Se munir de l'application Click and Collect Pain du Jour</li>
-                                            <li>Se rendre au point de retrait</li>
-                                            <li>Présenter le bon de commande</li>
+                                            <li>Commande via l'app Click and Collect pain du Jour grâce à ton compte collaborateur HBP</li>
+                                            <li>Préparation de ta commande par nos équipes du pain du Jour</li>
+                                            <li>Prise en charge de ta commande dans la navette</li>
+                                            <li>Liraison de ta commande pour le midi grâce à la tournée optimisée</li>
                                         </ol>
 
                                         <p style="font-size: 16px; margin-bottom: 20px;">Merci pour ta confiance et à très vite !</p>

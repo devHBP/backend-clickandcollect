@@ -88,11 +88,12 @@ const orderStatusReady = async (req, res) => {
                                      
                                         <p style="font-size: 16px; margin-top: 20px;">Si tu as des questions ou des demandes spécifiques concernant ta commande, n'hésites pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>04 68 84 46 01</strong>.</p>
                                         <h2 style="font-size: 18px; margin-bottom: 10px;">Comment retirer ta commande ?</h2>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">
-                                            1. Se munir de l'application Click and Collect Pain du Jour<br>
-                                            2. Se rendre au point de retrait<br>
-                                            3. Présenter le bon de commande
-                                        </p>
+                                        <ol style="font-size: 16px; margin-bottom: 20px; padding-left: 0; list-style-position: inside;">
+                                            <li>Commande via l'app Click and Collect pain du Jour grâce à ton compte collaborateur HBP</li>
+                                            <li>Préparation de ta commande par nos équipes du pain du Jour</li>
+                                            <li>Prise en charge de ta commande dans la navette</li>
+                                            <li>Liraison de ta commande pour le midi grâce à la tournée optimisée</li>
+                                        </ol>
                                         <p style="font-size: 16px; margin-top: 20px;">Merci pour ta confiance et à très vite !</p>
                                     </td>
                                 </tr>
