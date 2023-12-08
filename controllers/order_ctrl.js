@@ -134,11 +134,9 @@ const createOrder = async (req, res) => {
 
       // Vérifier si le stock est suffisant
       if (dbProduct.stock < product.quantity) {
-        return res
-          .status(400)
-          .json({
-            message: `Le stock du produit ${dbProduct.libelle} n'est pas suffisant pour la quantité commandée.`,
-          });
+        return res.status(400).json({
+          message: `Le stock du produit ${dbProduct.libelle} n'est pas suffisant pour la quantité commandée.`,
+        });
       }
 
       // Soustraire la quantité commandée du stock actuel
@@ -152,12 +150,10 @@ const createOrder = async (req, res) => {
     res.status(201).json(order);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        message:
-          "ICI, Une erreur est survenue lors de la création de la commande",
-      });
+    res.status(500).json({
+      message:
+        "ICI, Une erreur est survenue lors de la création de la commande",
+    });
   }
 };
 
@@ -266,31 +262,36 @@ const updateStatusOrder = async (req, res) => {
 
 const allOrders = async (req, res) => {
   try {
-      // Récupérer le paramètre de statut de la requête
-      const status = req.query.status;
+    // Récupérer le paramètre de statut de la requête
+    let status = req.query.status;
 
-      // Créer une condition de requête basée sur le statut, si spécifié
-      let whereCondition = {};
-      if (status) {
-          whereCondition.status = status;
-      }
+    // Convertir le statut en tableau si ce n'est pas déjà le cas
+    if (status && !Array.isArray(status)) {
+      status = [status];
+    }
 
-      const orders = await Orders.findAll({
-          where: whereCondition
-      });
+    // Créer une condition de requête basée sur le statut, si spécifié
+    let whereCondition = {};
+    if (status && status.length > 0) {
+      whereCondition.status = status;
+    }
 
-      if (!orders || orders.length === 0) {
-          return res.status(200).json({ orders: [] });
-      }
+    const orders = await Orders.findAll({
+      where: whereCondition,
+    });
 
-      res.json({ orders });
+    if (!orders || orders.length === 0) {
+      return res.status(200).json({ orders: [] });
+    }
 
+    res.json({ orders });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred while retrieving the orders.' });
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving the orders." });
   }
 };
-
 
 //suppression d'une commande
 // const deleteOneOrder = async (req, res) => {
@@ -398,11 +399,9 @@ const statusLastOrder = async (req, res) => {
       "Une erreur s'est produite lors de la récupération du statut de la commande :",
       error
     );
-    res
-      .status(500)
-      .json({
-        error: "An error occurred while trying to fetch the order status.",
-      });
+    res.status(500).json({
+      error: "An error occurred while trying to fetch the order status.",
+    });
   }
 };
 
@@ -461,12 +460,10 @@ const updateOrder = async (req, res) => {
     res.status(200).json(order);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        message:
-          "Une erreur est survenue lors de la mise à jour du statut de la commande",
-      });
+    res.status(500).json({
+      message:
+        "Une erreur est survenue lors de la mise à jour du statut de la commande",
+    });
   }
 };
 
@@ -499,12 +496,10 @@ const getOrderProducts = async (req, res) => {
     res.json(products);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        message:
-          "Une erreur s'est produite lors de la récupération des produits de la commande.",
-      });
+    res.status(500).json({
+      message:
+        "Une erreur s'est produite lors de la récupération des produits de la commande.",
+    });
   }
 };
 
@@ -544,12 +539,10 @@ const ordersOfUserWithProducts = async (req, res) => {
     res.json(ordersWithProducts);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        error:
-          "An error occurred while trying to fetch the orders and their products.",
-      });
+    res.status(500).json({
+      error:
+        "An error occurred while trying to fetch the orders and their products.",
+    });
   }
 };
 
@@ -597,11 +590,9 @@ const cancelOrder = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        message: "Une erreur est survenue lors de l'annulation de la commande",
-      });
+    res.status(500).json({
+      message: "Une erreur est survenue lors de l'annulation de la commande",
+    });
   }
 };
 
@@ -626,11 +617,9 @@ const productsWithFormuleForOrder = async (req, res) => {
     });
 
     if (products.length === 0) {
-      return res
-        .status(404)
-        .json({
-          error: "No products with formule found for the specified order.",
-        });
+      return res.status(404).json({
+        error: "No products with formule found for the specified order.",
+      });
     }
 
     // Regrouper les produits par formule
