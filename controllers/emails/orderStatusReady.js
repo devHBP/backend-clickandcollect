@@ -147,12 +147,12 @@ const orderStatusReady = async (req, res) => {
         await sgMail.send(msg);
 
         const userToken = await Token.findOne({ where: { userId: userId } });
-        console.log('token', userToken.fcmToken)
+        // console.log('token', userToken.fcmToken)
         if (userToken && userToken.fcmToken) {
             const message = {
                 notification: {
                     title: "Commande Prête",
-                    body: `Votre commande numéro ${numero_commande} est prête.`
+                    body: `Votre commande n° ${numeroCommande} est prête.`
                 },
                 token: userToken.fcmToken
             };
