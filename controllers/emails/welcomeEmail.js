@@ -1,6 +1,12 @@
-const sgMail = require('@sendgrid/mail'); 
+const nodemailer = require("nodemailer");
+
 const jwt = require('jsonwebtoken'); 
 require('dotenv').config();
+
+const PASSWORD = process.env.PASSWORD;
+const HOSTNAME = process.env.HOSTNAME;
+const PORT = process.env.PORT;
+const USERNAME = process.env.USERNAME;
 
 const sendWelcomeEmail = async (req, res) => {
   try {
@@ -12,11 +18,20 @@ const sendWelcomeEmail = async (req, res) => {
     const sav = "https://preprod.lepaindujour.io/sav.png"
     const location = "https://preprod.lepaindujour.io/location.png"
 
-    sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
-    const msg = {
+    let transporter = nodemailer.createTransport({
+        host: HOSTNAME, 
+        port: PORT, 
+        secure: true, 
+        auth: {
+          user: USERNAME, 
+          pass: PASSWORD, 
+        },
+      });
+
+    const mailOptions = {
+        from: USERNAME,
         to: email,
-        from: 'contact@lepaindujour.io',
         subject: `Bienvenue chez ${nom_application}`,
         html: `
                     <!DOCTYPE html>
@@ -150,7 +165,12 @@ const sendWelcomeEmail = async (req, res) => {
         `
     };
     
-    await sgMail.send(msg);
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        // console.log("Message sent: %s", info.messageId);
+      });
     return res.status(200).send("E-mail envoyé avec succès");
 } catch (error) {
     console.log(error);
