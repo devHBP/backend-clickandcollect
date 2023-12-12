@@ -1,9 +1,14 @@
 const sgMail = require('@sendgrid/mail'); 
+const nodemailer = require("nodemailer");
+
 const jwt = require('jsonwebtoken'); 
 require('dotenv').config();
 const Users = require('../../models/BDD/Users')
 
-
+const PASSWORD = process.env.PASSWORD;
+const HOSTNAME = process.env.HOSTNAME;
+const PORT = process.env.PORT;
+const USERNAME = process.env.USERNAME;
 
 const confirmOrder = async (req, res) => {
 
@@ -45,11 +50,21 @@ const confirmOrder = async (req, res) => {
         // 1. Vérifiez si l'utilisateur existe
         //const user = await Users.findOne({ where: { email: userEmail } });   
 
-        sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+        // sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
-        const msg = {
+        let transporter = nodemailer.createTransport({
+            host: HOSTNAME, 
+            port: PORT, 
+            secure: true, 
+            auth: {
+              user: USERNAME, 
+              pass: PASSWORD, 
+            },
+          });
+
+        const mailOptions = {
             to: email,
-            from: 'contact@lepaindujour.io',
+            from: USERNAME,
             subject: 'Confirmation de ta commande',
             html: `
             <!DOCTYPE html>
@@ -150,7 +165,13 @@ const confirmOrder = async (req, res) => {
             `
         };
        
-        await sgMail.send(msg);
+        // await sgMail.send(msg);
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log("Message sent: %s", info.messageId);
+          });
         return res.status(200).send("E-mail envoyé avec succès");
     } catch (error) {
         console.log(error);
