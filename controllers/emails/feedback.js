@@ -1,4 +1,3 @@
-const sgMail = require('@sendgrid/mail'); 
 const nodemailer = require("nodemailer");
 
 const jwt = require('jsonwebtoken'); 
@@ -52,9 +51,6 @@ const feedback = async (req, res) => {
         // 1. Vérifiez si l'utilisateur existe
         //const user = await Users.findOne({ where: { email: userEmail } });   
 
-
-
-        // sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
         let transporter = nodemailer.createTransport({
             host: HOSTNAME, 
@@ -117,7 +113,7 @@ const feedback = async (req, res) => {
                                         <h1 style="font-size: 24px; margin-bottom: 20px;">${firstname},</h1>
                                         <p style="font-size: 16px; margin-bottom: 20px;">Ta commande <strong>${numeroCommande}</strong> a bien été récupérée !</p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">Tout s'est bien passé ?</p>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Dit-nous !</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Dis-nous !</p>
                                         <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
                                         <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
                                         <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
@@ -179,12 +175,11 @@ const feedback = async (req, res) => {
             `
         };
        
-        // await sgMail.send(msg);
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
               return console.log(error);
             }
-            console.log("Message sent: %s", info.messageId);
+            // console.log("Message sent: %s", info.messageId);
           });
         return res.status(200).send("E-mail envoyé avec succès");
     } catch (error) {
