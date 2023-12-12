@@ -1,9 +1,16 @@
 const sgMail = require('@sendgrid/mail'); 
+const nodemailer = require("nodemailer");
+
 const jwt = require('jsonwebtoken'); 
 const admin = require('firebase-admin')
 require('dotenv').config();
 const Users = require('../../models/BDD/Users')
 const Token = require('../../models/BDD/Token')
+
+const PASSWORD = process.env.PASSWORD;
+const HOSTNAME = process.env.HOSTNAME;
+const PORT = process.env.PORT;
+const USERNAME = process.env.USERNAME;
 
 
 const orderStatusReady = async (req, res) => {
@@ -20,11 +27,21 @@ const orderStatusReady = async (req, res) => {
         const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999";
  
 
-        sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+        // sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
-        const msg = {
+        let transporter = nodemailer.createTransport({
+            host: HOSTNAME, 
+            port: PORT, 
+            secure: true, 
+            auth: {
+              user: USERNAME, 
+              pass: PASSWORD, 
+            },
+          });
+
+        const mailOptions = {
+            from: USERNAME,
             to: email,
-            from: 'contact@lepaindujour.io',
             subject: 'Ta commande est prête',
             html: `
             <!DOCTYPE html>
@@ -145,7 +162,14 @@ const orderStatusReady = async (req, res) => {
             `
         };
        
-        await sgMail.send(msg);
+        // await sgMail.send(msg);
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log("Message sent: %s", info.messageId);
+          });
 
         const userToken = await Token.findOne({ where: { userId: userId } });
         // console.log('token', userToken.fcmToken)
