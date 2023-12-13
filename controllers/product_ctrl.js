@@ -146,7 +146,7 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const productId = req.params.id;
   const updates = req.body;
-
+  console.log('req file', req.file)
   // Convertissez les chaînes vides en null pour les champs allergenes / ingredients
   if (updates.allergenes === "") {
     updates.allergenes = null;
@@ -191,12 +191,15 @@ const updateProduct = async (req, res) => {
       updates.id_famille_produit = familleProduit.id_famille_produit;
     }
 
-    if (!req.file) {
-      delete updates.image; // Cela évite de mettre à jour le champ image si aucun fichier n'est fourni
-    }
 
+    await Products.update({
+      ...updates,
+      ...(req.file && { image: req.file.path }), // Mettre à jour 'image' uniquement si 'req.file' est défini
+    }, {
+      where: { productId: productId }
+    });
     // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-    await Products.update(updates, { where: { productId: productId } });
+    // await Products.update(updates, { where: { productId: productId } });
     await product.save();
 
     // Mise à jour des détails du produit
@@ -223,7 +226,8 @@ const updateProduct = async (req, res) => {
 
     const response = {
       msg: "Product updated successfully",
-      ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
+      image: req.file.path
+      // ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
     };
     return res.status(200).json(response);
 
