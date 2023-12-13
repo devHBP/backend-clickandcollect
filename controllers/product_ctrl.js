@@ -226,8 +226,8 @@ const updateProduct = async (req, res) => {
 
     const response = {
       msg: "Product updated successfully",
-      image: req.file.path
-      // ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
+      // image: req.file.path
+      ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
     };
     return res.status(200).json(response);
 
