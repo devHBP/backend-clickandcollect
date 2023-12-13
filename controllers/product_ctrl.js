@@ -86,7 +86,7 @@ const addProduct = async (req, res) => {
       allergenes: allergenes
     };
     console.log('product', product)
-   
+
     const createdProduct = await Products.create(product);
 
     console.log("createdProduct", createdProduct);
@@ -192,9 +192,16 @@ const updateProduct = async (req, res) => {
     }
 
 
-   
+
     // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-    await Products.update(updates, { where: { productId: productId } });
+    // await Products.update(updates, { where: { productId: productId } });
+    await Products.update({
+      ...updates,
+      // Ne mettez à jour l'image que si un nouveau fichier a été téléchargé
+      ...(req.file && { image: req.file.path }),
+    }, {
+      where: { productId: productId }
+    });
     await product.save();
 
     // Mise à jour des détails du produit
@@ -221,7 +228,8 @@ const updateProduct = async (req, res) => {
 
     const response = {
       msg: "Product updated successfully",
-      image: req.file.path
+      image: req.file ? req.file.path : product.image,
+      // image: req.file.path,
       // ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
     };
     return res.status(200).json(response);
