@@ -192,14 +192,9 @@ const updateProduct = async (req, res) => {
     }
 
 
-    await Products.update({
-      ...updates,
-      ...(req.file && { image: req.file.path }), // Mettre à jour 'image' uniquement si 'req.file' est défini
-    }, {
-      where: { productId: productId }
-    });
+   
     // Mettez à jour uniquement les champs spécifiés dans les mises à jour
-    // await Products.update(updates, { where: { productId: productId } });
+    await Products.update(updates, { where: { productId: productId } });
     await product.save();
 
     // Mise à jour des détails du produit
@@ -226,8 +221,8 @@ const updateProduct = async (req, res) => {
 
     const response = {
       msg: "Product updated successfully",
-      // image: req.file.path
-      ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
+      image: req.file.path
+      // ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
     };
     return res.status(200).json(response);
 
