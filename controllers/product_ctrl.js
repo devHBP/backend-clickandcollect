@@ -163,16 +163,16 @@ const updateProduct = async (req, res) => {
     }
 
     // Vérification du téléchargement d'une nouvelle image
-    if (req.file) {
-      // Si une ancienne image existe et est présente sur le disque, la supprimer
-      if (product.image && fs.existsSync(product.image)) {
-        fs.unlinkSync(product.image);
-        console.log("Ancienne image supprimée");
-      }
+    // if (req.file) {
+    //   // Si une ancienne image existe et est présente sur le disque, la supprimer
+    //   if (product.image && fs.existsSync(product.image)) {
+    //     fs.unlinkSync(product.image);
+    //     console.log("Ancienne image supprimée");
+    //   }
 
-      // Ajout du nouveau chemin de l'image au produit
-      product.image = req.file.path;
-    }
+    //   // Ajout du nouveau chemin de l'image au produit
+    //   product.image = req.file.path;
+    // }
 
     // Si une nouvelle catégorie est spécifiée, vérifiez qu'elle correspond à la famille de produits
     if (updates.categorie) {
@@ -219,7 +219,7 @@ const updateProduct = async (req, res) => {
 
     const response = {
       msg: "Product updated successfully",
-      ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
+      // ...(req.file && { image: req.file.path }), // Inclure l'image seulement si elle est présente
     };
     return res.status(200).json(response);
 
