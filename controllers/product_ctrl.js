@@ -191,6 +191,10 @@ const updateProduct = async (req, res) => {
       updates.id_famille_produit = familleProduit.id_famille_produit;
     }
 
+    if (!req.file) {
+      delete updates.image; // Cela évite de mettre à jour le champ image si aucun fichier n'est fourni
+    }
+
     // Mettez à jour uniquement les champs spécifiés dans les mises à jour
     await Products.update(updates, { where: { productId: productId } });
     await product.save();
