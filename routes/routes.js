@@ -16,7 +16,7 @@ const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
 const {feedback} = require('../controllers/emails/feedback')
 const { verify } = require('jsonwebtoken')
 const  { saveToken, deleteToken } = require('../controllers/token')
-const  { versionApp } = require('../controllers/version')
+const  { versionApp, status } = require('../controllers/version')
 versionApp
 const router = Router()
 
@@ -133,5 +133,6 @@ router.delete('/deleteToken/:tokenId', deleteToken)
 
 //VERSION
 router.get('/versionApp',versionApp )
+router.get('/status', status)
 
 module.exports = router

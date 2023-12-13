@@ -5,4 +5,8 @@ const versionApp = async (req, res) => {
   res.json({ version: APP_VERSION });
 }
 
-module.exports = { versionApp}
+const status = (req, res) => {
+  res.status(200).send({ status: 'OK' });
+}
+
+module.exports = { versionApp, status}
