@@ -290,8 +290,7 @@ const getAllProducts = async (req, res) => {
     const products = await Products.findAll({
       attributes: { exclude: ["createdAt", "updatedAt"] },
     });
-
-    // Récupérer tous les détails des produits
+    products.forEach(product => console.log(product.allergenes));    // Récupérer tous les détails des produits
     const productDetails = await ProductDetail.findAll();
 
     // Combiner les produits et leurs détails
