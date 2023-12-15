@@ -1,15 +1,22 @@
-const Review = require('../models/BDD/Reviews')
+const Reviews = require('../models/BDD/Reviews')
 
 const averageRatings = async (req, res) => {
-    let totalRating = 0;
+    try {
+        const allReviews = await Reviews.findAll(); 
 
-    for (const review of Review) {
-        totalRating += review.rating;
+        let totalRating = 0;
+
+        for (const review of allReviews) {
+            totalRating += review.rating;
+        }
+
+        const averageRating = allReviews.length > 0 ? totalRating / allReviews.length : 0;
+
+        res.send(`La moyenne des notes est: ${averageRating}`);
+    } catch (error) {
+        // Gestion des erreurs
+        res.status(500).send("Erreur lors de la récupération des reviews");
     }
-
-    const averageRating = Review.length > 0 ? totalRating / Review.length : 0;
-
-    res.send(`La moyenne des notes est: ${averageRating}`);
 }
 
 module.exports = { averageRatings }
