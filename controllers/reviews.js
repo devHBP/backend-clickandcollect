@@ -12,7 +12,9 @@ const averageRatings = async (req, res) => {
 
         const averageRating = allReviews.length > 0 ? totalRating / allReviews.length : 0;
 
-        res.send(`La moyenne des notes est: ${averageRating}`);
+        const roundedAverage = averageRating.toFixed(2);
+
+        res.send(`La moyenne des notes est: ${roundedAverage}`);
     } catch (error) {
         // Gestion des erreurs
         res.status(500).send("Erreur lors de la récupération des reviews");
