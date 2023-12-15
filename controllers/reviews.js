@@ -14,7 +14,8 @@ const averageRatings = async (req, res) => {
 
         const roundedAverage = averageRating.toFixed(2);
 
-        res.send(`La moyenne des notes est: ${roundedAverage}`);
+        // res.send(`La moyenne des notes est: ${roundedAverage}`);
+        res.status(200).send(roundedAverage)
     } catch (error) {
         // Gestion des erreurs
         res.status(500).send("Erreur lors de la récupération des reviews");
