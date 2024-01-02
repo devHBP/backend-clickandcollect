@@ -17,8 +17,6 @@ const {feedback} = require('../controllers/emails/feedback')
 const { verify } = require('jsonwebtoken')
 const  { saveToken, deleteToken } = require('../controllers/token')
 const  { versionApp, status } = require('../controllers/version')
-const  { averageRatings } = require('../controllers/reviews')
-versionApp
 const router = Router()
 
 
@@ -67,7 +65,6 @@ router.post('/resetBoissonIds', resetBoissonIds);
 //REVIEWS
 router.post('/reviews', createReview)
 router.get('/getAllReviews', getAllReviews)
-router.get('/averageRatings', averageRatings)
 
 //Formules
 router.post('/formules', createFormule)
