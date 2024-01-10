@@ -60,7 +60,7 @@ const Users = db.define('Users', {
         type: DataTypes.DATEONLY,
         allowNull: true, // Si la date de naissance peut être nulle
       },
-      commentaires:{
+      fonction:{
         type: DataTypes.STRING,
         allowNull: true,
       },
