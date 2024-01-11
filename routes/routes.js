@@ -6,8 +6,8 @@ const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, d
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
-const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi } = require('../controllers/stock_ctrl')
-const { createSession, success, paiementStatus, createPaiement,  } = require('../controllers/payment_ctrl')
+const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock} = require('../controllers/stock_ctrl')
+const { createSession, success, paiementStatus, createPaiement, cancel , back } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
@@ -17,6 +17,7 @@ const {feedback} = require('../controllers/emails/feedback')
 const { verify } = require('jsonwebtoken')
 const  { saveToken, deleteToken } = require('../controllers/token')
 const  { versionApp, status } = require('../controllers/version')
+const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const router = Router()
 
 
@@ -96,6 +97,8 @@ router.delete('/deletepromocodes/:id', deletePromo)
 router.get('/allStocks', getAllStocks)
 router.get('/getStockByProduct/:productId', getStockByProduct)
 router.put('/getUpdateStockAntigaspi', getUpdateStockAntigaspi)
+router.put('/getUpdateStock', getUpdateStock)
+router.post('/checkStockAntiGaspi', checkStockAntiGaspi)
 
 //ORDERS
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
@@ -111,12 +114,15 @@ router.get('/ordersOfUserWithProducts/:userId',verifyToken,  ordersOfUserWithPro
 router.get('/statusLastOrder/:userId', statusLastOrder)
 router.get('/tableOrderProduct', tableOrderProduct)
 router.put('/updateViewStatus/:orderId',updateViewStatus )
+router.patch('/updateOrderPaidStatus', updateOrderPaidStatus);
 // router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 //router.post('/createOrderAndPayment')
 
 //PAYMENTS
 router.post('/checkout_session', createSession )
 router.get('/success', success)
+router.get('/cancel', cancel)
+router.get('/back', back)
 router.get('/paiementStatus', paiementStatus)
 router.post('/createPaiement', createPaiement) //paiement sur place, seuleulement le paiement ici
 
