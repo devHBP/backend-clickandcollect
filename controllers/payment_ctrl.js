@@ -95,10 +95,11 @@ const createSession = async (req, res) => {
       console.log('lineItems', lineItems);
      
 
-      let success_url = `https://preprod.lepaindujour.io/success/`;
-      let cancel_url = `https://preprod.lepaindujour.io/cancel/`;
+      let success_url = `http://127.0.0.1:8080/success/`;
+      let cancel_url = `http://127.0.0.1:8080/cancel/`;
+
+      //let cancel_url = `https://preprod.lepaindujour.io/cancel/`;
       // let success_url = `http://localhost:8080/success`;
-      // let cancel_url = 'http://localhost:8080/cancel';
       
 
       // if (req.body.platform === 'android' && req.body.isDev) {
@@ -147,11 +148,47 @@ const success = (req, res) => {
  `);
 }
 
+const cancel = (req, res) => {
+  // res.json({ message: 'Payment successful' });
+  // console.log('req', req)
+ console.log('paiement annulé backend')
+ res.send(`
+ <html>
+   <body>
+    <div style="display: flex; align-items: center; justify-content: center; height: 100vh;">
+      <div style="text-align: center;display:flex; flex-direction: column; gap:15px; width: 70%">
+        <h1 style="font-size: 42px">Paiement annulé !</h1>
+        <p style="font-size: 36px">Annulation du paiement</p>
+        <a href="clickandcollect://cancel" style="font-size: 36px; text-decoration:none; color: white; background-color:orange; padding: 20px 45px; margin-top:20px; border-radius: 10px">Retour</a>
+      </div>
+    </div>
+   </body>
+ </html>
+`);
+}
+
+const back = (req, res) => {
+  // res.json({ message: 'Payment successful' });
+  // console.log('req', req)
+ console.log('paiement annulé')
+ res.send(`
+ <html>
+   <body>
+    <div style="display: flex; align-items: center; justify-content: center; height: 100vh;">
+      <div style="text-align: center;display:flex; flex-direction: column; gap:15px; width: 70%">
+        <h1 style="font-size: 42px">Paiement annulé !</h1>
+        <p style="font-size: 36px">Retour en arriere</p>
+        <a href="clickandcollect://cancel" style="font-size: 36px; text-decoration:none; color: white; background-color:orange; padding: 20px 45px; margin-top:20px; border-radius: 10px">Retour</a>
+      </div>
+    </div>
+   </body>
+ </html>
+`);
+}
+
 const paiementStatus = async (req, res) => {
-  console.log('test boucle 1')
   try {
     const sessionId = req.query.sessionId;
-    console.log('test boucle 2')
 
     // Obtenez la session de paiement à partir de l'ID de session
     const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -163,6 +200,10 @@ const paiementStatus = async (req, res) => {
     console.log('paiment id', paymentId)
     const method = session.payment_method_types[0];
     console.log('méthode de paiement', method); 
+
+    if (session.payment_status = "unpaid"){
+      console.log('page d annulation ici')
+    }
     res.json({ status: paymentStatus, transactionId: paymentId, method: method });
     //rajouter l'idpaiement
   } catch (error) {
@@ -192,4 +233,4 @@ const createPaiement = async (req, res) => {
 }
 
 
-module.exports = { createSession, success, paiementStatus, createPaiement }
+module.exports = { createSession, success, paiementStatus, createPaiement, cancel, back }

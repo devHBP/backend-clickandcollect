@@ -82,9 +82,9 @@ const createOrder = async (req, res) => {
     //    console.log('invalide date')
     // return res.status(400).json({ message: 'La date fournie est invalide.' });
     // }
-    // Par défaut, le statut est "en attente" et paid est false
+    // Par défaut, le statut est "en attente" et paid est fa true car paiement avant ok 
     const status = "en attente";
-    const paid = false;
+    const paid = true;
 
     const order = await Orders.create({
       userRole,
@@ -123,29 +123,6 @@ const createOrder = async (req, res) => {
     console.log("orderProducts", orderProducts);
 
     await TableOrderProduct.bulkCreate(orderProducts);
-
-    // Mettre à jour le stock des produits
-    for (let product of products) {
-      // Récupérer le produit de la base de données
-      const dbProduct = await Products.findByPk(product.productId);
-      const stock = await StocksTest.findOne({
-        where: { productId: product.productId },
-      });
-
-      // Vérifier si le stock est suffisant
-      if (dbProduct.stock < product.quantity) {
-        return res.status(400).json({
-          message: `Le stock du produit ${dbProduct.libelle} n'est pas suffisant pour la quantité commandée.`,
-        });
-      }
-
-      // Soustraire la quantité commandée du stock actuel
-      const newStock = dbProduct.stock - product.quantity;
-
-      // Mettre à jour le produit dans la base de données avec le nouveau stock
-      await dbProduct.update({ stock: newStock });
-      await stock.update({ quantite: newStock });
-    }
 
     res.status(201).json(order);
   } catch (error) {
@@ -439,7 +416,7 @@ const statusLastOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
   try {
     // Récupérez le numéro de commande, le nouveau statut et l'ID du paiement à partir du corps de la requête
-    const { numero_commande, status, paymentId } = req.body;
+    const { numero_commande, paymentId } = req.body;
 
     // Trouvez la commande correspondante dans la base de données
     const order = await Orders.findOne({
@@ -452,9 +429,7 @@ const updateOrder = async (req, res) => {
     }
 
     // Mettez à jour le statut de la commande et l'ID du paiement
-    order.status = "en attente";
     order.paymentId = paymentId;
-    order.paid = true;
     await order.save();
 
     res.status(200).json(order);
