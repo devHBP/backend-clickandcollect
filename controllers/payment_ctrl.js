@@ -4,6 +4,9 @@ require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_KEY_PRIVATE);
 
 const createSession = async (req, res) => {
+  console.log('Info reçue pour Stripe:', req.body);
+  console.log("orderInfo coté backend", req.body.orderInfo)
+
   try {
     // Valider les entrées
     if (!req.body.orderInfo || !req.body.orderInfo.cart) {
@@ -67,9 +70,7 @@ const createSession = async (req, res) => {
 };
 
 const success = (req, res) => {
-  // res.json({ message: 'Payment successful' });
-  // console.log('req', req)
-  console.log("paiement ok");
+  console.log("paiement  success - ok");
   res.send(`
    <html>
      <body>
@@ -87,8 +88,6 @@ const success = (req, res) => {
 };
 
 const cancel = (req, res) => {
-  // res.json({ message: 'Payment successful' });
-  // console.log('req', req)
   console.log("paiement annulé backend");
   res.send(`
  <html>
@@ -106,8 +105,6 @@ const cancel = (req, res) => {
 };
 
 const back = (req, res) => {
-  // res.json({ message: 'Payment successful' });
-  // console.log('req', req)
   console.log("paiement annulé");
   res.send(`
  <html>
@@ -126,8 +123,9 @@ const back = (req, res) => {
 
 const paiementStatus = async (req, res) => {
   try {
+    // console.log('check paiement', req)
     const sessionId = req.query.sessionId;
-
+    console.log('sessionId coté back', sessionId)
     // Obtenez la session de paiement à partir de l'ID de session
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     console.log("session", session);
@@ -139,15 +137,11 @@ const paiementStatus = async (req, res) => {
     const method = session.payment_method_types[0];
     console.log("méthode de paiement", method);
 
-    if ((session.payment_status = "unpaid")) {
-      console.log("page d annulation ici");
-    }
     res.json({
       status: paymentStatus,
       transactionId: paymentId,
       method: method,
     });
-    //rajouter l'idpaiement
   } catch (error) {
     console.error(
       "Erreur lors de la vérification de l'état du paiement - erreur ici :",
@@ -163,14 +157,14 @@ const createPaiement = async (req, res) => {
   try {
     // Récupérer les données du corps de la requête
     const { method, transactionId, status } = req.body;
-
+    console.log('req createPaiement', req.body)
     // Créer le code promo dans la base de données
     const paiement = await TestPaymentsV2.create({
       method,
       transactionId,
       status,
     });
-
+    console.log('paiement', paiement)
     res.status(201).json(paiement);
   } catch (error) {
     console.error(error);

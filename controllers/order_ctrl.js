@@ -40,8 +40,7 @@ const createOrder = async (req, res) => {
       // ]
     } = req.body;
     const cartString = JSON.stringify(cart);
-    console.log("cart backend", cartString);
-    console.log("req", req.body);
+    console.log("req createOrder", req.body);
     //console.log('products', products)
     //console.log('prix total', prix_total)
 
