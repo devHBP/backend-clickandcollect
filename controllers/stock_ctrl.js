@@ -16,7 +16,7 @@ const getAllStocks = (req, res) => {
 
 //lister le stock par productId
 const getStockByProduct = async (req, res) => {
-  const { productId } = req.params; 
+  const { productId } = req.params;
   try {
     const stockByProduct = await StocksTest.findAll({
       where: { productId }, // Utilisation de l'ID du produit pour filtrer les résultats
@@ -73,14 +73,47 @@ const getUpdateStockAntigaspi = async (req, res) => {
   const { productId, quantityPurchased } = req.body;
   // console.log("productId", productId);
   // console.log("qty", quantityPurchased);
+  console.log("req body ", req.body);
   try {
     const product = await Products.findByPk(productId);
 
-    console.log("product", product);
+    // console.log("product", product);
     if (!product) {
       return res.status(404).json({ message: "Produit non trouvé." });
     }
-    product.stockantigaspi -= quantityPurchased;
+
+    product.stockantigaspi -= quantityPurchased; // Soustrait la quantité du stock
+    console.log("j enleve du stock");
+
+    await product.save();
+
+    res
+      .status(200)
+      .json({ message: "Stock antigaspi mis à jour avec succès." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la mise à jour du stock antigaspi." });
+  }
+};
+
+// je rajoute du stock antigaspi 
+const getAddStockAntigaspi = async (req, res) => {
+  const { productId, quantityPurchased } = req.body;
+  console.log("productId", productId);
+  console.log("qty", quantityPurchased);
+  console.log("req body ", req.body);
+  try {
+    const product = await Products.findByPk(productId);
+
+    // console.log("product", product);
+    if (!product) {
+      return res.status(404).json({ message: "Produit non trouvé." });
+    }
+
+    product.stockantigaspi += quantityPurchased; // Soustrait la quantité du stock
+    console.log("je rajoute du stock");
+
     await product.save();
 
     res
@@ -107,15 +140,13 @@ const getUpdateStock = async (req, res) => {
     if (stock.quantite < quantityPurchased) {
       return res.status(400).json({ error: "Not enough stock" });
     }
-    
+
     product.stock -= quantityPurchased;
     stock.quantite -= quantityPurchased;
     await product.save();
     await stock.save();
 
-    res
-      .status(200)
-      .json({ message: "Stock mis à jour avec succès." });
+    res.status(200).json({ message: "Stock mis à jour avec succès." });
   } catch (error) {
     res
       .status(500)
@@ -128,5 +159,6 @@ module.exports = {
   getStockByProduct,
   getUpdateStockAntigaspi,
   checkStockAntiGaspi,
-  getUpdateStock
+  getUpdateStock,
+  getAddStockAntigaspi
 };

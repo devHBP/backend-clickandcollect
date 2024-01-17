@@ -303,9 +303,11 @@ const getAllProducts = async (req, res) => {
         ingredients: details ? details.ingredients : null,
       };
     });
+    console.log("combined", combined)
 
     res.status(200).json(combined);
   } catch (error) {
+    // console.log("combined", combined)
     res.status(500).json(error);
   }
 };
