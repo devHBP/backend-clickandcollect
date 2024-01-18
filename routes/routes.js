@@ -6,8 +6,8 @@ const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, d
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
-const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi} = require('../controllers/stock_ctrl')
-const { createSession, success, paiementStatus, createPaiement, cancel , back , stripeWebhook} = require('../controllers/payment_ctrl')
+const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi} = require('../controllers/stock_ctrl')
+const { createSession, success, paiementStatus, createPaiement, cancel , back } = require('../controllers/payment_ctrl')
 
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus } = require('../controllers/order_ctrl')
@@ -101,7 +101,7 @@ router.put('/getUpdateStockAntigaspi', getUpdateStockAntigaspi)
 router.put('/getAddStockAntigaspi', getAddStockAntigaspi)
 router.put('/getUpdateStock', getUpdateStock)
 router.post('/checkStockAntiGaspi', checkStockAntiGaspi)
-
+router.get('/verifStockAntiGaspi/:productId', verifStockAntiGaspi)
 //ORDERS
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
 router.put('/updateStatusOrder/:orderId', updateStatusOrder)
@@ -127,7 +127,8 @@ router.get('/cancel', cancel)
 router.get('/back', back)
 router.get('/paiementStatus', paiementStatus)
 router.post('/createPaiement', createPaiement) //paiement sur place, seuleulement le paiement ici
-router.post('/stripeWebhook', stripeWebhook)
+//router.post('/stripeWebhook', stripeWebhook)
+
 //EMAILS
 router.post('/sendWelcomeEmail', sendWelcomeEmail)
 router.post('/confirmOrder', confirmOrder)

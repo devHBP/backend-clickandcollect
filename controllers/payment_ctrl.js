@@ -43,7 +43,8 @@ const createSession = async (req, res) => {
 
     console.log("lineItems", lineItems);
 
-    let success_url = `${process.env.ADRESS_PREPROD}/success/`;
+    //let success_url = `http://127.0.0.1:8080/success/`;
+    let success_url = `${process.env.ADRESS_PREPROD}/success/`;x
     let cancel_url = `${process.env.ADRESS_PREPROD}/cancel/`;
 
     // if (req.body.platform === 'android' && req.body.isDev) {
@@ -74,23 +75,91 @@ const createSession = async (req, res) => {
   }
 };
 
+// const success = (req, res) => {
+//   console.log("paiement  success - ok");
+//   res.send(`
+//    <html>
+//      <body>
+//       <div style="display: flex; align-items: center; justify-content: center; height: 100vh;">
+//         <div style="text-align: center;display:flex; flex-direction: column; gap:15px; width: 70%">
+//           <h1 style="font-size: 42px">Paiement réussi !</h1>
+//           <p style="font-size: 36px">Merci d'avoir effectué votre paiement avec Stripe.</p>
+//           <p style="font-size: 36px">Vous pouvez revenir sur votre application</p>
+//           <a href="clickandcollect://success" style="font-size: 36px; text-decoration:none; color: white; background-color:green; padding: 20px 45px; margin-top:20px; border-radius: 10px">Retour</a>
+//         </div>
+//       </div>
+//      </body>
+//    </html>
+//  `);
+// };
+
 const success = (req, res) => {
-  console.log("paiement  success - ok");
+  console.log("paiement success - ok");
   res.send(`
-   <html>
-     <body>
-      <div style="display: flex; align-items: center; justify-content: center; height: 100vh;">
-        <div style="text-align: center;display:flex; flex-direction: column; gap:15px; width: 70%">
-          <h1 style="font-size: 42px">Paiement réussi !</h1>
-          <p style="font-size: 36px">Merci d'avoir effectué votre paiement avec Stripe.</p>
-          <p style="font-size: 36px">Vous pouvez revenir sur votre application</p>
-          <a href="clickandcollect://success" style="font-size: 36px; text-decoration:none; color: white; background-color:green; padding: 20px 45px; margin-top:20px; border-radius: 10px">Retour</a>
-        </div>
-      </div>
-     </body>
-   </html>
- `);
+  <!DOCTYPE html>
+  <html>
+<head>
+  <title>Finaliser votre paiement</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f7f7f7;
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 2vw;
+      max-width: 90%;
+      background-color: #fff;
+      padding: 4vw;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    h1 {
+      font-size: 6vw;
+    }
+    p {
+      font-size: 4vw;
+    }
+    .success-message {
+      font-style: italic;
+      color: green;
+    }
+    .btn-retour {
+      font-size: 4vw;
+      text-decoration: none;
+      color: white;
+      background-color: orange; /* Orange */
+      padding: 4vw 8vw;
+      margin-top: 4vw;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .btn-retour:hover {
+      background-color: darkorange;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Finaliser votre paiement</h1>
+    <p class="success-message">Votre paiement a été traité avec succès.</p>
+    <p><strong>Il est essentiel de revenir à l'application pour finaliser la création de votre commande.</strong></p>
+    <a href="clickandcollect://success" class="btn-retour">Retourner à l'application</a>
+  </div>
+</body>
+</html>
+  
+  `);
 };
+
 
 const cancel = (req, res) => {
   console.log("paiement annulé backend");
@@ -180,32 +249,32 @@ const createPaiement = async (req, res) => {
 };
 
 //webhook stripe
-const stripeWebhook = async (req, res) => {
-  const sig = req.headers['stripe-signature'];
+// const stripeWebhook = async (req, res) => {
+//   const sig = req.headers['stripe-signature'];
 
-  let event;
+//   let event;
 
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+//   try {
+//     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
 
-    // Gérez l'événement
-    switch (event.type) {
-      case 'checkout.session.completed':
-        const session = event.data.object;
-        console.log('Session de paiement complétée', session);
-        // Ici, vous pouvez effectuer des actions supplémentaires basées sur la session complétée
-        break;
-      // Ajoutez d'autres cas d'événements si nécessaire
-      default:
-        console.log(`Événement non géré de type: ${event.type}`);
-    }
+//     // Gérez l'événement
+//     switch (event.type) {
+//       case 'checkout.session.completed':
+//         const session = event.data.object;
+//         console.log('Session de paiement complétée', session);
+//         // Ici, vous pouvez effectuer des actions supplémentaires basées sur la session complétée
+//         break;
+//       // Ajoutez d'autres cas d'événements si nécessaire
+//       default:
+//         console.log(`Événement non géré de type: ${event.type}`);
+//     }
 
-    res.status(200).json({received: true});
-  } catch (err) {
-    console.error(`Erreur dans le Webhook Stripe: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-};
+//     res.status(200).json({received: true});
+//   } catch (err) {
+//     console.error(`Erreur dans le Webhook Stripe: ${err.message}`);
+//     return res.status(400).send(`Webhook Error: ${err.message}`);
+//   }
+// };
 
 
 module.exports = {
@@ -215,5 +284,5 @@ module.exports = {
   createPaiement,
   cancel,
   back,
-  stripeWebhook
+  // stripeWebhook
 };

@@ -68,6 +68,26 @@ const checkStockAntiGaspi = async (req, res) => {
   }
 };
 
+//verif info stockantigaspi sur le produit
+const verifStockAntiGaspi = async (req, res) => {
+  const productId = req.params.productId;
+
+  try {
+    const product = await Products.findByPk(productId);
+
+    if (product) {
+      res.json({ stockantigaspi: product.stockantigaspi });
+    } else {
+      res.status(404).send("Produit non trouvé");
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Erreur lors de la vérification des stocks antisgapi.",
+      });
+  }
+};
 //update stockantigaspi
 const getUpdateStockAntigaspi = async (req, res) => {
   const { productId, quantityPurchased } = req.body;
@@ -97,7 +117,7 @@ const getUpdateStockAntigaspi = async (req, res) => {
   }
 };
 
-// je rajoute du stock antigaspi 
+// je rajoute du stock antigaspi
 const getAddStockAntigaspi = async (req, res) => {
   const { productId, quantityPurchased } = req.body;
   console.log("productId", productId);
@@ -106,13 +126,14 @@ const getAddStockAntigaspi = async (req, res) => {
   try {
     const product = await Products.findByPk(productId);
 
-    // console.log("product", product);
+    //console.log("product", product);
     if (!product) {
       return res.status(404).json({ message: "Produit non trouvé." });
     }
 
-    product.stockantigaspi += quantityPurchased; // Soustrait la quantité du stock
+    product.stockantigaspi += quantityPurchased; // ajoute la quantité du stock
     console.log("je rajoute du stock");
+    console.log("product.antigasti", product.stockantigaspi);
 
     await product.save();
 
@@ -160,5 +181,6 @@ module.exports = {
   getUpdateStockAntigaspi,
   checkStockAntiGaspi,
   getUpdateStock,
-  getAddStockAntigaspi
+  getAddStockAntigaspi,
+  verifStockAntiGaspi,
 };
