@@ -44,7 +44,7 @@ const createSession = async (req, res) => {
     console.log("lineItems", lineItems);
 
     //let success_url = `http://127.0.0.1:8080/success/`;
-    let success_url = `${process.env.ADRESS_PREPROD}/success/`;x
+    let success_url = `${process.env.ADRESS_PREPROD}/success/`;
     let cancel_url = `${process.env.ADRESS_PREPROD}/cancel/`;
 
     // if (req.body.platform === 'android' && req.body.isDev) {
