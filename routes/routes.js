@@ -92,6 +92,8 @@ router.post('/promocodes',addPromo )
 router.get('/promocodes',allDiscounts )
 router.get('/promocodes/:code',handleApplyDiscount )
 router.delete('/deletepromocodes/:id', deletePromo)
+// router.post('/handleApplyDiscount', handleApplyDiscount);
+
 // reste a faire : lister une promo, supprimer une promo
 
 //STOCKS
