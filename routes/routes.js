@@ -19,6 +19,8 @@ const { verify } = require('jsonwebtoken')
 const  { saveToken, deleteToken } = require('../controllers/token')
 const  { versionApp, status } = require('../controllers/version')
 const  { updateOrderPaidStatus } = require('../controllers/order_paid')
+const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
+
 const router = Router()
 
 
@@ -144,5 +146,6 @@ router.delete('/deleteToken/:tokenId', deleteToken)
 //VERSION
 router.get('/versionApp',versionApp )
 router.get('/status', status)
-
+router.get('/getEmailInvite',getEmailInvite )
+router.get('/getPsswInvite',getPsswInvite )
 module.exports = router
