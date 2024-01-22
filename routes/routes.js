@@ -1,5 +1,5 @@
 const Router = require('express')
-const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, verifyHeader, modifyUser, deleteUser, getEmailByUserId, getUserByEmail } = require('../controllers/ctrl')
+const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, verifyHeader, modifyUser, deleteUser, getEmailByUserId, getUserByEmail, getInfoAlimentaire } = require('../controllers/ctrl')
 const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, desactiveProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct } = require('../controllers/product_ctrl')
@@ -36,6 +36,7 @@ router.patch('/modifyUser/:userId', verifyToken, modifyUser)
 router.delete('/deleteUser/:id', verifyToken,  deleteUser)
 router.get('/getEmailByUserId/:userId/email', getEmailByUserId)
 router.get('/getUserByEmail/:email',  getUserByEmail);
+router.get('/getInfoAlimentaire/:id',  getInfoAlimentaire);
 // router.delete('/deleteOne/:id', deleteOne)
 // router.post('/refreshToken', refreshToken)
 
