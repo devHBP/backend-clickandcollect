@@ -124,35 +124,31 @@ const success = (req, res) => {
     }
     h1 {
       font-size: 6vw;
+      color: #E9520E;
     }
     p {
       font-size: 4vw;
     }
     .success-message {
-      font-style: italic;
-      color: green;
+      color: #273545;
     }
     .btn-retour {
       font-size: 4vw;
       text-decoration: none;
       color: white;
-      background-color: orange; /* Orange */
+      background-color: green;
       padding: 4vw 8vw;
       margin-top: 4vw;
       border-radius: 5px;
       transition: background-color 0.3s ease;
     }
-    .btn-retour:hover {
-      background-color: darkorange;
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Finaliser votre paiement</h1>
-    <p class="success-message">Votre paiement a été traité avec succès.</p>
-    <p><strong>Il est essentiel de revenir à l'application pour finaliser la création de votre commande.</strong></p>
-    <a href="clickandcollect://success" class="btn-retour">Retourner à l'application</a>
+    <h1>Attention, n'oublie pas de valider ta commande !</h1>
+    <p class="success-message">Clique sur ce bouton pour valider ton achat.</p>
+    <a href="clickandcollect://success" class="btn-retour">Je confirme ma commande !</a>
   </div>
 </body>
 </html>
