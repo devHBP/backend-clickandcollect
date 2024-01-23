@@ -109,14 +109,17 @@ const success = (req, res) => {
       min-height: 100vh;
       font-family: Arial, sans-serif;
       margin: 0;
-      background-color: #f7f7f7;
       text-align: center;
+      background-image: url('patern.jpg'); 
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
     }
     .container {
       display: flex;
       flex-direction: column;
       gap: 2vw;
-      max-width: 90%;
+      width: 90vw;
       background-color: #fff;
       padding: 4vw;
       border-radius: 10px;
@@ -131,12 +134,13 @@ const success = (req, res) => {
     }
     .success-message {
       color: #273545;
+      font-weight:bold;
     }
     .btn-retour {
       font-size: 4vw;
       text-decoration: none;
       color: white;
-      background-color: green;
+      background-color: #E9520E;
       padding: 4vw 8vw;
       margin-top: 4vw;
       border-radius: 5px;
