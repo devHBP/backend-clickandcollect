@@ -80,6 +80,10 @@ const Users = db.define('Users', {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      preference_commande: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       
 })
 
