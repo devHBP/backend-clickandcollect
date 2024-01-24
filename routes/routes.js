@@ -5,13 +5,13 @@ const { forgotPassword, resetPassword , updatePassword} = require('../controller
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, desactiveProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
-const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole } = require('../controllers/stores_ctrl')
+const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole, getStores } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi} = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement, cancel , back } = require('../controllers/payment_ctrl')
 
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
-    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp } = require('../controllers/order_ctrl')
+    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
@@ -89,10 +89,12 @@ router.delete('/famille/:id', deleteFamillyProduct);
 
 //STORES
 router.post('/addStore', addStore)
- router.get('/getAllStores', getAllStores)
+router.get('/getAllStores', getAllStores)
 router.post('/getStoresByRole', getStoresByRole)
 router.get('/getOneStore/:id', getOneStore)
 router.put('/updateStore/:id', updateStore)
+router.get('/getStores', getStores)
+
 // router.get('/:roleName/stores', getStoresByRole);
 
 
@@ -131,7 +133,7 @@ router.put('/updateViewStatus/:orderId',updateViewStatus )
 router.patch('/updateOrderPaidStatus', updateOrderPaidStatus);
 router.get('/getAllProducts',getAllProducts)
 router.get('/ordersInWebApp',ordersInWebApp)
-
+router.get('/ordersInWaiting',ordersInWaiting)
 // router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 //router.post('/createOrderAndPayment')
 

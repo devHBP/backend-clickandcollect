@@ -711,6 +711,31 @@ const ordersInWebApp = async (req, res) => {
   }
 };
 
+const ordersInWaiting = async (req, res) => {
+  try {
+    // Statuts à filtrer
+    const filteredStatuses = ['en attente'];
+
+    const orders = await Orders.findAll({
+      where: {
+        status: filteredStatuses 
+      }
+    });
+
+    if (!orders || orders.length === 0) {
+      return res.status(200).json({ orders: [] });
+    }
+
+    res.json({ orders });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "erreur commande en attente" });
+  }
+};
+
+
 
 module.exports = {
   createOrder,
@@ -728,5 +753,6 @@ module.exports = {
   statusLastOrder,
   tableOrderProduct,
   updateViewStatus,
-  ordersInWebApp
+  ordersInWebApp,
+  ordersInWaiting
 };

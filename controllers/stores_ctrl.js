@@ -1,4 +1,5 @@
 const TestStoresV2 = require('../models/BDD/Stores')
+const { Op } = require('sequelize'); 
 
 
 //Créer un magasin
@@ -102,6 +103,61 @@ const getOneStore = ( req, res ) => {
         .catch(error => res.statut(500).json(error))
 }
 
+// faire ressortir les nom_magasin d'un tableau de storeId
+// const getStores = (req, res) => {
+//     let { ids } = req.query;
+//     ids = ids.split(',').map(id => parseInt(id));
+
+//     TestStoresV2.findAll({
+//         attributes: ['nom_magasin'], 
+//         where: {
+//             storeId: {
+//                 [Op.in]: ids
+//             }
+//         }
+//     })
+//     .then(stores => {
+//         if (!stores || stores.length === 0) return res.status(404).json({ msg: "Stores not found" });
+//         // Simplifier la sortie pour ne renvoyer qu'un tableau de noms de magasins
+//         const storeNames = stores.map(store => store.nom_magasin);
+//         res.status(200).json(storeNames);
+//     })
+//     .catch(error => {
+//         console.error(error);
+//         res.status(500).json({ error: "An error occurred while retrieving the stores." });
+//     });
+// };
+
+const getStores = (req, res) => {
+    let { ids } = req.query;
+    ids = ids.split(',').map(id => parseInt(id));
+
+    TestStoresV2.findAll({
+        attributes: ['storeId', 'nom_magasin'], // Inclure 'storeId' dans les attributs sélectionnés
+        where: {
+            storeId: {
+                [Op.in]: ids
+            }
+        }
+    })
+    .then(stores => {
+        if (!stores || stores.length === 0) return res.status(404).json({ msg: "Stores not found" });
+        
+        // Créer un objet qui mappe chaque storeId à son nom_magasin
+        const storeNamesById = stores.reduce((acc, store) => {
+            acc[store.storeId] = store.nom_magasin;
+            return acc;
+        }, {});
+
+        res.status(200).json(storeNamesById); // Renvoyer l'objet modifié
+    })
+    .catch(error => {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while retrieving the stores." });
+    });
+};
+
+
 
 //Supprimer un magasin
 const deleteStore = ( req, res ) => {
@@ -130,4 +186,4 @@ const deleteStore = ( req, res ) => {
 // };
 
 
-module.exports = { addStore, updateStore, getOneStore, getAllStores, deleteStore, getStoresByRole }
+module.exports = { addStore, updateStore, getOneStore, getAllStores, deleteStore, getStoresByRole, getStores }
