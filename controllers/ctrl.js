@@ -1,4 +1,7 @@
 const Users = require("../models/BDD/Users");
+const Preferences = require("../models/BDD/Preferences.js");
+const Allergies = require("../models/BDD/Allergies.js");
+
 
 const { userValidation } = require("../validation/uservalidation");
 const bcrypt = require("bcrypt");
@@ -374,6 +377,106 @@ const getInfoAlimentaire = (req, res) => {
     });
 };
 
+// liste des preferences alimentaires dans l'application mobile - page profile
+const addListePref = async (req, res) => {
+  try {
+    const { preferences } = req.body;
+
+    // Convertir les ids en chaîne
+    const liste = preferences.join(",");
+
+     // Vérifier si un enregistrement existe
+     let record = await Preferences.findOne();
+     if (record) {
+      // Mettre à jour l'enregistrement existant
+      record.preferences = liste;
+      await record.save();
+    } else {
+      // Créer un nouvel enregistrement
+      await Preferences.create({ preferences: liste });
+    }
+    res.status(200).json({ preferences: preferences });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur liste preferences alimentaires", error });
+  }
+};
+
+//afficher la liste des preferences
+const getListePref = async (req, res) => {
+  try {
+
+    const record = await Preferences.findOne();
+
+    if (!record) {
+      return res.status(404).json({ message: "Pas de preferences alimentaires trouvés" });
+    }
+    const prefArray = record.preferences.split(",");
+
+    res.json(prefArray);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error });
+  }
+};
+
+//info preference_commande d'un user
+const getInfoPrefCommande = (req, res) => {
+  const { id } = req.params;
+
+  Users.findByPk(id, {
+    attributes: ['preference_commande'] 
+  })
+  .then((user) => {
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    res.status(200).json(user);
+  })
+  .catch((error) => {
+    console.error(error);
+    res.status(500).json(error);
+  });
+};
+
+// liste des preferences alimentaires dans l'application mobile - page profile
+const addListeAllergie = async (req, res) => {
+  try {
+    const { allergies } = req.body;
+
+    // Convertir les ids en chaîne
+    const liste = allergies.join(",");
+
+     // Vérifier si un enregistrement existe
+     let record = await Allergies.findOne();
+     if (record) {
+      // Mettre à jour l'enregistrement existant
+      record.allergies = liste;
+      await record.save();
+    } else {
+      // Créer un nouvel enregistrement
+      await Allergies.create({ allergies: liste });
+    }
+    res.status(200).json({ allergies: allergies });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur liste allergies", error });
+  }
+};
+
+// afficher la liste des allergies
+const getListeAllergie = async (req, res) => {
+  try {
+
+    const record = await Allergies.findOne();
+
+    if (!record) {
+      return res.status(404).json({ message: "Pas de liste d allergies trouvée" });
+    }
+    const allergieArray = record.allergies.split(",");
+
+    res.json(allergieArray);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur - allergie", error });
+  }
+};
+
+
 module.exports = {
   signup,
   login,
@@ -388,4 +491,9 @@ module.exports = {
   getEmailByUserId,
   getUserByEmail,
   getInfoAlimentaire,
+  addListePref,
+  getListePref,
+  getInfoPrefCommande,
+  addListeAllergie,
+  getListeAllergie
 };
