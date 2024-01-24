@@ -686,6 +686,32 @@ const updateViewStatus = async (req, res) => {
   }
 };
 
+// affiche les commandes en attente ou prete
+const ordersInWebApp = async (req, res) => {
+  try {
+    // Statuts à filtrer
+    const filteredStatuses = ['prete', 'en attente'];
+
+    const orders = await Orders.findAll({
+      where: {
+        status: filteredStatuses 
+      }
+    });
+
+    if (!orders || orders.length === 0) {
+      return res.status(200).json({ orders: [] });
+    }
+
+    res.json({ orders });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving the orders." });
+  }
+};
+
+
 module.exports = {
   createOrder,
   updateStatusOrder,
@@ -702,4 +728,5 @@ module.exports = {
   statusLastOrder,
   tableOrderProduct,
   updateViewStatus,
+  ordersInWebApp
 };

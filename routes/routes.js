@@ -11,7 +11,7 @@ const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAnti
 const { createSession, success, paiementStatus, createPaiement, cancel , back } = require('../controllers/payment_ctrl')
 
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
-    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus } = require('../controllers/order_ctrl')
+    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
@@ -113,6 +113,7 @@ router.put('/getAddStockAntigaspi', getAddStockAntigaspi)
 router.put('/getUpdateStock', getUpdateStock)
 router.post('/checkStockAntiGaspi', checkStockAntiGaspi)
 router.get('/verifStockAntiGaspi/:productId', verifStockAntiGaspi)
+
 //ORDERS
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
 router.put('/updateStatusOrder/:orderId', updateStatusOrder)
@@ -128,6 +129,9 @@ router.get('/statusLastOrder/:userId', statusLastOrder)
 router.get('/tableOrderProduct', tableOrderProduct)
 router.put('/updateViewStatus/:orderId',updateViewStatus )
 router.patch('/updateOrderPaidStatus', updateOrderPaidStatus);
+router.get('/getAllProducts',getAllProducts)
+router.get('/ordersInWebApp',ordersInWebApp)
+
 // router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 //router.post('/createOrderAndPayment')
 
