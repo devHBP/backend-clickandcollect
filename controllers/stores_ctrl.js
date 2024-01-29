@@ -130,7 +130,14 @@ const getOneStore = ( req, res ) => {
 
 const getStores = (req, res) => {
     let { ids } = req.query;
+    if (!ids) {
+        return res.status(200).json({}); // objet vide si aucun ID n'est fourni
+    }
     ids = ids.split(',').map(id => parseInt(id));
+
+    if (ids.length === 0) {
+        return res.status(200).json({}); // objet vide si aucun ID n'est fourni
+    }
 
     TestStoresV2.findAll({
         attributes: ['storeId', 'nom_magasin'], // Inclure 'storeId' dans les attributs sélectionnés
@@ -141,6 +148,7 @@ const getStores = (req, res) => {
         }
     })
     .then(stores => {
+        
         if (!stores || stores.length === 0) return res.status(404).json({ msg: "Stores not found" });
         
         // Créer un objet qui mappe chaque storeId à son nom_magasin
