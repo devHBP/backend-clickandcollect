@@ -269,6 +269,54 @@ const allOrders = async (req, res) => {
   }
 };
 
+// commande du jour
+const ordersByDate = async (req, res) => {
+  try {
+    // Récupérer les paramètres de date de la requête
+    let startDate = req.query.startDate;
+    let endDate = req.query.endDate;
+
+    // Si endDate n'est pas spécifié, utiliser startDate comme endDate
+    if (!endDate) {
+      endDate = startDate;
+    }
+
+    // Convertir le statut en tableau s'il n'est pas déjà sous cette forme
+    let status = req.query.status;
+    if (status && !Array.isArray(status)) {
+      status = [status];
+    }
+
+    // Construire la condition de requête
+    let whereCondition = {
+      date: {
+        [Op.gte]: new Date(startDate),
+        [Op.lte]: new Date(endDate)
+      }
+    };
+
+    // Ajouter la condition de statut si spécifié
+    if (status && status.length > 0) {
+      whereCondition.status = status;
+    }
+
+    // Requête pour trouver toutes les commandes correspondantes
+    const orders = await Orders.findAll({
+      where: whereCondition,
+    });
+
+    if (!orders || orders.length === 0) {
+      return res.status(200).json({ orders: [] });
+    }
+
+    res.json({ orders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while retrieving the orders." });
+  }
+};
+
+
 //suppression d'une commande
 // const deleteOneOrder = async (req, res) => {
 //   try {
@@ -741,6 +789,7 @@ module.exports = {
   createOrder,
   updateStatusOrder,
   allOrders,
+  ordersByDate,
   deleteOneOrder,
   ordersOfUser,
   updateOrder,

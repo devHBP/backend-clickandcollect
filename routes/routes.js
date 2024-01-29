@@ -1,4 +1,5 @@
 const Router = require('express')
+
 const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, verifyHeader, modifyUser, deleteUser, getEmailByUserId, getUserByEmail, getInfoAlimentaire, addListePref , getListePref, getInfoPrefCommande, addListeAllergie,
     getListeAllergie} = require('../controllers/ctrl')
 const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
@@ -11,7 +12,7 @@ const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAnti
 const { createSession, success, paiementStatus, createPaiement, cancel , back } = require('../controllers/payment_ctrl')
 
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
-    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting } = require('../controllers/order_ctrl')
+    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
@@ -23,7 +24,6 @@ const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 
 const router = Router()
-
 
 //USERS
 router.post('/signup', signup)
@@ -120,6 +120,7 @@ router.get('/verifStockAntiGaspi/:productId', verifStockAntiGaspi)
 router.post('/createorder',createOrder ) // paiement sur place, seulement la commande ici
 router.put('/updateStatusOrder/:orderId', updateStatusOrder)
 router.get('/allOrders', allOrders)
+router.get('/ordersByDate', ordersByDate)
 router.delete('/deleteOneOrder/:id', deleteOneOrder)
 router.get('/ordersOfUser/:userId', ordersOfUser)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 
@@ -144,7 +145,7 @@ router.get('/cancel', cancel)
 router.get('/back', back)
 router.get('/paiementStatus', paiementStatus)
 router.post('/createPaiement', createPaiement) //paiement sur place, seuleulement le paiement ici
-//router.post('/stripeWebhook', stripeWebhook)
+//router.post('/stripeWebhook', Router.raw({type: 'application/json'}), stripeWebhook)
 
 //EMAILS
 router.post('/sendWelcomeEmail', sendWelcomeEmail)
@@ -161,4 +162,5 @@ router.get('/versionApp',versionApp )
 router.get('/status', status)
 router.get('/getEmailInvite',getEmailInvite )
 router.get('/getPsswInvite',getPsswInvite )
+
 module.exports = router
