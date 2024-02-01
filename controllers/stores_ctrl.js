@@ -103,6 +103,17 @@ const getOneStore = ( req, res ) => {
         .catch(error => res.statut(500).json(error))
 }
 
+const getOneStoreName = ( req, res ) => {
+    const { id} = req.params
+    //findbyprimarykey
+    TestStoresV2.findByPk(id)
+        .then( store => {
+            if(!store) return res.status(404).json({msg:"store not found"})
+            res.status(200).json({ nom_magasin: store.nom_magasin });
+        })
+        .catch(error => res.statut(500).json(error))
+}
+
 // faire ressortir les nom_magasin d'un tableau de storeId
 // const getStores = (req, res) => {
 //     let { ids } = req.query;
@@ -194,4 +205,4 @@ const deleteStore = ( req, res ) => {
 // };
 
 
-module.exports = { addStore, updateStore, getOneStore, getAllStores, deleteStore, getStoresByRole, getStores }
+module.exports = { addStore, updateStore, getOneStore, getAllStores, deleteStore, getStoresByRole, getStores, getOneStoreName }

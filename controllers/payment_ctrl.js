@@ -1,13 +1,18 @@
 const TestPaymentsV2 = require("../models/BDD/Payments");
 require("dotenv").config();
 const bodyParser = require("body-parser");
-
+const { confirmOrder } = require("../controllers/emails/confirmOrder");
+const {
+  createPaiementId,
+  updateOrderService,
+  getOneStoreName,
+} = require("../services/services");
 
 const stripe = require("stripe")(process.env.STRIPE_KEY_PRIVATE);
 
 const createSession = async (req, res) => {
-  console.log('Info reçue pour Stripe:', req.body);
-  console.log("orderInfo coté backend", req.body.orderInfo)
+  // console.log("Info reçue pour Stripe:", req.body);
+  console.log("orderInfo coté backend", req.body.orderInfo);
 
   try {
     // Valider les entrées
@@ -18,13 +23,13 @@ const createSession = async (req, res) => {
     }
 
     const role = req.body.orderInfo.userRole;
-    console.log("req", req.body.orderInfo.cart);
+    // console.log("req", req.body.orderInfo.cart);
     const lineItems = req.body.orderInfo.cart.map((item) => {
       const { libelle, prix, qty, prix_unitaire, antigaspi } = item;
       let adjustedPrice = prix || prix_unitaire;
-      console.log("item", item);
-      console.log("libelle", libelle);
-      console.log("prix", adjustedPrice);
+      // console.log("item", item);
+      // console.log("libelle", libelle);
+      // console.log("prix", adjustedPrice);
 
       if (role === "SUNcollaborateur" && !antigaspi) {
         adjustedPrice *= 0.8;
@@ -41,19 +46,21 @@ const createSession = async (req, res) => {
       };
     });
 
-    console.log("lineItems", lineItems);
+    // console.log("lineItems", lineItems);
 
-    //let success_url = `http://127.0.0.1:8080/success/`;
     let success_url = `${process.env.ADRESS_PREPROD}/success/`;
     let cancel_url = `${process.env.ADRESS_PREPROD}/cancel/`;
 
-    // if (req.body.platform === 'android' && req.body.isDev) {
-    //     success_url = 'http://10.0.2.2:8080/success';
-    //     cancel_url = 'http://10.0.2.2:8080/cancel';
-    // } else if (req.body.platform === 'ios' && req.body.isDev) {
-    //     success_url = 'http://192.168.1.16:8080/success';
-    //     cancel_url = 'http://localhost:8080/cancel';
-    // }
+
+    const orderId = JSON.stringify(req.body.orderInfo.orderId);
+    const numero_commande = req.body.orderInfo.numero_commande;
+    const firstname = req.body.orderInfo.user.firstname;
+    const email = req.body.orderInfo.user.email;
+    const date = req.body.orderInfo.dateForDatabase;
+    const store = req.body.orderInfo.selectStore;
+
+    // je recupère le nom_magasin via le storeID
+    const point_de_vente = await getOneStoreName(store);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -61,10 +68,23 @@ const createSession = async (req, res) => {
       mode: "payment",
       success_url: success_url,
       cancel_url: cancel_url,
+
+      metadata: {
+        orderId,
+        numero_commande,
+        firstname,
+        email,
+        date,
+        point_de_vente,
+      },
     });
 
     // ajouter le console response
-    console.log("Session Stripe créée:", { id: session.id, session: session.url, lineItems });
+    console.log("Session Stripe créée:", {
+      id: session.id,
+      session: session.url,
+      lineItems,
+    });
 
     res.json({ id: session.id, session: session.url, lineItems });
   } catch (error) {
@@ -127,7 +147,7 @@ const success = (req, res) => {
     }
     h1 {
       font-size: 6vw;
-      color: #E9520E;
+      color: #34AA55;
     }
     p {
       font-size: 4vw;
@@ -140,7 +160,7 @@ const success = (req, res) => {
       font-size: 4vw;
       text-decoration: none;
       color: white;
-      background-color: #E9520E;
+      background-color: #34AA55;
       padding: 4vw 8vw;
       margin-top: 4vw;
       border-radius: 5px;
@@ -150,16 +170,16 @@ const success = (req, res) => {
 </head>
 <body>
   <div class="container">
-    <h1>Attention, n'oublie pas de valider ta commande !</h1>
-    <p class="success-message">Clique sur ce bouton pour valider ton achat.</p>
-    <a href="clickandcollect://success" class="btn-retour">Je confirme ma commande !</a>
+    <h1>Commande réussie !</h1>
+    <p class="success-message">Ta commande est passée avec succès. Un e-mail de confirmation t'a été envoyé.
+    </p>
+    <a href="clickandcollect://success" class="btn-retour">Retourner sur l'application</a>
   </div>
 </body>
 </html>
   
   `);
 };
-
 
 const cancel = (req, res) => {
   console.log("paiement annulé backend");
@@ -199,7 +219,7 @@ const paiementStatus = async (req, res) => {
   try {
     // console.log('check paiement', req)
     const sessionId = req.query.sessionId;
-    console.log('sessionId coté back', sessionId)
+    console.log("sessionId coté back", sessionId);
     // Obtenez la session de paiement à partir de l'ID de session
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     console.log("session", session);
@@ -210,11 +230,14 @@ const paiementStatus = async (req, res) => {
     console.log("paiment id", paymentId);
     const method = session.payment_method_types[0];
     console.log("méthode de paiement", method);
+    const orderID = session.metadata.orderId;
+    console.log("orderID", orderID);
 
     res.json({
       status: paymentStatus,
       transactionId: paymentId,
       method: method,
+      orderID: orderID,
     });
   } catch (error) {
     console.error(
@@ -231,14 +254,14 @@ const createPaiement = async (req, res) => {
   try {
     // Récupérer les données du corps de la requête
     const { method, transactionId, status } = req.body;
-    console.log('req createPaiement', req.body)
+    console.log("req createPaiement", req.body);
     // Créer le code promo dans la base de données
     const paiement = await TestPaymentsV2.create({
       method,
       transactionId,
       status,
     });
-    console.log('paiement', paiement)
+    console.log("paiement", paiement);
     res.status(201).json(paiement);
   } catch (error) {
     console.error(error);
@@ -249,33 +272,104 @@ const createPaiement = async (req, res) => {
 };
 
 //webhook stripe
-// const stripeWebhook = async (req, res) => {
-//   const sig = req.headers['stripe-signature'];
+const stripeWebhook = async (req, res) => {
+  const sig = req.headers["stripe-signature"];
 
-//   let event;
+  let event;
 
-//   try {
-//     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET_LOCAL
+    );
+  } catch (err) {
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
 
-//     // Gérez l'événement
-//     switch (event.type) {
-//       case 'checkout.session.completed':
-//         const session = event.data.object;
-//         console.log('Session de paiement complétée', session);
-//         // Ici, vous pouvez effectuer des actions supplémentaires basées sur la session complétée
-//         break;
-//       // Ajoutez d'autres cas d'événements si nécessaire
-//       default:
-//         console.log(`Événement non géré de type: ${event.type}`);
-//     }
+  // Handle the event
+  switch (event.type) {
+    case "checkout.session.completed":
+      const checkoutSession = event.data.object;
+      console.log("Session de paiement complétée");
 
-//     res.status(200).json({received: true});
-//   } catch (err) {
-//     console.error(`Erreur dans le Webhook Stripe: ${err.message}`);
-//     return res.status(400).send(`Webhook Error: ${err.message}`);
-//   }
-// };
+      const paymentIntentId = checkoutSession.payment_intent;
+      const paymentStatus = checkoutSession.payment_status;
+      const paymentMethod = checkoutSession.payment_method_types[0];
+      const email = checkoutSession.metadata.email;
+      const firstname = checkoutSession.metadata.firstname;
+      const numero_commande = checkoutSession.metadata.numero_commande;
+      const date = checkoutSession.metadata.date;
+      const point_de_vente = checkoutSession.metadata.point_de_vente;
 
+      console.log("paymentIntentId", paymentIntentId);
+      console.log("paymentStatus", paymentStatus);
+      console.log("paymentMethod", paymentMethod);
+      console.log("email", email);
+      console.log("firstname", firstname);
+      console.log("numero_commande", numero_commande);
+      console.log("date", date);
+      console.log("point_de_vente", point_de_vente);
+
+      try {
+        // Appel du service createPaiementId
+        const paiement = await createPaiementId(
+          paymentMethod,
+          paymentIntentId,
+          paymentStatus
+        );
+
+        // Utiliser l'ID de paiement pour d'autres opérations
+        const paymentId = paiement;
+
+        if (paymentId) {
+          console.log("Metadata:", checkoutSession.metadata);
+          try {
+            const numero_commande = checkoutSession.metadata.numero_commande;
+            // Appel de la requete updateOrder - j'ajoute le paymentID à la commande
+            const update = await updateOrderService(numero_commande, paymentId);
+
+            // envoi de l'email
+            const fakeReq = {
+              body: {
+                email: email,
+                firstname: firstname,
+                numero_commande: numero_commande,
+                date: date,
+                point_de_vente: point_de_vente,
+              },
+            };
+            const fakeRes = {
+              status: () => ({ send: () => {} }),
+            };
+            const emailResponse = await confirmOrder(fakeReq, fakeRes);
+          } catch (error) {
+            console.error(
+              "Erreur lors de la modification de la commande avec paymentId et numero_commande",
+              error
+            );
+            res.status(500).send(error.message);
+            return;
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors de la création du paiement", error);
+        res.status(500).send(error.message);
+        return;
+      }
+
+      break;
+
+    //4. vider le panier (quand il sera coté back)
+
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  // Return a 200 response to acknowledge receipt of the event
+  res.send();
+};
 
 module.exports = {
   createSession,
@@ -284,5 +378,5 @@ module.exports = {
   createPaiement,
   cancel,
   back,
-  // stripeWebhook
+  stripeWebhook,
 };

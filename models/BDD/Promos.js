@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const db = require('../../db/db');
 
-const TestPromo = db.define(
-  'TestPromo',
+const Promos = db.define(
+  'Promos',
   {
     promotionId: {
       type: DataTypes.INTEGER,
@@ -47,4 +47,4 @@ const TestPromo = db.define(
 
 
 
-module.exports = TestPromo;
+module.exports = Promos;

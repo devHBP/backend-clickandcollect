@@ -83,7 +83,7 @@ const createOrder = async (req, res) => {
     // }
     // Par défaut, le statut est "en attente" et paid est fa true car paiement avant ok 
     const status = "en attente";
-    const paid = true;
+    const paid = false;
 
     const order = await Orders.create({
       userRole,

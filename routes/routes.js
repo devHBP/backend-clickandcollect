@@ -6,10 +6,10 @@ const { forgotPassword, resetPassword , updatePassword} = require('../controller
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, desactiveProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
-const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole, getStores } = require('../controllers/stores_ctrl')
+const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole, getStores, getOneStoreName } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi} = require('../controllers/stock_ctrl')
-const { createSession, success, paiementStatus, createPaiement, cancel , back } = require('../controllers/payment_ctrl')
+const { createSession, success, paiementStatus, createPaiement, cancel , back, stripeWebhook } = require('../controllers/payment_ctrl')
 
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate } = require('../controllers/order_ctrl')
@@ -92,6 +92,7 @@ router.post('/addStore', addStore)
 router.get('/getAllStores', getAllStores)
 router.post('/getStoresByRole', getStoresByRole)
 router.get('/getOneStore/:id', getOneStore)
+router.get('/getOneStoreName/:id', getOneStoreName)
 router.put('/updateStore/:id', updateStore)
 router.get('/getStores', getStores)
 
@@ -103,7 +104,7 @@ router.post('/promocodes',addPromo )
 router.get('/promocodes',allDiscounts )
 router.get('/promocodes/:code',handleApplyDiscount )
 router.delete('/deletepromocodes/:id', deletePromo)
-// router.post('/handleApplyDiscount', handleApplyDiscount);
+router.post('/handleApplyDiscount', handleApplyDiscount);
 
 // reste a faire : lister une promo, supprimer une promo
 
@@ -145,7 +146,7 @@ router.get('/cancel', cancel)
 router.get('/back', back)
 router.get('/paiementStatus', paiementStatus)
 router.post('/createPaiement', createPaiement) //paiement sur place, seuleulement le paiement ici
-//router.post('/stripeWebhook', Router.raw({type: 'application/json'}), stripeWebhook)
+router.post('/stripeWebhook', Router.raw({type: 'application/json'}), stripeWebhook)
 
 //EMAILS
 router.post('/sendWelcomeEmail', sendWelcomeEmail)

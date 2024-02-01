@@ -8,6 +8,7 @@ const NODEJS_PORT = process.env.NODEJS_PORT;
 const NODEJS_URL = process.env.NODEJS_URL;
 const bodyParser = require("body-parser");
 const admin = require('firebase-admin');
+const stripeWebhook = require('./controllers/payment_ctrl').stripeWebhook;
 
 const app = express();
 
@@ -20,6 +21,9 @@ admin.initializeApp({
 });
 
 app.use(cors());
+
+app.post('/stripeWebhook', express.raw({ type: 'application/json' }), stripeWebhook);
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
