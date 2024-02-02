@@ -85,7 +85,7 @@ const addProduct = async (req, res) => {
       stockantigaspi: req.body.stockantigaspi,
       allergenes: allergenes
     };
-    console.log('product', product)
+    // console.log('product', product)
 
     const createdProduct = await Products.create(product);
 
@@ -303,7 +303,7 @@ const getAllProducts = async (req, res) => {
         ingredients: details ? details.ingredients : null,
       };
     });
-    console.log("combined", combined)
+    // console.log("combined", combined)
 
     res.status(200).json(combined);
   } catch (error) {
