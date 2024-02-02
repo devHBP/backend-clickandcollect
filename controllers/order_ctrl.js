@@ -61,30 +61,14 @@ const createOrder = async (req, res) => {
       []
     );
 
-    //mise en tableau
-    //const productIds = productIdsString.split(",");
-
-    // Validation de la date avec moment
-    // const dateIsValid = moment(date, 'YYYY-MM-DD HH:mm:ss', true).isValid();
-    // if (!dateIsValid) {
-    //   console.log('date invalide')
-    //   return res.status(400).json({ message: 'La date fournie est invalide.' });
-    // }
-    // if (dateIsValid){
-    //   console.log('date valide')
-    // }
-    // console.log('test2')
-    // const dateIsValid = moment(date, 'YYYY-MM-DD', true).isValid();
-    // const dateIsValid = moment(date, 'DD/MM/YYYY', true).isValid();
-    //  console.log(date)
-    // if (!dateIsValid) {
-    //    console.log('invalide date')
-    // return res.status(400).json({ message: 'La date fournie est invalide.' });
-    // }
-    // Par défaut, le statut est "en attente" et paid est fa true car paiement avant ok 
+    // Par défaut, le statut est "en attente" 
     const status = "en attente";
-    const paid = false;
 
+    // Vérifie si le panier contient uniquement un produit avec type_produit "offreSUN"
+    // et si le prix total est 0 pour marquer la commande comme payée
+    const isOnlyFreeBaguetteInCart = cart.every(item => item.type_produit === "offreSUN") && cart.length === 1;
+    const paid = isOnlyFreeBaguetteInCart ? true : false;
+      
     const order = await Orders.create({
       userRole,
       firstname_client,
@@ -119,7 +103,7 @@ const createOrder = async (req, res) => {
       formule: product.formule,
       category: product.category,
     }));
-    console.log("orderProducts", orderProducts);
+    //console.log("orderProducts", orderProducts);
 
     await TableOrderProduct.bulkCreate(orderProducts);
 
