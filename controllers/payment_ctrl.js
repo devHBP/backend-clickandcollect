@@ -1,7 +1,7 @@
 const TestPaymentsV2 = require("../models/BDD/Payments");
 require("dotenv").config();
 const bodyParser = require("body-parser");
-const { confirmOrder } = require("../controllers/emails/confirmOrder");
+const { confirmOrder, confirmOrderMail } = require("../controllers/emails/confirmOrder");
 const {
   createPaiementId,
   updateOrderService,
@@ -52,8 +52,8 @@ const createSession = async (req, res) => {
     let cancel_url = `${process.env.ADRESS_PREPROD}/cancel/`;
 
 
-    const orderId = JSON.stringify(req.body.orderInfo.orderId);
-    const numero_commande = req.body.orderInfo.numero_commande;
+    const orderId = req.body.orderInfo.orderId;
+    // const numero_commande = req.body.orderInfo.numero_commande;
     const firstname = req.body.orderInfo.user.firstname;
     const email = req.body.orderInfo.user.email;
     const date = req.body.orderInfo.dateForDatabase;
@@ -71,7 +71,6 @@ const createSession = async (req, res) => {
 
       metadata: {
         orderId,
-        numero_commande,
         firstname,
         email,
         date,
@@ -299,7 +298,8 @@ const stripeWebhook = async (req, res) => {
       const paymentMethod = checkoutSession.payment_method_types[0];
       const email = checkoutSession.metadata.email;
       const firstname = checkoutSession.metadata.firstname;
-      const numero_commande = checkoutSession.metadata.numero_commande;
+      const orderId = checkoutSession.metadata.orderId;
+      // const numero_commande = checkoutSession.metadata.numero_commande;
       const date = checkoutSession.metadata.date;
       const point_de_vente = checkoutSession.metadata.point_de_vente;
 
@@ -308,9 +308,11 @@ const stripeWebhook = async (req, res) => {
       console.log("paymentMethod", paymentMethod);
       console.log("email", email);
       console.log("firstname", firstname);
-      console.log("numero_commande", numero_commande);
+      console.log("orderId", orderId);
       console.log("date", date);
       console.log("point_de_vente", point_de_vente);
+      // console.log("numero_commande", numero_commande);
+
 
       try {
         // Appel du service createPaiementId
@@ -326,16 +328,19 @@ const stripeWebhook = async (req, res) => {
         if (paymentId) {
           console.log("Metadata:", checkoutSession.metadata);
           try {
-            const numero_commande = checkoutSession.metadata.numero_commande;
+            const orderId = parseInt(checkoutSession.metadata.orderId, 10);
+            console.log('orderId metadat', orderId)
+            console.log('orderId type',typeof orderId)
+
             // Appel de la requete updateOrder - j'ajoute le paymentID à la commande
-            const update = await updateOrderService(numero_commande, paymentId);
+            const update = await updateOrderService(orderId, paymentId);
 
             // envoi de l'email
             const fakeReq = {
               body: {
                 email: email,
                 firstname: firstname,
-                numero_commande: numero_commande,
+                orderId: orderId,
                 date: date,
                 point_de_vente: point_de_vente,
               },
@@ -343,10 +348,10 @@ const stripeWebhook = async (req, res) => {
             const fakeRes = {
               status: () => ({ send: () => {} }),
             };
-            const emailResponse = await confirmOrder(fakeReq, fakeRes);
+            const emailResponse = await confirmOrderMail(fakeReq, fakeRes);
           } catch (error) {
             console.error(
-              "Erreur lors de la modification de la commande avec paymentId et numero_commande",
+              "Erreur lors de la modification de la commande avec paymentId et orderId",
               error
             );
             res.status(500).send(error.message);

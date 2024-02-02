@@ -17,8 +17,8 @@ const createPaiementId = async (method, transactionId, status) => {
   }
 };
 
-const updateOrderService = async (numero_commande, paymentId) => {
-  const order = await Orders.findOne({ where: { numero_commande } });
+const updateOrderService = async (orderId, paymentId) => {
+  const order = await Orders.findOne({ where: { orderId } });
   if (!order) {
     throw new Error("Commande non trouvée");
   }
