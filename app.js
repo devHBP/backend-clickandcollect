@@ -22,7 +22,8 @@ admin.initializeApp({
 
 app.use(cors());
 
-app.post('/stripeWebhook', express.raw({ type: 'application/json' }), stripeWebhook);
+// route stripe avant les middlewares suivants pour etre bien pris en compte par Stripe
+app.post('/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));

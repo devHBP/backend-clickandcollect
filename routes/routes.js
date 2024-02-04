@@ -1,5 +1,4 @@
 const Router = require('express')
-
 const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, verifyHeader, modifyUser, deleteUser, getEmailByUserId, getUserByEmail, getInfoAlimentaire, addListePref , getListePref, getInfoPrefCommande, addListeAllergie,
     getListeAllergie} = require('../controllers/ctrl')
 const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
@@ -146,7 +145,8 @@ router.get('/cancel', cancel)
 router.get('/back', back)
 router.get('/paiementStatus', paiementStatus)
 router.post('/createPaiement', createPaiement) //paiement sur place, seuleulement le paiement ici
-router.post('/stripeWebhook', Router.raw({type: 'application/json'}), stripeWebhook)
+// ne pas utiliser ici - voir app.js
+//router.post('/webhook', Router.raw({type: 'application/json'}), stripeWebhook)
 
 //EMAILS
 router.post('/sendWelcomeEmail', sendWelcomeEmail)

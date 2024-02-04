@@ -275,24 +275,29 @@ const stripeWebhook = async (req, res) => {
   const sig = req.headers["stripe-signature"];
 
   let event;
-
+  // console.log('test1', process.env.STRIPE_WEBHOOK_SECRET_LOCAL)
+  // console.log(req.body)
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET_LOCAL
+      process.env.STRIPE_WEBHOOK_SECRET_LOCAL,
     );
+    console.log('event', event)
   } catch (err) {
+    console.log(`❌ Error message: ${err.message}`);
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
+
+  console.log("event.type", event.type)
 
   // Handle the event
   switch (event.type) {
     case "checkout.session.completed":
       const checkoutSession = event.data.object;
       console.log("Session de paiement complétée");
-
+      
       const paymentIntentId = checkoutSession.payment_intent;
       const paymentStatus = checkoutSession.payment_status;
       const paymentMethod = checkoutSession.payment_method_types[0];
