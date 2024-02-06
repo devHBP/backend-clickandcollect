@@ -726,7 +726,8 @@ const ordersInWebApp = async (req, res) => {
 
     const orders = await Orders.findAll({
       where: {
-        status: filteredStatuses 
+        status: filteredStatuses,
+        paid: true
       }
     });
 
