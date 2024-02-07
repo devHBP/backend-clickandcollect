@@ -16,10 +16,10 @@ const getAllStocks = (req, res) => {
 
 //lister le stock par productId
 const getStockByProduct = async (req, res) => {
-  const { productId } = req.params;
+  const { productIds } = req.params;
   try {
     const stockByProduct = await StocksTest.findAll({
-      where: { productId }, // Utilisation de l'ID du produit pour filtrer les résultats
+      where: { productIds }, // Utilisation de l'ID du produit pour filtrer les résultats
       attributes: ["productId", "quantite"], // Sélection des attributs à récupérer
     });
     //console.log(stockByProduct);
