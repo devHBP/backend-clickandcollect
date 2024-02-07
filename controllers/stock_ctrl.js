@@ -44,7 +44,7 @@ const getStockByProduct = async (req, res) => {
   if (req.params.productId) {
     productIds = [req.params.productId];
   }
-  // Sinon, si req.body contient un tableau de productIds, utilisez-le
+  // Si req.body contient un tableau de productIds, utilisez-le
   else if (req.body.productIds && Array.isArray(req.body.productIds)) {
     productIds = req.body.productIds;
   }
@@ -56,7 +56,6 @@ const getStockByProduct = async (req, res) => {
   }
 
   try {
-    // Utilisation de l'opérateur IN pour récupérer le stock de plusieurs produits
     const stockByProducts = await StocksTest.findAll({
       where: {
         productId: productIds,
@@ -64,11 +63,10 @@ const getStockByProduct = async (req, res) => {
       attributes: ["productId", "quantite"],
     });
 
-    // Vérifiez si le stock est suffisant pour chaque produit d'une formule
+    // Pour les formules, vérifiez le stock pour chaque produit
     if (productIds.length > 1) {
-      let stockInsuffisant = stockByProducts.some(stockItem => {
-        let productIndex = productIds.indexOf(stockItem.productId);
-        return productIndex !== -1 && stockItem.quantite < 1; // Supposons que la quantité requise par produit dans la formule est 1
+      const stockInsuffisant = stockByProducts.some(stockItem => {
+        return stockItem.quantite < 1; // Ou autre logique selon la quantité requise
       });
 
       if (stockInsuffisant) {
@@ -89,6 +87,7 @@ const getStockByProduct = async (req, res) => {
     });
   }
 };
+
 
 
 
