@@ -15,82 +15,29 @@ const getAllStocks = (req, res) => {
 };
 
 //lister le stock par productId
-// const getStockByProduct = async (req, res) => {
-//   const { productId } = req.params;
-//   try {
-//     const stockByProduct = await StocksTest.findAll({
-//       where: { productId }, // Utilisation de l'ID du produit pour filtrer les résultats
-//       attributes: ["productId", "quantite"], // Sélection des attributs à récupérer
-//     });
-//     //console.log(stockByProduct);
-
-//     res.json(stockByProduct); // Envoi des données en réponse
-//   } catch (error) {
-//     console.error(
-//       "Une erreur s'est produite lors de la récupération du stock par produit :",
-//       error
-//     );
-//     res.status(500).json({
-//       error:
-//         "Une erreur s'est produite lors de la récupération du stock par produit.",
-//     });
-//   }
-// };
-
 const getStockByProduct = async (req, res) => {
-  let productIds = [];
-  console.log('req.params', req.params)
-  // Si req.body contient une formule, extraire les productIds des options
-  if (req.body.formule && Array.isArray(req.body.formule)) {
-    req.body.formule.forEach(formuleItem => {
-      Object.keys(formuleItem).forEach(key => {
-        if (key.startsWith('option') && formuleItem[key]?.productId) {
-          productIds.push(formuleItem[key].productId);
-        }
-      });
-    });
-  }
-  // Si req.params contient un productId, utilisez-le directement
-  else if (req.params.productId) {
-    productIds = [req.params.productId];
-  }
-  // Si aucun des deux, renvoyez une erreur
-  else {
-    return res.status(400).json({
-      error: "Aucun ID de produit valide fourni.",
-    });
-  }
-
+  const { productId } = req.params;
   try {
-    const stockByProducts = await StocksTest.findAll({
-      where: {
-        productId: productIds,
-      },
-      attributes: ["productId", "quantite"],
+    const stockByProduct = await StocksTest.findAll({
+      where: { productId }, // Utilisation de l'ID du produit pour filtrer les résultats
+      attributes: ["productId", "quantite"], // Sélection des attributs à récupérer
     });
+    //console.log(stockByProduct);
 
-    // Vérifiez si le stock est suffisant pour chaque produit
-    const stockInsuffisant = stockByProducts.some(stockItem => {
-      return stockItem.quantite < 1; // Ou autre logique selon la quantité requise
-    });
-
-    if (stockInsuffisant) {
-      return res.status(400).json({
-        error: "Stock insuffisant pour un ou plusieurs produits.",
-      });
-    }
-
-    res.json(stockByProducts);
+    res.json(stockByProduct); // Envoi des données en réponse
   } catch (error) {
     console.error(
       "Une erreur s'est produite lors de la récupération du stock par produit :",
       error
     );
     res.status(500).json({
-      error: "Une erreur s'est produite lors de la récupération du stock par produit.",
+      error:
+        "Une erreur s'est produite lors de la récupération du stock par produit.",
     });
   }
 };
+
+
 
 
 
