@@ -15,14 +15,53 @@ const getAllStocks = (req, res) => {
 };
 
 //lister le stock par productId
+// const getStockByProduct = async (req, res) => {
+//   const { productId } = req.params;
+//   try {
+//     const stockByProduct = await StocksTest.findAll({
+//       where: { productId }, // Utilisation de l'ID du produit pour filtrer les résultats
+//       attributes: ["productId", "quantite"], // Sélection des attributs à récupérer
+//     });
+//     //console.log(stockByProduct);
+
+//     res.json(stockByProduct); // Envoi des données en réponse
+//   } catch (error) {
+//     console.error(
+//       "Une erreur s'est produite lors de la récupération du stock par produit :",
+//       error
+//     );
+//     res.status(500).json({
+//       error:
+//         "Une erreur s'est produite lors de la récupération du stock par produit.",
+//     });
+//   }
+// };
+
 const getStockByProduct = async (req, res) => {
-  const { productIds } = req.params;
+  let productIds = [];
+
+  // Si req.params contient un productId, utilisez-le directement
+  if (req.params.productId) {
+    productIds = [req.params.productId];
+  }
+  // Sinon, si req.body contient un tableau de productIds, utilisez-le
+  else if (req.body.productIds && Array.isArray(req.body.productIds)) {
+    productIds = req.body.productIds;
+  }
+  // Si aucun des deux, renvoyez une erreur
+  else {
+    return res.status(400).json({
+      error: "Aucun ID de produit valide fourni.",
+    });
+  }
+
   try {
     const stockByProduct = await StocksTest.findAll({
-      where: { productIds }, // Utilisation de l'ID du produit pour filtrer les résultats
+      where: {
+        productId: productIds, // Utilisation des ID de produits pour filtrer les résultats
+      },
       attributes: ["productId", "quantite"], // Sélection des attributs à récupérer
     });
-    //console.log(stockByProduct);
 
     res.json(stockByProduct); // Envoi des données en réponse
   } catch (error) {
@@ -31,11 +70,11 @@ const getStockByProduct = async (req, res) => {
       error
     );
     res.status(500).json({
-      error:
-        "Une erreur s'est produite lors de la récupération du stock par produit.",
+      error: "Une erreur s'est produite lors de la récupération du stock par produit.",
     });
   }
 };
+
 
 // verif stockantigaspi dans le panier
 const checkStockAntiGaspi = async (req, res) => {
