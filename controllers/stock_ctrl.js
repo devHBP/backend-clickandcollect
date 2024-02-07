@@ -56,14 +56,29 @@ const getStockByProduct = async (req, res) => {
   }
 
   try {
-    const stockByProduct = await StocksTest.findAll({
+    // Utilisation de l'opérateur IN pour récupérer le stock de plusieurs produits
+    const stockByProducts = await StocksTest.findAll({
       where: {
-        productId: productIds, // Utilisation des ID de produits pour filtrer les résultats
+        productId: productIds,
       },
-      attributes: ["productId", "quantite"], // Sélection des attributs à récupérer
+      attributes: ["productId", "quantite"],
     });
 
-    res.json(stockByProduct); // Envoi des données en réponse
+    // Vérifiez si le stock est suffisant pour chaque produit d'une formule
+    if (productIds.length > 1) {
+      let stockInsuffisant = stockByProducts.some(stockItem => {
+        let productIndex = productIds.indexOf(stockItem.productId);
+        return productIndex !== -1 && stockItem.quantite < 1; // Supposons que la quantité requise par produit dans la formule est 1
+      });
+
+      if (stockInsuffisant) {
+        return res.status(400).json({
+          error: "Stock insuffisant pour un ou plusieurs produits de la formule.",
+        });
+      }
+    }
+
+    res.json(stockByProducts);
   } catch (error) {
     console.error(
       "Une erreur s'est produite lors de la récupération du stock par produit :",
@@ -74,6 +89,7 @@ const getStockByProduct = async (req, res) => {
     });
   }
 };
+
 
 
 // verif stockantigaspi dans le panier
