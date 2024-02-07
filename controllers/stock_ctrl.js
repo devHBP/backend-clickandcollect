@@ -39,7 +39,7 @@ const getAllStocks = (req, res) => {
 
 const getStockByProduct = async (req, res) => {
   let productIds = [];
-  console.log('req.body', req.body)
+  console.log('req.params', req.params)
   // Si req.body contient une formule, extraire les productIds des options
   if (req.body.formule && Array.isArray(req.body.formule)) {
     req.body.formule.forEach(formuleItem => {
