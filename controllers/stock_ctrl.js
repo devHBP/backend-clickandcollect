@@ -40,13 +40,19 @@ const getAllStocks = (req, res) => {
 const getStockByProduct = async (req, res) => {
   let productIds = [];
 
-  // Si req.params contient un productId, utilisez-le directement
-  if (req.params.productId) {
-    productIds = [req.params.productId];
+  // Si req.body contient une formule, extraire les productIds des options
+  if (req.body.formule && Array.isArray(req.body.formule)) {
+    req.body.formule.forEach(formuleItem => {
+      Object.keys(formuleItem).forEach(key => {
+        if (key.startsWith('option') && formuleItem[key]?.productId) {
+          productIds.push(formuleItem[key].productId);
+        }
+      });
+    });
   }
-  // Si req.body contient un tableau de productIds, utilisez-le
-  else if (req.body.productIds && Array.isArray(req.body.productIds)) {
-    productIds = req.body.productIds;
+  // Si req.params contient un productId, utilisez-le directement
+  else if (req.params.productId) {
+    productIds = [req.params.productId];
   }
   // Si aucun des deux, renvoyez une erreur
   else {
@@ -63,17 +69,15 @@ const getStockByProduct = async (req, res) => {
       attributes: ["productId", "quantite"],
     });
 
-    // Pour les formules, vérifiez le stock pour chaque produit
-    if (productIds.length > 1) {
-      const stockInsuffisant = stockByProducts.some(stockItem => {
-        return stockItem.quantite < 1; // Ou autre logique selon la quantité requise
-      });
+    // Vérifiez si le stock est suffisant pour chaque produit
+    const stockInsuffisant = stockByProducts.some(stockItem => {
+      return stockItem.quantite < 1; // Ou autre logique selon la quantité requise
+    });
 
-      if (stockInsuffisant) {
-        return res.status(400).json({
-          error: "Stock insuffisant pour un ou plusieurs produits de la formule.",
-        });
-      }
+    if (stockInsuffisant) {
+      return res.status(400).json({
+        error: "Stock insuffisant pour un ou plusieurs produits.",
+      });
     }
 
     res.json(stockByProducts);
@@ -87,6 +91,7 @@ const getStockByProduct = async (req, res) => {
     });
   }
 };
+
 
 
 
