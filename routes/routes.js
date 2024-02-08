@@ -3,7 +3,8 @@ const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, v
     getListeAllergie} = require('../controllers/ctrl')
 const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, desactiveProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
-     getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct } = require('../controllers/product_ctrl')
+     getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct,
+     getProductsSolanid } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole, getStores, getOneStoreName } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo, updateStatusPromo } = require('../controllers/promo_ctrl')
@@ -70,7 +71,7 @@ router.post('/resetDessertIds', resetDessertIds);
 router.post('/addBoissonIds/ids', addBoissonIds)
 router.get('/getBoissonIds/ids', getBoissonIds);
 router.post('/resetBoissonIds', resetBoissonIds);
-// router.get('/getProductsSolanid',getProductsSolanid)
+router.get('/getProductsSolanid',getProductsSolanid)
 
 //REVIEWS
 router.post('/reviews', createReview)
