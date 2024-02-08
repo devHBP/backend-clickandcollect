@@ -39,6 +39,12 @@ const signup = async (req, res) => {
       userData.cp = body.cp;
     }
 
+    if (body.telephone === "") {
+      userData.telephone = null;
+    } else {
+      userData.telephone = body.telephone;
+    }
+
     if (body.idSUN === "") {
       userData.idSUN = null;
     } else {
