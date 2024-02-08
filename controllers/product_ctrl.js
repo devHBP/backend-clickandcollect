@@ -342,6 +342,25 @@ const getAllProductsClickandCollect = async (req, res) => {
   }
 };
 
+//produit solanid
+// const getProductsSolanid = async (req, res) => {
+//   try {
+//     // Récupérer tous les produits où clickandcollect est vrai et vente_a_distance est vrai
+//     const products = await Products.findAll({
+//       where: {
+//         clickandcollect: true,
+//         reference_fournisseur: 'Solanid', 
+//       },
+//       attributes: { exclude: ["createdAt", "updatedAt"] },
+//     });
+
+//     res.status(200).json(products);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
+
 //lister un produit par id
 // const getOneProduct =  ( req, res) => {
 //     const { id } = req.params
@@ -741,4 +760,5 @@ module.exports = {
   createFormule,
   getAllFormules,
   updateStatusProduct,
+
 };

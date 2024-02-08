@@ -6,10 +6,9 @@ const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, d
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole, getStores, getOneStoreName } = require('../controllers/stores_ctrl')
-const {addPromo, handleApplyDiscount, allDiscounts, deletePromo } = require('../controllers/promo_ctrl')
+const {addPromo, handleApplyDiscount, allDiscounts, deletePromo, updateStatusPromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi} = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement, cancel , back, stripeWebhook } = require('../controllers/payment_ctrl')
-
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
@@ -71,6 +70,7 @@ router.post('/resetDessertIds', resetDessertIds);
 router.post('/addBoissonIds/ids', addBoissonIds)
 router.get('/getBoissonIds/ids', getBoissonIds);
 router.post('/resetBoissonIds', resetBoissonIds);
+// router.get('/getProductsSolanid',getProductsSolanid)
 
 //REVIEWS
 router.post('/reviews', createReview)
@@ -104,6 +104,7 @@ router.get('/promocodes',allDiscounts )
 router.get('/promocodes/:code',handleApplyDiscount )
 router.delete('/deletepromocodes/:id', deletePromo)
 router.post('/handleApplyDiscount', handleApplyDiscount);
+router.put('/updateStatusPromo',updateStatusPromo )
 
 // reste a faire : lister une promo, supprimer une promo
 
