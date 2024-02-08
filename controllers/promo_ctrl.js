@@ -207,4 +207,25 @@ const deletePromo = async (req, res) => {
   }
 };
 
-module.exports = { addPromo, handleApplyDiscount, allDiscounts, deletePromo };
+const updateStatusPromo = async (req, res) => {
+  try {
+    // Récupérer l'identifiant du code promo et le nouvel état 'active' du corps de la requête
+    const { promotionId, active } = req.body;
+
+    // Trouver et mettre à jour le code promo
+    const promoCode = await Promos.findByPk(promotionId);
+    if (!promoCode) {
+      return res.status(404).json({ message: "Code promo non trouvé." });
+    }
+
+    promoCode.active = active;
+    await promoCode.save();
+
+    res.status(200).json({ message: "Le statut du code promo a été mis à jour.", promoCode });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur lors de la mise à jour du code promo." });
+  }
+};
+
+module.exports = { addPromo, handleApplyDiscount, allDiscounts, deletePromo, updateStatusPromo };
