@@ -1,4 +1,3 @@
-const sgMail = require('@sendgrid/mail'); 
 const nodemailer = require("nodemailer");
 
 const jwt = require('jsonwebtoken'); 
@@ -27,7 +26,6 @@ const orderStatusReady = async (req, res) => {
         const lien_application_ios = "https://apps.apple.com/fr/app/le-pain-du-jour-click-collect/id6464316999";
  
 
-        // sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
         let transporter = nodemailer.createTransport({
             host: HOSTNAME, 
@@ -162,8 +160,6 @@ const orderStatusReady = async (req, res) => {
             `
         };
        
-        // await sgMail.send(msg);
-
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
               return console.log(error);

@@ -1,4 +1,3 @@
-const sgMail = require('@sendgrid/mail'); 
 const nodemailer = require("nodemailer");
 
 const jwt = require('jsonwebtoken'); 
@@ -49,8 +48,6 @@ const confirmOrder = async (req, res) => {
 
         // 1. Vérifiez si l'utilisateur existe
         //const user = await Users.findOne({ where: { email: userEmail } });   
-
-        // sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
         let transporter = nodemailer.createTransport({
             host: HOSTNAME, 
@@ -165,7 +162,6 @@ const confirmOrder = async (req, res) => {
             `
         };
        
-        // await sgMail.send(msg);
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
               return console.log(error);
@@ -219,7 +215,6 @@ const confirmOrderMail = async (req, res) => {
         // 1. Vérifiez si l'utilisateur existe
         //const user = await Users.findOne({ where: { email: userEmail } });   
 
-        // sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
         let transporter = nodemailer.createTransport({
             host: HOSTNAME, 
@@ -334,7 +329,6 @@ const confirmOrderMail = async (req, res) => {
             `
         };
        
-        // await sgMail.send(msg);
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
               return console.log(error);

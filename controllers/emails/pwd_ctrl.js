@@ -2,7 +2,6 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const Users = require("../../models/BDD/Users");
 
-const sgMail = require("@sendgrid/mail");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
@@ -184,7 +183,6 @@ const forgotPassword = async (req, res) => {
         `,
     };
 
-    // await sgMail.send(msg);
     // Envoyer l'e-mail
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
