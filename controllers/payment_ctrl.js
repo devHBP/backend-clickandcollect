@@ -290,8 +290,6 @@ const stripeWebhook = async (req, res) => {
     return;
   }
 
-  console.log("event.type", event.type)
-
   // Handle the event
   switch (event.type) {
     case "checkout.session.completed":
@@ -334,8 +332,7 @@ const stripeWebhook = async (req, res) => {
           console.log("Metadata:", checkoutSession.metadata);
           try {
             const orderId = parseInt(checkoutSession.metadata.orderId, 10);
-            console.log('orderId metadat', orderId)
-            console.log('orderId type',typeof orderId)
+            console.log('orderId metadata', orderId)
 
             // Appel de la requete updateOrder - j'ajoute le paymentID à la commande
             const update = await updateOrderService(orderId, paymentId);
