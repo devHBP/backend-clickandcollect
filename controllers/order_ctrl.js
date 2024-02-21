@@ -718,16 +718,22 @@ const updateViewStatus = async (req, res) => {
   }
 };
 
-// affiche les commandes en attente ou prete
+// affiche les commandes en attente ou prete sans les profils supprimés
 const ordersInWebApp = async (req, res) => {
   try {
     // Statuts à filtrer
     const filteredStatuses = ['prete', 'en attente'];
 
+    // profils à filtrer
+    const usersDeleted = [ 'Supprimé']
+
     const orders = await Orders.findAll({
       where: {
         status: filteredStatuses,
-        paid: true
+        paid: true,
+        lastname_client: {
+          [Op.notIn]: usersDeleted // Exclut les profils supprimés
+        }
       }
     });
 
