@@ -1,6 +1,6 @@
 const Router = require('express')
-const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, verifyHeader, modifyUser, deleteUser, getEmailByUserId, getUserByEmail, getInfoAlimentaire, addListePref , getListePref, getInfoPrefCommande, addListeAllergie,
-    getListeAllergie} = require('../controllers/ctrl')
+const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, verifyHeader, modifyUser, getEmailByUserId, getUserByEmail, getInfoAlimentaire, addListePref , getListePref, getInfoPrefCommande, addListeAllergie,
+    getListeAllergie, deleteUserOrAnonymize} = require('../controllers/ctrl')
 const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, desactiveProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct,
@@ -18,7 +18,7 @@ const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
 const {feedback} = require('../controllers/emails/feedback')
 const { verify } = require('jsonwebtoken')
 const  { saveToken, deleteToken } = require('../controllers/token')
-const  { versionApp, status } = require('../controllers/version')
+const  { versionApp, status, checkAntiGaspi } = require('../controllers/version')
 const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 
@@ -33,7 +33,6 @@ router.put('/updateOneUser/:id',  updateOneUser)
 router.put('/updateRole/:id',  updateRole)
 router.get('/verifyToken', verifyToken)
 router.patch('/modifyUser/:userId', verifyToken, modifyUser)
-router.delete('/deleteUser/:id', verifyToken,  deleteUser)
 router.get('/getEmailByUserId/:userId/email', getEmailByUserId)
 router.get('/getUserByEmail/:email',  getUserByEmail);
 router.get('/getInfoAlimentaire/:id',  getInfoAlimentaire);
@@ -42,8 +41,10 @@ router.get('/getListePref', getListePref);
 router.get('/getInfoPrefCommande/:id', getInfoPrefCommande)
 router.post('/addListeAllergie', addListeAllergie)
 router.get('/getListeAllergie', getListeAllergie);
+router.post('/deleteUserOrAnonymize/:userId', verifyToken, deleteUserOrAnonymize)
 // router.delete('/deleteOne/:id', deleteOne)
 // router.post('/refreshToken', refreshToken)
+// router.delete('/deleteUser/:id', verifyToken,  deleteUser)
 
 //PASSWORD
 router.post('/forgotPassword', forgotPassword)
@@ -165,5 +166,6 @@ router.get('/versionApp',versionApp )
 router.get('/status', status)
 router.get('/getEmailInvite',getEmailInvite )
 router.get('/getPsswInvite',getPsswInvite )
+router.get('/checkAntiGaspi', checkAntiGaspi)
 
 module.exports = router
