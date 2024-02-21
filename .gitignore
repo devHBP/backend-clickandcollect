@@ -5,3 +5,5 @@ node_modules/
 .npm
 .env
 firebase.json
+tests
+jest.config.js
