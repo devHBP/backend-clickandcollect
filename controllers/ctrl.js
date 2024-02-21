@@ -1,5 +1,6 @@
 const Users = require("../models/BDD/Users");
 const Orders = require("../models/BDD/Orders");
+const Token = require("../models/BDD/Token");
 const Preferences = require("../models/BDD/Preferences.js");
 const Allergies = require("../models/BDD/Allergies.js");
 
@@ -522,6 +523,11 @@ const deleteUserOrAnonymize = async (req, res) => {
       // Si l'utilisateur a des commandes, anonymisez-les d'abord
       await anonymizeUserInOrders(userId);
     }
+
+    // Supprimez d'abord les tokens (ou autres enregistrements dépendants) associés à l'utilisateur
+    await Token.destroy({
+      where: { userId: userId },
+    });
 
     // Puis supprimez l'utilisateur de la table Users, que des commandes existent ou non
     await Users.destroy({
