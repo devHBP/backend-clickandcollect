@@ -1,4 +1,5 @@
 const Users = require("../models/BDD/Users");
+const Orders = require("../models/BDD/Orders");
 const Preferences = require("../models/BDD/Preferences.js");
 const Allergies = require("../models/BDD/Allergies.js");
 
@@ -293,28 +294,28 @@ const modifyUser = async (req, res) => {
   }
 };
 //supprimer un compte
-const deleteUser = async (req, res) => {
-  try {
-    const userId = req.params.id;
+// const deleteUser = async (req, res) => {
+//   try {
+//     const userId = req.params.id;
 
-    // Trouvez l'utilisateur par son ID
-    const user = await Users.findByPk(userId);
+//     // Trouvez l'utilisateur par son ID
+//     const user = await Users.findByPk(userId);
 
-    if (!user) {
-      throw { status: 404, message: "User not found" };
-    }
+//     if (!user) {
+//       throw { status: 404, message: "User not found" };
+//     }
 
-    // Supprimez l'utilisateur
-    await user.destroy();
+//     // Supprimez l'utilisateur
+//     await user.destroy();
 
-    res.status(200).json({ message: "User deleted successfully" });
-  } catch (err) {
-    const status = err.status || 500;
-    res
-      .status(status)
-      .json({ message: err.message, details: err.details || undefined });
-  }
-};
+//     res.status(200).json({ message: "User deleted successfully" });
+//   } catch (err) {
+//     const status = err.status || 500;
+//     res
+//       .status(status)
+//       .json({ message: err.message, details: err.details || undefined });
+//   }
+// };
 
 //Récupérer l'email via le UserId
 const getEmailByUserId = async (req, res) => {
@@ -482,6 +483,61 @@ const getListeAllergie = async (req, res) => {
   }
 };
 
+const anonymizeUserInOrders = async (userId) => {
+  const anonymizedData = {
+    firstname_client: "Utilisateur",
+    lastname_client: "Supprimé",
+  };
+
+  try {
+    await Orders.update(anonymizedData, {
+      where: {
+        userId: userId,
+      },
+    });
+
+    console.log(`Les commandes pour l'utilisateur ID ${userId} ont été anonymisées.`);
+  } catch (error) {
+    console.error(`Erreur lors de l'anonymisation des commandes pour l'utilisateur ID ${userId}:`, error);
+    throw error; 
+  }
+};
+
+const deleteUserOrAnonymize = async (req, res) => {
+  const userId = parseInt(req.params.userId, 10);
+
+  if (isNaN(userId)) {
+    return res.status(400).send({ error: "L'ID utilisateur fourni est invalide." });
+  }
+
+  try {
+    // Vérifiez d'abord s'il existe des commandes pour cet utilisateur
+    const orders = await Orders.findAll({
+      where: {
+        userId: userId,
+      },
+    });
+
+    if (orders.length > 0) {
+      // Si l'utilisateur a des commandes, anonymisez-les d'abord
+      await anonymizeUserInOrders(userId);
+    }
+
+    // Puis supprimez l'utilisateur de la table Users, que des commandes existent ou non
+    await Users.destroy({
+      where: {
+        userId: userId, 
+      },
+    });
+
+    console.log(`Utilisateur ID ${userId} a été traité avec succès.`);
+    return res.status(200).send({ message: `Utilisateur ID ${userId} a été traité avec succès.` });
+  } catch (error) {
+    console.error(`Erreur lors du traitement de l'utilisateur ID ${userId}:`, error);
+    return res.status(500).send({ error: "Une erreur s'est produite lors du traitement de l'utilisateur." });
+  }
+};
+
 
 module.exports = {
   signup,
@@ -493,7 +549,6 @@ module.exports = {
   verifyToken,
   verifyHeader,
   modifyUser,
-  deleteUser,
   getEmailByUserId,
   getUserByEmail,
   getInfoAlimentaire,
@@ -501,5 +556,6 @@ module.exports = {
   getListePref,
   getInfoPrefCommande,
   addListeAllergie,
-  getListeAllergie
+  getListeAllergie,
+  deleteUserOrAnonymize
 };
