@@ -755,9 +755,15 @@ const ordersInWaiting = async (req, res) => {
     // Statuts à filtrer
     const filteredStatuses = ['en attente'];
 
+     // profils à filtrer
+     const usersDeleted = ['Supprimé']
+
     const orders = await Orders.findAll({
       where: {
-        status: filteredStatuses 
+        status: filteredStatuses,
+        lastname_client: {
+          [Op.notIn]: usersDeleted // Exclut les profils supprimés
+        }
       }
     });
 
