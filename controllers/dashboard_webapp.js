@@ -307,7 +307,7 @@ const getTopSoldProducts = async (req, res) => {
         let sortedProducts = Object.entries(productCount)
             .map(([productId, count]) => ({ productId, count }))
             .sort((a, b) => b.count - a.count)
-            .slice(0, 3); // Prendre les trois premiers résultats
+            .slice(0, 5); // Prendre les trois premiers résultats
 
         // Récupérer les libellés des produits pour chaque productId
         const productsWithDetails = await Promise.all(sortedProducts.map(async ({ productId, count }) => {
