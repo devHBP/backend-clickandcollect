@@ -21,6 +21,7 @@ const  { saveToken, deleteToken } = require('../controllers/token')
 const  { versionApp, status, checkAntiGaspi } = require('../controllers/version')
 const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
+const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
 
 const router = Router()
 
@@ -167,5 +168,20 @@ router.get('/status', status)
 router.get('/getEmailInvite',getEmailInvite )
 router.get('/getPsswInvite',getPsswInvite )
 router.get('/checkAntiGaspi', checkAntiGaspi)
+
+//DASHBOARD WEBAPP
+router.get('/getTotalSales', getTotalSales)
+router.get('/getSalesToday', getSalesToday)
+router.get('/getSalesMonth', getSalesMonth)
+router.get('/getSalesWeek', getSalesWeek)
+router.get('/getSalesByDate/:date', getSalesByDate);
+router.get('/getOrderToday', getOrderToday);
+router.get('/getOrderWeek', getOrderWeek);
+router.get('/getOrderMonth', getOrderMonth);
+router.get('/getTotalOrders', getTotalOrders);
+router.get('/getOrdersByDate/:date', getOrdersByDate);
+router.get('/calculateAverageBasket', calculateAverageBasket);
+router.get('/getTopSoldProducts', getTopSoldProducts);
+
 
 module.exports = router
