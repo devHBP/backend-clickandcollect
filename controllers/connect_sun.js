@@ -42,7 +42,7 @@ const receiveMsg = (req, res) => {
   // console.log(`Message reçu:`,  message);
   // res.status(200).send({ status: 'Succès', message: 'Message reçu avec succès.' });
 
- console.log(`Req:`,  req);
+ console.log(`Req.body:`, req.body);
 
   // Assurez-vous que le corps de la requête contient les données nécessaires pour le déchiffrement
   if (!req.body.iv || !req.body.encryptedData) {
