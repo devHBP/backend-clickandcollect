@@ -16,6 +16,7 @@ function decryptMessage(encryptedMessage, secretKey) {
   // Convertit la clé secrète et l'IV de la représentation hexadécimale à un Buffer
 
   const decodedIv = Buffer.from(encryptedMessage.iv, 'base64');
+  console.log('decodedIv', decodedIv)
   const iv = Buffer.from(decodedIv, "hex");
   const encryptedText = Buffer.from(encryptedMessage.encryptedData, "hex");
 
