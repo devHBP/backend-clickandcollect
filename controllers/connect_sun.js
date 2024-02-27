@@ -59,7 +59,8 @@ const receiveMsg = (req, res) => {
 
   // Extrait les données chiffrées et l'IV du corps de la requête
   const encryptedMessage = {
-    iv: Buffer.from(req.body.iv, 'base64'),
+    // iv: Buffer.from(req.body.iv, 'base64'),
+    iv: req.body.iv,
     encryptedData: req.body.encryptedData,
   };
 
