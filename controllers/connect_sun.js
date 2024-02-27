@@ -62,6 +62,8 @@ const receiveMsg = (req, res) => {
     encryptedData: req.body.encryptedData,
   };
 
+  console.log("iv", encryptedMessage.iv)
+
   // Tente de déchiffrer le message
   try {
     const decryptedMessage = decryptMessage(encryptedMessage, SUN_KEY);
