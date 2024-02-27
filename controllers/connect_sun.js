@@ -3,7 +3,7 @@ require("dotenv").config();
 const axios = require("axios");
 const crypto = require("crypto");
 
-const SUN_KEY = process.env.SECRET_KEY;
+const SUN_KEY = process.env.SUN_KEY;
 
 /**
  * Fonction pour déchiffrer un message chiffré avec AES-256-CBC.
