@@ -17,7 +17,8 @@ if (config.use_env_variable) {
 }
 
 fs
-  .readdirSync(__dirname)
+  //.readdirSync(__dirname)
+  .readdirSync(path.join(__dirname, '/BDD')) // Modification ici pour pointer vers le bon dossier
   .filter(file => {
     return (
       file.indexOf('.') !== 0 &&
@@ -27,7 +28,8 @@ fs
     );
   })
   .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    //const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    const model = require(path.join(__dirname, '/BDD', file))(sequelize, Sequelize.DataTypes); // Modification ici aussi
     db[model.name] = model;
   });
 

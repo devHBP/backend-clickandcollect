@@ -22,6 +22,7 @@ const  { versionApp, status, checkAntiGaspi } = require('../controllers/version'
 const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
+const  { createCart, addCartItems, getCart } = require('../controllers/cart')
 
 const router = Router()
 
@@ -183,5 +184,9 @@ router.get('/getOrdersByDate/:date', getOrdersByDate);
 router.get('/calculateAverageBasket', calculateAverageBasket);
 router.get('/getTopSoldProducts', getTopSoldProducts);
 
+// PANIER BACKEND
+router.post('/createCart', createCart)
+router.post('/addCartItems', addCartItems)
+router.get('/getCart/:cartId', getCart)
 
 module.exports = router
