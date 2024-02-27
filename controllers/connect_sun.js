@@ -22,8 +22,7 @@ const sendMessageToExternalAPI = async (message) => {
         const response = await axios.post(apiUrl, {
             message: message
         });
-        console.log('api', API_SUN)
-        console.log('Réponse de l\'API externe:', response);
+        console.log('Réponse de l\'API externe:', response.data);
         return response.data;
     } catch (error) {
         console.error('Erreur lors de l\'envoi du message à l\'API externe:', error.response ? error.response.data : error.message);
