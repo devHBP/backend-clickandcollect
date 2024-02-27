@@ -19,7 +19,6 @@ const receiveMsg = (req, res) => {
 const sendMessageToExternalAPI = async (message) => {
     try {
         const apiUrl = process.env.API_SUN; 
-        console.log('API URL:', apiUrl);
         const response = await axios.post(apiUrl, {
             message: message
         });
