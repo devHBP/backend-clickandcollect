@@ -16,9 +16,11 @@ function decryptMessage(encryptedMessage, secretKey) {
   // Convertit la clé secrète et l'IV de la représentation hexadécimale à un Buffer
 
   const iv = Buffer.from(encryptedMessage.iv, 'base64');
-  console.log('iv', iv)
   const encryptedText = Buffer.from(encryptedMessage.encryptedData, 'base64');
-
+  console.log('iv', iv)
+  console.log('IV length:', iv.length); // Longueur de l'IV
+  console.log('IV (hex):', iv.toString('hex')); // Contenu de l'IV en hexadécimal
+  console.log('Encrypted text length:', encryptedText.length);
   // Crée un déchiffreur avec l'algorithme AES-256-CBC, la clé secrète et l'IV
   const decipher = crypto.createDecipheriv(
     "aes-256-cbc",
@@ -26,10 +28,14 @@ function decryptMessage(encryptedMessage, secretKey) {
     iv
   );
 
-  // Déchiffre les données chiffrées
-  let decrypted = decipher.update(encryptedText);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-
+  let decrypted;
+  try {
+    decrypted = decipher.update(encryptedText);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+  } catch (error) {
+    console.error("Erreur lors du déchiffrement du message:", error);
+    throw error; // Pour propager l'erreur et permettre son traitement ultérieur
+  }
   // Convertit le Buffer déchiffré en chaîne de caractères et le retourne
   return decrypted.toString();
 }
@@ -63,7 +69,7 @@ const receiveMsg = (req, res) => {
     encryptedData: req.body.encryptedData,
   };
 
-  console.log("iv", encryptedMessage.iv)
+  console.log("iv receivedMsg", encryptedMessage.iv)
 
   // Tente de déchiffrer le message
   try {
@@ -77,6 +83,7 @@ const receiveMsg = (req, res) => {
         message: "Message reçu et déchiffré avec succès.",
       });
   } catch (error) {
+    console.error("Erreur:", error);
     console.error("Erreur lors du déchiffrement du message:", error.message);
     return res
       .status(500)
