@@ -14,7 +14,9 @@ const SUN_KEY = process.env.SUN_KEY;
  */
 function decryptMessage(encryptedMessage, secretKey) {
   // Convertit la clé secrète et l'IV de la représentation hexadécimale à un Buffer
-  const iv = Buffer.from(encryptedMessage.iv, "hex");
+
+  const decodedIv = Buffer.from(encryptedMessage.iv, 'base64');
+  const iv = Buffer.from(decodedIv, "hex");
   const encryptedText = Buffer.from(encryptedMessage.encryptedData, "hex");
 
   // Crée un déchiffreur avec l'algorithme AES-256-CBC, la clé secrète et l'IV
@@ -56,7 +58,7 @@ const receiveMsg = (req, res) => {
 
   // Extrait les données chiffrées et l'IV du corps de la requête
   const encryptedMessage = {
-    iv: req.body.iv,
+    iv: Buffer.from(req.body.iv, 'base64'),
     encryptedData: req.body.encryptedData,
   };
 
