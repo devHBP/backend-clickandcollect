@@ -23,6 +23,8 @@ const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
 const  { createCart, addCartItems, getCart } = require('../controllers/cart')
+const  { sendMsg, receiveMsg } = require('../controllers/connect_sun')
+
 
 const router = Router()
 
@@ -188,5 +190,9 @@ router.get('/getTopSoldProducts', getTopSoldProducts);
 router.post('/createCart', createCart)
 router.post('/addCartItems', addCartItems)
 router.get('/getCart/:cartId', getCart)
+
+//CONNEXION SUN
+router.post('/sendMsg', sendMsg)
+router.post('/receiveMsg', receiveMsg)
 
 module.exports = router
