@@ -6,7 +6,7 @@ const API_SUN = process.env.API_SUN
 
 // je recois le message
 const receiveMsg = (req, res) => {
-    console.log('req.body', req.body)
+    console.log('req', req)
     if (!req.body.message) {
         return res.status(400).send({ status: 'Erreur', message: 'Un message est requis.' });
     }
