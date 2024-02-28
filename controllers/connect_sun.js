@@ -21,7 +21,7 @@ function decryptMessage(encryptedMessage, secretKey) {
   // Crée un déchiffreur avec l'algorithme AES-256-CBC, la clé secrète et l'IV
   const decipher = crypto.createDecipheriv(
     "aes-256-cbc",
-    Buffer.from(secretKey, "hex"),
+    secretKey,
     iv
   );
 
