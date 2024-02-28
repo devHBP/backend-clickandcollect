@@ -15,8 +15,8 @@ const SUN_KEY = process.env.SUN_KEY;
 function decryptMessage(encryptedMessage, secretKey) {
   // Convertit la clé secrète et l'IV de la représentation hexadécimale à un Buffer
 
-  const iv = Buffer.from(encryptedMessage.iv, 'base64');
-  console.log('iv', iv);
+  const iv = Buffer.from(encryptedMessage.iv, 'base64').toString('hex');
+  console.log('iv from buffer', iv);
   const encryptedText = Buffer.from(encryptedMessage.encryptedData, 'hex');
   // Crée un déchiffreur avec l'algorithme AES-256-CBC, la clé secrète et l'IV
   const decipher = crypto.createDecipheriv(
