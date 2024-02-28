@@ -13,7 +13,7 @@ const SUN_KEY = process.env.SUN_KEY;
  * @param {string} secretKey - La clé secrète utilisée pour le déchiffrement.
  * @returns {string} Le message déchiffré.
  */
-function decryptMessage(encryptedMessage, secretKey) {
+function decryptMessage(data) {
   // Convertit la clé secrète et l'IV de la représentation hexadécimale à un Buffer
 
 //   const iv = Buffer.from(encryptedMessage.iv, 'base64');
@@ -37,12 +37,13 @@ function decryptMessage(encryptedMessage, secretKey) {
 //   // Convertit le Buffer déchiffré en chaîne de caractères et le retourne
 //   return decrypted.toString();
 
-
+  const key = Buffer.from(SUN_KEY, 'base64');
   let iv = data.slice(0, 16);
   let encryptedText = data.slice(16);
   let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
+
   return decrypted.toString();
 }
 
@@ -58,28 +59,11 @@ const receiveMsg = (req, res) => {
 
  console.log(`Req.body:`, req.body);
 
-  // Assurez-vous que le corps de la requête contient les données nécessaires pour le déchiffrement
-  if (!req.body.iv || !req.body.encryptedData) {
-    return res
-      .status(400)
-      .send({
-        status: "Erreur",
-        message: "Le message chiffré et l'IV sont requis.",
-      });
-  }
 
-  // Extrait les données chiffrées et l'IV du corps de la requête
-  const encryptedMessage = {
-    // iv: Buffer.from(req.body.iv, 'base64'),
-    iv: req.body.iv,
-    encryptedData: req.body.encryptedData,
-  };
-
-  console.log("iv receivedMsg", encryptedMessage.iv)
 
   // Tente de déchiffrer le message
   try {
-    const decryptedMessage = decryptMessage(encryptedMessage, SUN_KEY);
+    const decryptedMessage = decryptMessage(req.body.encryptedData);
     console.log(`Message déchiffré:`, decryptedMessage);
 
     res
