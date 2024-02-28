@@ -3,6 +3,7 @@ require("dotenv").config();
 const axios = require("axios");
 const crypto = require("crypto");
 
+
 const SUN_KEY = process.env.SUN_KEY;
 
 /**
@@ -15,25 +16,33 @@ const SUN_KEY = process.env.SUN_KEY;
 function decryptMessage(encryptedMessage, secretKey) {
   // Convertit la clé secrète et l'IV de la représentation hexadécimale à un Buffer
 
-  const iv = Buffer.from(encryptedMessage.iv, 'base64');
-  console.log('iv from buffer', iv);
-  const encryptedText = Buffer.from(encryptedMessage.encryptedData, 'hex');
-  // Crée un déchiffreur avec l'algorithme AES-256-CBC, la clé secrète et l'IV
-  const decipher = crypto.createDecipheriv(
-    "aes-256-cbc",
-    secretKey,
-    iv
-  );
+//   const iv = Buffer.from(encryptedMessage.iv, 'base64');
+//   console.log('iv from buffer', iv);
+//   const encryptedText = Buffer.from(encryptedMessage.encryptedData, 'hex');
+//   // Crée un déchiffreur avec l'algorithme AES-256-CBC, la clé secrète et l'IV
+//   const decipher = crypto.createDecipheriv(
+//     "aes-256-cbc",
+//     secretKey,
+//     iv
+//   );
 
-  let decrypted;
-  try {
-    decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-  } catch (error) {
-    console.error("Erreur lors du déchiffrement du message dans la fonction:", error);
-    throw error; // Pour propager l'erreur et permettre son traitement ultérieur
-  }
-  // Convertit le Buffer déchiffré en chaîne de caractères et le retourne
+//   let decrypted;
+//   try {
+//     decrypted = decipher.update(encryptedText);
+//     decrypted = Buffer.concat([decrypted, decipher.final()]);
+//   } catch (error) {
+//     console.error("Erreur lors du déchiffrement du message dans la fonction:", error);
+//     throw error; // Pour propager l'erreur et permettre son traitement ultérieur
+//   }
+//   // Convertit le Buffer déchiffré en chaîne de caractères et le retourne
+//   return decrypted.toString();
+
+
+  let iv = data.slice(0, 16);
+  let encryptedText = data.slice(16);
+  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
 }
 
