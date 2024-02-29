@@ -97,7 +97,6 @@ const refundArticle = async (req, res) => {
                     </tr>
                     <tr>
                         <td align="center" style="padding: 20px;">
-                            <p style="margin: 10px 0; font-size: 14px;"> Ceci est un test - Ne pas en tenir compte</p>
                             <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #fff; border-radius: 8px; overflow: hidden;">
                                 <tr>
                                     <td  style="padding: 40px;">
