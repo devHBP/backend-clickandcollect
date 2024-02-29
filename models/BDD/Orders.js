@@ -93,8 +93,11 @@ const Orders = db.define('Orders', {
     type: DataTypes.BOOLEAN,
     allowNull: true,
     defaultValue: false
-  }
-
+  },
+  refundedProductIds: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
 });
 
 // generéation numéro de commande
