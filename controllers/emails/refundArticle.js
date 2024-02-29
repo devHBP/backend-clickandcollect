@@ -41,7 +41,7 @@ const refundArticle = async (req, res) => {
       // remettre ici le mail 2
       to: [
         process.env.EMAIL1,
-        process.env.EMAIL1
+        process.env.EMAIL2
     ],
       subject: "Demande de remboursement",
       html: `
