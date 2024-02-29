@@ -780,6 +780,26 @@ const ordersInWaiting = async (req, res) => {
   }
 };
 
+// modifier une commande
+const updateOrderContent = async (req, res) => {
+  const { orderId, ...updateValues } = req.body;
+
+  try {
+    // Mise à jour de la commande avec les valeurs reçues de la requête
+    const [updatedRows] = await Orders.update(updateValues, {
+      where: { orderId }
+    });
+
+    if (updatedRows === 0) {
+      return res.status(404).json({ message: "Aucune commande trouvée ou les données sont identiques." });
+    }
+
+    res.status(200).json({ message: "Commande mise à jour avec succès" });
+  } catch (error) {
+    console.error("Erreur de mise à jour de la commande :", error);
+    res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+};
 
 
 module.exports = {
@@ -800,5 +820,6 @@ module.exports = {
   tableOrderProduct,
   updateViewStatus,
   ordersInWebApp,
-  ordersInWaiting
+  ordersInWaiting,
+  updateOrderContent
 };

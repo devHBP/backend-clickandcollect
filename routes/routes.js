@@ -11,10 +11,11 @@ const {addPromo, handleApplyDiscount, allDiscounts, deletePromo, updateStatusPro
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi} = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement, cancel , back, stripeWebhook } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
-    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate } = require('../controllers/order_ctrl')
+    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate, updateOrderContent } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
+const {refundArticle } = require('../controllers/emails/refundArticle')
 const {feedback} = require('../controllers/emails/feedback')
 const { verify } = require('jsonwebtoken')
 const  { saveToken, deleteToken } = require('../controllers/token')
@@ -142,6 +143,7 @@ router.patch('/updateOrderPaidStatus', updateOrderPaidStatus);
 router.get('/getAllProducts',getAllProducts)
 router.get('/ordersInWebApp',ordersInWebApp)
 router.get('/ordersInWaiting',ordersInWaiting)
+router.put('/updateOrderContent', updateOrderContent);
 // router.put('/updateStatus/:orderId', updateStatus) //routes pour websocket
 //router.post('/createOrderAndPayment')
 
@@ -160,6 +162,7 @@ router.post('/sendWelcomeEmail', sendWelcomeEmail)
 router.post('/confirmOrder', confirmOrder)
 router.post('/orderStatusReady', orderStatusReady)
 router.post('/feedback', feedback)
+router.post('/refundArticle', refundArticle)
 
 //TOKEN
 router.post('/saveToken', saveToken)
