@@ -1,4 +1,6 @@
 const APP_VERSION = process.env.VERSION_STORE;
+const Users = require("../models/BDD/Users.js");
+
 
 const versionApp = async (req, res) => {
   res.json({ version: APP_VERSION });
@@ -33,4 +35,30 @@ const checkAntiGaspi = (req, res) => {
   }
 };
 
-module.exports = { versionApp, status, checkAntiGaspi };
+const updateVersion = async (req, res) => {
+  console.log(req.body);
+
+  const userId = req.body.userId; 
+  const versionApp = req.body.versionApp; 
+
+  if (!userId ) {
+    return res.status(400).send({ message: "Les données userId et versionApp sont requises." });
+  }
+
+  try {
+    const user = await Users.findOne({ where: { userId: userId } });
+
+    if (!user) {
+      return res.status(404).send({ message: "Utilisateur non trouvé." });
+    }
+
+    await user.update({ versionApp: versionApp });
+
+    res.send({ message: `Version de l'application mise à jour avec succès: ${versionApp}.` });
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour de la version de l\'application:', error);
+    res.status(500).send({ message: "Erreur lors de la mise à jour de la version de l'application." });
+  }
+}
+
+module.exports = { versionApp, status, checkAntiGaspi, updateVersion };

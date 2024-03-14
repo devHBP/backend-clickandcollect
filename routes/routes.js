@@ -4,11 +4,11 @@ const { signup, getAll, getOne, login, updateOneUser, updateRole, verifyToken, v
 const { forgotPassword, resetPassword , updatePassword} = require('../controllers/emails/pwd_ctrl')
 const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, deleteProduct, desactiveProduct, decreaseProductStock, increaseProductStock, getProductsofOneCategory,
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct,
-     getProductsSolanid } = require('../controllers/product_ctrl')
+     getProductsSolanid, getOneProductForNewCartString, getLibelleProduct } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
 const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole, getStores, getOneStoreName } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo, updateStatusPromo } = require('../controllers/promo_ctrl')
-const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi} = require('../controllers/stock_ctrl')
+const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi, getAddStock} = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement, cancel , back, stripeWebhook } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate, updateOrderContent } = require('../controllers/order_ctrl')
@@ -19,7 +19,7 @@ const {refundArticle } = require('../controllers/emails/refundArticle')
 const {feedback} = require('../controllers/emails/feedback')
 const { verify } = require('jsonwebtoken')
 const  { saveToken, deleteToken } = require('../controllers/token')
-const  { versionApp, status, checkAntiGaspi } = require('../controllers/version')
+const  { versionApp, status, checkAntiGaspi, updateVersion } = require('../controllers/version')
 const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
@@ -78,6 +78,8 @@ router.post('/addBoissonIds/ids', addBoissonIds)
 router.get('/getBoissonIds/ids', getBoissonIds);
 router.post('/resetBoissonIds', resetBoissonIds);
 router.get('/getProductsSolanid',getProductsSolanid)
+router.get('/getOneProductForNewCartString/:id', getOneProductForNewCartString)
+router.get('/getLibelleProduct', getLibelleProduct)
 
 //REVIEWS
 router.post('/reviews', createReview)
@@ -104,7 +106,6 @@ router.get('/getStores', getStores)
 
 // router.get('/:roleName/stores', getStoresByRole);
 
-
 //PROMOS
 router.post('/promocodes',addPromo )
 router.get('/promocodes',allDiscounts )
@@ -121,6 +122,7 @@ router.get('/getStockByProduct/:productId', getStockByProduct)
 router.put('/getUpdateStockAntigaspi', getUpdateStockAntigaspi) 
 router.put('/getAddStockAntigaspi', getAddStockAntigaspi)
 router.put('/getUpdateStock', getUpdateStock)
+router.put('/getAddStock', getAddStock)
 router.post('/checkStockAntiGaspi', checkStockAntiGaspi)
 router.get('/verifStockAntiGaspi/:productId', verifStockAntiGaspi)
 
@@ -174,6 +176,7 @@ router.get('/status', status)
 router.get('/getEmailInvite',getEmailInvite )
 router.get('/getPsswInvite',getPsswInvite )
 router.get('/checkAntiGaspi', checkAntiGaspi)
+router.post('/updateVersion', updateVersion )
 
 //DASHBOARD WEBAPP
 router.get('/getTotalSales', getTotalSales)

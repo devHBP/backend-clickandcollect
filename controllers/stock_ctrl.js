@@ -37,12 +37,6 @@ const getStockByProduct = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
 // verif stockantigaspi dans le panier
 const checkStockAntiGaspi = async (req, res) => {
   const panier = req.body.cart;
@@ -94,7 +88,7 @@ const verifStockAntiGaspi = async (req, res) => {
       });
   }
 };
-//update stockantigaspi
+// j'enleve du stock antigaspi
 const getUpdateStockAntigaspi = async (req, res) => {
   const { productId, quantityPurchased } = req.body;
   // console.log("productId", productId);
@@ -138,8 +132,8 @@ const getAddStockAntigaspi = async (req, res) => {
     }
 
     product.stockantigaspi += quantityPurchased; // ajoute la quantité du stock
-    console.log("je rajoute du stock");
-    console.log("product.antigasti", product.stockantigaspi);
+    // console.log("je rajoute du stock");
+    // console.log("product.antigasti", product.stockantigaspi);
 
     await product.save();
 
@@ -153,8 +147,10 @@ const getAddStockAntigaspi = async (req, res) => {
   }
 };
 
+// j'enleve du stock - produit normal
 const getUpdateStock = async (req, res) => {
   const { productId, quantityPurchased } = req.body;
+  console.log('req.body', req.body)
   // console.log("productId", productId);
   // console.log("qty", quantityPurchased);
   try {
@@ -173,11 +169,37 @@ const getUpdateStock = async (req, res) => {
     await product.save();
     await stock.save();
 
-    res.status(200).json({ message: "Stock mis à jour avec succès." });
+    res.status(200).json({ message: `Stock mis à jour (- ${quantityPurchased}) avec succès.` });
   } catch (error) {
     res
       .status(500)
       .json({ message: "Erreur lors de la mise à jour du stock." });
+  }
+};
+
+// j'ajoute du stock
+const getAddStock = async (req, res) => {
+  const { productId, quantityPurchased } = req.body;
+  console.log('req.body', req.body)
+ 
+  try {
+    const product = await Products.findByPk(productId);
+    const stock = await StocksTest.findOne({ where: { productId: productId } });
+
+    if (!product) {
+      return res.status(404).json({ message: "Produit non trouvé." });
+    }
+
+    product.stock += quantityPurchased;
+    stock.quantite += quantityPurchased;
+    await product.save();
+    await stock.save();
+
+    res.status(200).json({ message: "Stock mis à jour (+)  avec succès." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la mise à jour en plus du stock." });
   }
 };
 
@@ -187,6 +209,7 @@ module.exports = {
   getUpdateStockAntigaspi,
   checkStockAntiGaspi,
   getUpdateStock,
+  getAddStock,
   getAddStockAntigaspi,
   verifStockAntiGaspi,
 };

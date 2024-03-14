@@ -65,7 +65,7 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ error: "Famille de produit non trouvée" });
     }
 
-    const allergenes = req.body.allergenes === '' ? null : req.body.allergenes;
+    const allergenes = req.body.allergenes === "" ? null : req.body.allergenes;
 
     let product = {
       // Vérifier si req.file existe et contient les informations sur le fichier
@@ -83,7 +83,7 @@ const addProduct = async (req, res) => {
       clickandcollect: req.body.clickandcollect,
       antigaspi: req.body.antigaspi,
       stockantigaspi: req.body.stockantigaspi,
-      allergenes: allergenes
+      allergenes: allergenes,
     };
     // console.log('product', product)
 
@@ -146,7 +146,7 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const productId = req.params.id;
   const updates = req.body;
-  console.log('req file', req.file)
+  console.log("req file", req.file);
   // Convertissez les chaînes vides en null pour les champs allergenes / ingredients
   if (updates.allergenes === "") {
     updates.allergenes = null;
@@ -191,17 +191,18 @@ const updateProduct = async (req, res) => {
       updates.id_famille_produit = familleProduit.id_famille_produit;
     }
 
-
-
     // Mettez à jour uniquement les champs spécifiés dans les mises à jour
     // await Products.update(updates, { where: { productId: productId } });
-    await Products.update({
-      ...updates,
-      // Ne mettez à jour l'image que si un nouveau fichier a été téléchargé
-      ...(req.file && { image: req.file.path }),
-    }, {
-      where: { productId: productId }
-    });
+    await Products.update(
+      {
+        ...updates,
+        // Ne mettez à jour l'image que si un nouveau fichier a été téléchargé
+        ...(req.file && { image: req.file.path }),
+      },
+      {
+        where: { productId: productId },
+      }
+    );
     await product.save();
 
     // Mise à jour des détails du produit
@@ -349,7 +350,7 @@ const getProductsSolanid = async (req, res) => {
     const products = await Products.findAll({
       where: {
         clickandcollect: true,
-        reference_fournisseur: 'Solanid', 
+        reference_fournisseur: "Solanid",
       },
       attributes: { exclude: ["createdAt", "updatedAt"] },
     });
@@ -359,7 +360,6 @@ const getProductsSolanid = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
 
 //lister un produit par id
 // const getOneProduct =  ( req, res) => {
@@ -411,12 +411,10 @@ const getProductsofOneCategory = async (req, res) => {
       "Une erreur s'est produite lors de la récupération des produits par catégorie:",
       error
     );
-    res
-      .status(500)
-      .json({
-        message:
-          "Une erreur s'est produite lors de la récupération des produits par catégorie",
-      });
+    res.status(500).json({
+      message:
+        "Une erreur s'est produite lors de la récupération des produits par catégorie",
+    });
   }
 };
 
@@ -478,34 +476,38 @@ const desactiveProduct = async (req, res) => {
 
 //supprimer un produit
 // A NE PAS FAIRE POUR RAISONS DE SECURITE = PLUTOT DESACTIVER UN PRODUIT
-  const deleteProduct = async (req, res) => {
-    const productId = req.params.id;
+const deleteProduct = async (req, res) => {
+  const productId = req.params.id;
 
-    try {
-      const product = await Products.findByPk(productId);
+  try {
+    const product = await Products.findByPk(productId);
 
-      if (!product) {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-
-      // Supprimer les associations avec les commandes
-      await TableOrderProduct.destroy({ where: { productId: productId } });
-
-      // Supprimer le stock associé
-      const stock = await StocksTest.findOne({ where: { productId: productId } });
-      if (stock) {
-        await stock.destroy();
-      }
-
-      // Supprimer le produit
-      await ProductDetail.destroy({ where: { productId: productId } });
-      await product.destroy();
-
-      return res.status(200).json({ msg: 'Product and associated entries deleted successfully' });
-    } catch (error) {
-      console.error('Error:', error);  // Ajout de log d'erreur
-      return res.status(500).json({ error: 'Failed to delete product and associated entries' });
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
     }
+
+    // Supprimer les associations avec les commandes
+    await TableOrderProduct.destroy({ where: { productId: productId } });
+
+    // Supprimer le stock associé
+    const stock = await StocksTest.findOne({ where: { productId: productId } });
+    if (stock) {
+      await stock.destroy();
+    }
+
+    // Supprimer le produit
+    await ProductDetail.destroy({ where: { productId: productId } });
+    await product.destroy();
+
+    return res
+      .status(200)
+      .json({ msg: "Product and associated entries deleted successfully" });
+  } catch (error) {
+    console.error("Error:", error); // Ajout de log d'erreur
+    return res
+      .status(500)
+      .json({ error: "Failed to delete product and associated entries" });
+  }
 };
 
 //diminuer un stock
@@ -738,6 +740,48 @@ const resetBoissonIds = async (req, res) => {
   }
 };
 
+const getOneProductForNewCartString = (req, res) => {
+  const { id } = req.params;
+
+  // Récupérez le produit par son ID
+  Products.findByPk(id)
+    .then((product) => {
+      if (!product) return res.status(404).json({ msg: "product not found" });
+
+      const productResponse = {
+        productId: product.productId,
+        libelle: product.libelle,
+        prix_unitaire: product.prix_unitaire, 
+      };
+
+      res.status(200).json(productResponse);
+    })
+    .catch((error) => res.status(500).json(error));
+};
+
+// get libelle 
+const getLibelleProduct = async (req, res) => {
+  const { ids } = req.query; // "ids" est une chaîne d'ID séparés par des virgules
+
+  try {
+    const productIds = ids.split(',').map(id => parseInt(id)); // Convertit en tableau d'entiers
+    const products = await Products.findAll({
+      where: {
+        productId: productIds
+      }
+    });
+
+    if (products.length === 0) return res.status(404).json({ msg: "Aucun produit trouvé." });
+
+    // Renvoie les libellés des produits trouvés
+    const libelles = products.map(product => ({ libelle: product.libelle }));
+    res.status(200).json(libelles);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des libellés:', error);
+    res.status(500).json({ msg: "Erreur serveur lors de la récupération des libellés." });
+  }
+};
+
 module.exports = {
   addProduct,
   getAllProducts,
@@ -760,5 +804,7 @@ module.exports = {
   createFormule,
   getAllFormules,
   updateStatusProduct,
-  getProductsSolanid
+  getProductsSolanid,
+  getOneProductForNewCartString,
+  getLibelleProduct
 };
