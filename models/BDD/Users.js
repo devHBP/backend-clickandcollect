@@ -84,6 +84,10 @@ const Users = db.define('Users', {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      versionApp: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       
 })
 

@@ -98,6 +98,10 @@ const Orders = db.define('Orders', {
     type: DataTypes.JSON,
     allowNull: true
   },
+  newCartString: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
 });
 
 // generéation numéro de commande
