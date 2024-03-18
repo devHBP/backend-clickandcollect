@@ -38,7 +38,6 @@ const refundArticle = async (req, res) => {
 
     const mailOptions = {
       from: USERNAME,
-      // remettre ici le mail 2
       to: [
         process.env.EMAIL1,
         process.env.EMAIL2
