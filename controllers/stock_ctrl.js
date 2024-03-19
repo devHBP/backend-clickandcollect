@@ -203,7 +203,7 @@ const getUpdateStock = async (req, res) => {
 
       return { updatedStock, updatedProduct };
     });
-    console.log(result)
+    // console.log(result)
 
     // Vérifiez le résultat de la transaction
     if (!result.updatedStock || !result.updatedProduct) {
