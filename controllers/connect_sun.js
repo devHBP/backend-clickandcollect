@@ -75,8 +75,7 @@ const receiveMsg = async (req, res) => {
 // verification du statusSUN
 const getStatusSun = async (req, res) => {
 
-  const userId = req.query.userId;
-
+  const userId = req.params.userId;
   if (!userId) {
     return res.status(400).send({ message: "Le paramètre userId est requis." });
   }

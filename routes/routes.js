@@ -201,6 +201,6 @@ router.get('/getCart/:cartId', getCart)
 //CONNEXION SUN
 router.post('/sendMsg', sendMsg)
 router.post('/receiveMsg', receiveMsg)
-router.get('/getStatusSun',getStatusSun )
+router.get('/getStatusSun/:userId',getStatusSun )
 
 module.exports = router
