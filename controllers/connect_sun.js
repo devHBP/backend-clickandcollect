@@ -19,9 +19,8 @@ const receiveMsg = (req, res) => {
   // res.status(200).send({ status: 'Succès', message: 'Message reçu avec succès.' });
 
  console.log(`Req.body:`, req.body);
-
-
-
+ const data = req.body.data 
+console.log('data', data)
 
 };
 
