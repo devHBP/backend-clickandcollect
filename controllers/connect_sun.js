@@ -6,30 +6,7 @@ const crypto = require("crypto");
 
 const SUN_KEY = process.env.SUN_KEY;
 
-/**
- * Fonction pour déchiffrer un message chiffré avec AES-256-CBC.
- *
- * @param {Object} encryptedMessage - Un objet contenant l'IV et les données chiffrées.
- * @param {string} secretKey - La clé secrète utilisée pour le déchiffrement.
- * @returns {string} Le message déchiffré.
- */
-function decryptMessage(encryptedData) {
-  const key = Buffer.from(SUN_KEY, 'base64'); // Assurez-vous que SUN_KEY est correctement formaté
-  
-  // Laravel encode le résultat en Base64, donc décodez-le d'abord
-  const dataBuffer = Buffer.from(encryptedData, 'base64');
-  
-  // Laravel utilise également un IV, qui est typiquement au début du payload chiffré
-  // La taille de l'IV pour AES-256-CBC est toujours de 16 octets
-  let iv = dataBuffer.slice(0, 16);
-  let encryptedText = dataBuffer.slice(16);
-  
-  let decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-  let decrypted = decipher.update(encryptedText);
-  
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString();
-}
+
 
 // je recois le message
 const receiveMsg = (req, res) => {
@@ -45,28 +22,7 @@ const receiveMsg = (req, res) => {
 
 
 
-  // Tente de déchiffrer le message
-  try {
-    const decryptedMessage = decryptMessage(req.body.encryptedData);
-    console.log(`Message déchiffré:`, decryptedMessage);
 
-    res
-      .status(200)
-      .send({
-        status: "Succès",
-        message: "Message reçu et déchiffré avec succès.",
-        decryptedData: decryptedMessage
-      });
-  } catch (error) {
-    console.error("Erreur:", error);
-    console.error("Erreur lors du déchiffrement du message:", error.message);
-    return res
-      .status(500)
-      .send({
-        status: "Erreur",
-        message: "Erreur lors du déchiffrement du message.",
-      });
-  }
 };
 
 // envoi vers sun
