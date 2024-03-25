@@ -88,7 +88,10 @@ const Users = db.define('Users', {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      
+      statusSUN: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
 })
 
 //TestUsers.belongsTo(TestStores, { foreignKey: 'id_magasin' });

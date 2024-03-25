@@ -3,14 +3,10 @@ require("dotenv").config();
 const axios = require("axios");
 const crypto = require("crypto");
 
-
 const SUN_KEY = process.env.SUN_KEY;
-
-
 
 // je recois le message
 const receiveMsg = (req, res) => {
-
   // if (!req.body.message) {
   //     return res.status(400).send({ status: 'Erreur', message: 'Un message est requis.' });
   // }
@@ -18,10 +14,13 @@ const receiveMsg = (req, res) => {
   // console.log(`Message reçu:`,  message);
   // res.status(200).send({ status: 'Succès', message: 'Message reçu avec succès.' });
 
- console.log(`Req.body:`, req.body);
- const data = req.body.data 
-console.log('data', data)
+  console.log(`Req.body:`, req.body);
+  const data = req.body.data;
+  console.log("data", data);
 
+  // verif si le mail correspond à un userId
+
+  res.status(200).send({ status: 'Succès', message: 'Message reçu avec succès.' })
 };
 
 // envoi vers sun
