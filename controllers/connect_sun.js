@@ -41,6 +41,14 @@ const receiveMsg = async (req, res) => {
         .send({ status: "Erreur", message: "Utilisateur non trouvé." });
     }
 
+    // si un user a deja un statusSun renseigné, je veux envoyé une reponse le precisant
+    if (user.statusSUN) {
+      return res.status(409).send({ // Utilisation du code 409 pour indiquer un conflit
+        status: "Conflit",
+        message: `L'utilisateur est déja connecté à un compte pdj ou en attente de l'être.`
+      });
+    }
+
     await user.update({
       statusSUN: "en attente",
       idSUN: idSUN 
