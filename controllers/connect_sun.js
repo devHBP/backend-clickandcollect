@@ -17,7 +17,7 @@ const receiveMsg = async (req, res) => {
 
   console.log("req", req.body.data);
   try {
-    const data = JSON.parse(req.body.data); 
+    const data = req.body.data; 
 
     console.log('data', data)
     const email = data.email;
