@@ -13,37 +13,21 @@ const SUN_KEY = process.env.SUN_KEY;
  * @param {string} secretKey - La clé secrète utilisée pour le déchiffrement.
  * @returns {string} Le message déchiffré.
  */
-function decryptMessage(data) {
-  // Convertit la clé secrète et l'IV de la représentation hexadécimale à un Buffer
-
-//   const iv = Buffer.from(encryptedMessage.iv, 'base64');
-//   console.log('iv from buffer', iv);
-//   const encryptedText = Buffer.from(encryptedMessage.encryptedData, 'hex');
-//   // Crée un déchiffreur avec l'algorithme AES-256-CBC, la clé secrète et l'IV
-//   const decipher = crypto.createDecipheriv(
-//     "aes-256-cbc",
-//     secretKey,
-//     iv
-//   );
-
-//   let decrypted;
-//   try {
-//     decrypted = decipher.update(encryptedText);
-//     decrypted = Buffer.concat([decrypted, decipher.final()]);
-//   } catch (error) {
-//     console.error("Erreur lors du déchiffrement du message dans la fonction:", error);
-//     throw error; // Pour propager l'erreur et permettre son traitement ultérieur
-//   }
-//   // Convertit le Buffer déchiffré en chaîne de caractères et le retourne
-//   return decrypted.toString();
-
-  const key = Buffer.from(SUN_KEY, 'base64');
-  let iv = data.slice(0, 16);
-  let encryptedText = data.slice(16);
-  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+function decryptMessage(encryptedData) {
+  const key = Buffer.from(SUN_KEY, 'base64'); // Assurez-vous que SUN_KEY est correctement formaté
+  
+  // Laravel encode le résultat en Base64, donc décodez-le d'abord
+  const dataBuffer = Buffer.from(encryptedData, 'base64');
+  
+  // Laravel utilise également un IV, qui est typiquement au début du payload chiffré
+  // La taille de l'IV pour AES-256-CBC est toujours de 16 octets
+  let iv = dataBuffer.slice(0, 16);
+  let encryptedText = dataBuffer.slice(16);
+  
+  let decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
   let decrypted = decipher.update(encryptedText);
+  
   decrypted = Buffer.concat([decrypted, decipher.final()]);
-
   return decrypted.toString();
 }
 
@@ -71,6 +55,7 @@ const receiveMsg = (req, res) => {
       .send({
         status: "Succès",
         message: "Message reçu et déchiffré avec succès.",
+        decryptedData: decryptedMessage
       });
   } catch (error) {
     console.error("Erreur:", error);
