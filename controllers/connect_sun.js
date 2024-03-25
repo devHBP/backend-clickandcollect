@@ -72,6 +72,39 @@ const receiveMsg = async (req, res) => {
   }
 };
 
+// verification du statusSUN
+const getStatusSun = async (req, res) => {
+
+  const userId = req.query.userId;
+
+  if (!userId) {
+    return res.status(400).send({ message: "Le paramètre userId est requis." });
+  }
+
+  try {
+    const user = await Users.findOne({ where: { userId: userId } });
+
+    if (!user) {
+      return res.status(404).send({ message: "Utilisateur non trouvé." });
+    }
+
+    const statusSUN = user.statusSUN;
+
+    res.send({ statusSUN: statusSUN });
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération du statusSUN",
+      error
+    );
+    res
+      .status(500)
+      .send({
+        message:
+          "Erreur lors de la vérification.",
+      });
+  }
+};
+
 // envoi vers sun
 const sendMessageToExternalAPI = async (message) => {
   try {
@@ -110,4 +143,5 @@ const sendMsg = async (req, res) => {
 module.exports = {
   sendMsg,
   receiveMsg,
+  getStatusSun
 };
