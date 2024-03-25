@@ -6,6 +6,13 @@ const Users = require("../models/BDD/Users");
 
 const SUN_KEY = process.env.SUN_KEY;
 
+
+// Fonction pour valider le format de l'email
+function validateEmail(email) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
+  return re.test(String(email).toLowerCase());
+}
+
 // je recois le message
 const receiveMsg = async (req, res) => {
   // if (!req.body.message) {
@@ -18,13 +25,16 @@ const receiveMsg = async (req, res) => {
   console.log("req", req.body.data);
   try {
     const data = req.body.data; 
-
-    console.log('data', data)
     const email = data.email;
     const idSUN = data.id
 
+    // Validation du format de l'email
+    if (!validateEmail(email)) {
+      return res.status(400).send({ status: "Erreur", message: "Le format de l'email est invalide." });
+    }
+
     // Recherche de l'utilisateur par email
-    const user = await Users.findOne({ email: email });
+    const user = await Users.findOne({ where: { email: email } });
     if (!user) {
       return res
         .status(404)
