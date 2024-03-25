@@ -60,7 +60,6 @@ const receiveMsg = async (req, res) => {
       .send({
         status: "Erreur",
         message: "Erreur lors du traitement de la requête.",
-        error: error.message,
       });
   }
 };

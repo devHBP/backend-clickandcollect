@@ -73,7 +73,7 @@ const Users = db.define('Users', {
         allowNull: true,
       },
       idSUN: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: true,
       },
       genre: {
