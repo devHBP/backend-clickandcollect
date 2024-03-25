@@ -2,11 +2,12 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const axios = require("axios");
 const crypto = require("crypto");
+const Users = require("../models/BDD/Users");
 
 const SUN_KEY = process.env.SUN_KEY;
 
 // je recois le message
-const receiveMsg = (req, res) => {
+const receiveMsg = async (req, res) => {
   // if (!req.body.message) {
   //     return res.status(400).send({ status: 'Erreur', message: 'Un message est requis.' });
   // }
@@ -14,13 +15,44 @@ const receiveMsg = (req, res) => {
   // console.log(`Message reçu:`,  message);
   // res.status(200).send({ status: 'Succès', message: 'Message reçu avec succès.' });
 
-  console.log(`Req.body:`, req.body);
-  const data = req.body.data;
-  console.log("data", data);
+  console.log("req", req.body.data);
+  try {
+    const data = JSON.parse(req.body.data); 
 
-  // verif si le mail correspond à un userId
+    console.log('data', data)
+    const email = data.email;
+    const idSUN = data.id
 
-  res.status(200).send({ status: 'Succès', message: 'Message reçu avec succès.' })
+    // Recherche de l'utilisateur par email
+    const user = await Users.findOne({ email: email });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ status: "Erreur", message: "Utilisateur non trouvé." });
+    }
+
+    await user.update({
+      statusSUN: "en attente",
+      idSUN: idSUN 
+    });
+    console.log(`Utilisateur trouvé:`, user);
+    res
+      .status(200)
+      .send({
+        status: "Succès",
+        message: "Message reçu et utilisateur trouvé avec succès.",
+        user,
+      });
+  } catch (error) {
+    console.error("Erreur:", error);
+    return res
+      .status(500)
+      .send({
+        status: "Erreur",
+        message: "Erreur lors du traitement de la requête.",
+        error: error.message,
+      });
+  }
 };
 
 // envoi vers sun
