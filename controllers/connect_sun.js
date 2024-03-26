@@ -116,8 +116,14 @@ const sendMsgToSun = async (req, res) => {
       idSUN
     });
 
+    const user = await Users.findOne({ where: { userId: userId } });
+
     if (response.data.status === 'success') { 
       console.log("Confirmé");
+      
+      await user.update({
+        statusSUN: "confirmé",
+      });
     }
     if (response.data.status === 'error') { 
       console.log("erreur de data");
