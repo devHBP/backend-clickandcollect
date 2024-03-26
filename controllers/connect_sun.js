@@ -105,14 +105,21 @@ const getStatusSun = async (req, res) => {
 };
 
 // envoi vers sun
-const sendMessageToExternalAPI = async (message) => {
+const sendMsgToSun = async (req, res) => {
+
+  const { userId, idSUN } = req.body;
+
   try {
     const apiUrl = process.env.API_SUN;
     const response = await axios.post(apiUrl, {
-      message: message,
+      userId, 
+      idSUN
     });
-    console.log("Réponse de l'API externe:", response.data);
-    return response.data;
+    res.status(200).send({
+      status: 'success',
+      message: 'Message bien reçu par l\'API externe',
+      data: response.data
+    });
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi du message à l'API externe:",
@@ -122,22 +129,6 @@ const sendMessageToExternalAPI = async (message) => {
   }
 };
 
-// j'envoi le message
-const sendMsg = async (req, res) => {
-  const { message } = req.body;
-  const result = await sendMessageToExternalAPI(message);
-  if (result) {
-    res.status(200).send({
-      status: "Message envoyé avec succès à l'API externe",
-      message: message,
-      response: result,
-    });
-  } else {
-    res
-      .status(500)
-      .send({ error: "Échec de l'envoi du message à l'API externe" });
-  }
-};
 
 // je vide le statusSUN et idSun de ma table User
 const clearStatusSun = async (req, res) => {
@@ -170,7 +161,7 @@ const clearStatusSun = async (req, res) => {
 
 
 module.exports = {
-  sendMsg,
+  sendMsgToSun,
   receiveMsg,
   getStatusSun,
   clearStatusSun

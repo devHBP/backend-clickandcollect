@@ -24,7 +24,7 @@ const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
 const  { createCart, addCartItems, getCart } = require('../controllers/cart')
-const  { sendMsg, receiveMsg, getStatusSun, clearStatusSun } = require('../controllers/connect_sun')
+const  { sendMsgToSun, receiveMsg, getStatusSun, clearStatusSun } = require('../controllers/connect_sun')
 
 
 const router = Router()
@@ -199,7 +199,7 @@ router.post('/addCartItems', addCartItems)
 router.get('/getCart/:cartId', getCart)
 
 //CONNEXION SUN
-router.post('/sendMsg', sendMsg)
+router.post('/sendMsgToSun', sendMsgToSun)
 router.post('/receiveMsg', receiveMsg)
 router.get('/getStatusSun/:userId',getStatusSun)
 router.patch('/clearStatusSun/:userId', clearStatusSun)
