@@ -115,11 +115,19 @@ const sendMsgToSun = async (req, res) => {
       userId, 
       idSUN
     });
-    res.status(200).send({
-      status: 'success',
-      message: 'Message bien reçu par l\'API externe',
-      data: response.data
-    });
+
+    if (response.data.status === 'success') { 
+      console.log("Confirmé");
+    }
+    if (response.data.status === 'error') { 
+      console.log("erreur de data");
+    }
+
+    // res.status(200).send({
+    //   status: 'success',
+    //   message: 'Message bien reçu par l\'API externe',
+    //   data: response.data
+    // });
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi du message à l'API externe:",
