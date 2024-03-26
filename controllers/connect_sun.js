@@ -139,8 +139,39 @@ const sendMsg = async (req, res) => {
   }
 };
 
+// je vide le statusSUN et idSun de ma table User
+const clearStatusSun = async (req, res) => {
+  const userId = req.params.userId;
+
+  if (!userId) {
+    return res.status(400).send({ message: "Le paramètre userId est requis." });
+  }
+
+  try {
+    const user = await Users.findOne({ where: { userId: userId } });
+
+    if (!user) {
+      return res.status(404).send({ message: "Utilisateur non trouvé." });
+    }
+
+    await user.update({
+      statusSUN: null,
+      idSUN: null
+    });
+
+    res.send({ message: "Le statusSUN et l'idSUN ont été réinitialisés avec succès." });
+  } catch (error) {
+    console.error("Erreur lors de la réinitialisation du statusSUN et de l'idSUN", error);
+    res.status(500).send({
+      message: "Erreur lors de la réinitialisation."
+    });
+  }
+};
+
+
 module.exports = {
   sendMsg,
   receiveMsg,
-  getStatusSun
+  getStatusSun,
+  clearStatusSun
 };
