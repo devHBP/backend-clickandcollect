@@ -104,36 +104,33 @@ const getStatusSun = async (req, res) => {
   }
 };
 
-// envoi vers sun
-const sendMsgToSun = async (req, res) => {
+// envoi la confirmation de link vers sun (sun -> pdj)
+const sendConfirmLink = async (req, res) => {
 
-  const { userId, idSUN } = req.body;
+  const { userId, idSUN, email } = req.body;
 
   try {
-    const apiUrl = process.env.API_SUN;
+    const apiUrl = process.env.CONFIRM_LINK_SUN;
     const response = await axios.post(apiUrl, {
       userId, 
-      idSUN
+      idSUN, 
+      email
     });
 
     const user = await Users.findOne({ where: { userId: userId } });
 
     if (response.data.status === 'success') { 
       console.log("Confirmé");
-      
+
       await user.update({
         statusSUN: "confirmé",
       });
     }
     if (response.data.status === 'error') { 
       console.log("erreur de data");
+      // prevenir user de l'erreur
     }
 
-    // res.status(200).send({
-    //   status: 'success',
-    //   message: 'Message bien reçu par l\'API externe',
-    //   data: response.data
-    // });
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi du message à l'API externe:",
@@ -175,7 +172,7 @@ const clearStatusSun = async (req, res) => {
 
 
 module.exports = {
-  sendMsgToSun,
+  sendConfirmLink,
   receiveMsg,
   getStatusSun,
   clearStatusSun
