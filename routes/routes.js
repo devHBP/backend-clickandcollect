@@ -202,6 +202,6 @@ router.get('/getCart/:cartId', getCart)
 router.post('/sendConfirmLink', sendConfirmLink)
 router.post('/receiveMsg', receiveMsg)
 router.get('/getStatusSun/:userId',getStatusSun)
-router.patch('/sendCancelLink/:userId', sendCancelLink)
+router.post('/sendCancelLink', sendCancelLink)
 
 module.exports = router

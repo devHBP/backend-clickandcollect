@@ -144,6 +144,8 @@ const sendCancelLink = async (req, res) => {
 
     const user = await Users.findOne({ where: { userId: userId } });
 
+    console.log("Réponse de l'API Sun:", response.data);
+
     if (response.data.status === "success") {
 
       await user.update({
