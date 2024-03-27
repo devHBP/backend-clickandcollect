@@ -13,15 +13,9 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
-// je recois le message
-const receiveMsg = async (req, res) => {
-  // if (!req.body.message) {
-  //     return res.status(400).send({ status: 'Erreur', message: 'Un message est requis.' });
-  // }
-  // const { message } = req.body;
-  // console.log(`Message reçu:`,  message);
-  // res.status(200).send({ status: 'Succès', message: 'Message reçu avec succès.' });
-
+// je recois la demande de connexion de SUN
+const receiveSunConnection = async (req, res) => {
+  
   console.log("req", req.body.data);
   try {
     const data = req.body.data;
@@ -132,7 +126,7 @@ const sendConfirmLink = async (req, res) => {
   }
 };
 
-// annulation (refus) du link sun
+// Refus du link sun
 const sendCancelLink = async (req, res) => {
   const { idSUN, userId } = req.body;
 
@@ -169,9 +163,11 @@ const sendCancelLink = async (req, res) => {
   }
 };
 
+// Annulation de la demande en cours de link Sun
+
 module.exports = {
   sendConfirmLink,
-  receiveMsg,
+  receiveSunConnection,
   getStatusSun,
   sendCancelLink,
 };
