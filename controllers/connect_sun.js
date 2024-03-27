@@ -53,7 +53,7 @@ const receiveMsg = async (req, res) => {
       statusSUN: "en attente",
       idSUN: idSUN 
     });
-    console.log(`Utilisateur trouvé:`, user);
+    // console.log(`Utilisateur trouvé:`, user);
     res
       .status(200)
       .send({
@@ -107,14 +107,15 @@ const getStatusSun = async (req, res) => {
 // envoi la confirmation de link vers sun (sun -> pdj)
 const sendConfirmLink = async (req, res) => {
 
-  const { userId, idSUN, email } = req.body;
+  const { userId, idSUN } = req.body;
+
+
 
   try {
     const apiUrl = process.env.CONFIRM_LINK_SUN;
     const response = await axios.post(apiUrl, {
       userId, 
       idSUN, 
-      email
     });
 
     const user = await Users.findOne({ where: { userId: userId } });
@@ -141,8 +142,8 @@ const sendConfirmLink = async (req, res) => {
 };
 
 
-// je vide le statusSUN et idSun de ma table User
-const clearStatusSun = async (req, res) => {
+// annulation (refus) du link sun
+const sendCancelLink = async (req, res) => {
   const userId = req.params.userId;
 
   if (!userId) {
@@ -175,5 +176,5 @@ module.exports = {
   sendConfirmLink,
   receiveMsg,
   getStatusSun,
-  clearStatusSun
+  sendCancelLink
 };
