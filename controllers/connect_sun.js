@@ -112,11 +112,14 @@ const sendConfirmLink = async (req, res) => {
       await user.update({
         statusSUN: "confirmé",
       });
+
+      res.status(200).send({
+        status: "success",
+        message: "confirmation avec succes.",
+        user,
+      });
     }
-    if (response.data.status === "error") {
-      console.log("erreur de data");
-      // prevenir user de l'erreur
-    }
+   
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi du message à l'API externe:",
@@ -149,11 +152,13 @@ const sendCancelLink = async (req, res) => {
 
       console.log("Confirmé");
 
+      res.status(200).send({
+        status: "success",
+        message: "annulation avec succes.",
+        user,
+      });
     }
-    if (response.data.status === "error") {
-      console.log("erreur de data");
-      // prevenir user de l'erreur
-    }
+   
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi du message à l'API externe:",
