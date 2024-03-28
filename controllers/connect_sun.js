@@ -187,7 +187,7 @@ const sendConnexionRequest = async (req, res) => {
         statusSUN: "en attente",
       });
       res.status(200).send({
-        status: "Succès",
+        status: "success",
         message: "Data envoyé avec succes.",
         user,
       });
