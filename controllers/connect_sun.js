@@ -98,7 +98,7 @@ const sendConfirmLink = async (req, res) => {
   const { userId, idSUN } = req.body;
 
   try {
-    const apiUrl = process.env.CONFIRM_LINK_SUN;
+    const apiUrl = process.env.CONFIRM_LINK_FROM_SUN;
     const response = await axios.post(apiUrl, {
       userId,
       idSUN,
@@ -131,7 +131,7 @@ const sendCancelLink = async (req, res) => {
   const { idSUN, userId } = req.body;
 
   try {
-    const apiUrl = process.env.CANCEL_LINK_SUN;
+    const apiUrl = process.env.CANCEL_LINK_FROM_SUN;
     const response = await axios.post(apiUrl, {
       idSUN,
     });
@@ -169,7 +169,7 @@ const sendCancelLink = async (req, res) => {
 const sendConnexionRequest = async (req, res) => {
   const { userId, email } = req.body;
 
-  console.log('req', req)
+  console.log('req', req.body)
   try {
     const apiUrl = process.env.DEMAND_LINK_TO_SUN;
     const response = await axios.post(apiUrl, {
