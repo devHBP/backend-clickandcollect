@@ -179,14 +179,15 @@ const sendConnexionRequest = async (req, res) => {
 
     const user = await Users.findOne({ where: { userId: userId } });
 
-    if (response.data.status === "success") {
+    console.log('response de sun', res.data)
+    if (res.data.status === "success") {
       console.log("Demande En attente");
 
       await user.update({
         statusSUN: "en attente",
       });
     }
-    if (response.data.status === "error") {
+    if (res.data.status === "error") {
       console.log("erreur de data");
       // prevenir user de l'erreur
     }
@@ -198,6 +199,8 @@ const sendConnexionRequest = async (req, res) => {
     return null;
   }
 };
+
+// confirmation de link pdj -> sun
 
 module.exports = {
   sendConfirmLink,
