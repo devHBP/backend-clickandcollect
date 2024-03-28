@@ -186,17 +186,20 @@ const sendConnexionRequest = async (req, res) => {
       await user.update({
         statusSUN: "en attente",
       });
-    }
-    if (response.data.status === "error") {
-      console.log("erreur de data");
-      // prevenir user de l'erreur
+      res.status(200).send({
+        status: "Succès",
+        message: "Data envoyé avec succes.",
+        user,
+      });
     }
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi du message à l'API externe:",
       error.response ? error.response.data : error.message
     );
-    return null;
+    res.status(500).send({
+      message: "Erreur lors de l'envoi.",
+    });
   }
 };
 
