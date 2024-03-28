@@ -179,7 +179,7 @@ const sendConnexionRequest = async (req, res) => {
 
     const user = await Users.findOne({ where: { userId: userId } });
 
-    console.log('response de sun', res.data)
+    console.log('response de sun', res)
     if (res.data.status === "success") {
       console.log("Demande En attente");
 
