@@ -179,15 +179,15 @@ const sendConnexionRequest = async (req, res) => {
 
     const user = await Users.findOne({ where: { userId: userId } });
 
-    console.log('response de sun', res)
-    if (res.data.status === "success") {
+    console.log('response de sun', response)
+    if (response.data.status === "success") {
       console.log("Demande En attente");
 
       await user.update({
         statusSUN: "en attente",
       });
     }
-    if (res.data.status === "error") {
+    if (response.data.status === "error") {
       console.log("erreur de data");
       // prevenir user de l'erreur
     }
