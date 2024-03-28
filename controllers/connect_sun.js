@@ -165,9 +165,44 @@ const sendCancelLink = async (req, res) => {
 
 // Annulation de la demande en cours de link Sun
 
+// Demande de link PDJ -> SUN
+const sendConnexionRequest = async (req, res) => {
+  const { userId, email } = req.body;
+
+  console.log('req', req)
+  try {
+    const apiUrl = process.env.DEMAND_LINK_TO_SUN;
+    const response = await axios.post(apiUrl, {
+      userId,
+      email,
+    });
+
+    const user = await Users.findOne({ where: { userId: userId } });
+
+    if (response.data.status === "success") {
+      console.log("Demande En attente");
+
+      await user.update({
+        statusSUN: "en attente",
+      });
+    }
+    if (response.data.status === "error") {
+      console.log("erreur de data");
+      // prevenir user de l'erreur
+    }
+  } catch (error) {
+    console.error(
+      "Erreur lors de l'envoi du message à l'API externe:",
+      error.response ? error.response.data : error.message
+    );
+    return null;
+  }
+};
+
 module.exports = {
   sendConfirmLink,
   receiveSunConnection,
   getStatusSun,
   sendCancelLink,
+  sendConnexionRequest,
 };
