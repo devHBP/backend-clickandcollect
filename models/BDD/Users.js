@@ -92,6 +92,13 @@ const Users = db.define('Users', {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      emailSun: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          isEmail: true, 
+        },
+      },
 })
 
 //TestUsers.belongsTo(TestStores, { foreignKey: 'id_magasin' });
