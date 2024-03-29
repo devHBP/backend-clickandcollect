@@ -202,8 +202,7 @@ const sendConnexionRequest = async (req, res) => {
 
 // confirmation de link pdj -> sun
 const receiveConfirmationFromSun = async (req, res) => {
-  console.log("req", req.body.data);
-  // envoi de l'idSUn, idpdj (userid)
+  // console.log("req", req.body.data);
 
   const data = req.body.data;
   const userId = data.idPdj;
@@ -272,7 +271,7 @@ const receiveCancellationFromSun = async (req, res) => {
 
 // annulation de sun suite à la demande de connexion coté SUN
 const receiveDenialFromSun = async (req, res) => {
-  console.log("req", req.body.data);
+  // console.log("req", req.body.data);
 
   const data = req.body.data;
   const idSUN = data.idSun;
@@ -285,7 +284,6 @@ const receiveDenialFromSun = async (req, res) => {
         .status(404)
         .send({ status: "Erreur", message: "Utilisateur non trouvé." });
     }
-    console.log
 
     await user.update({
       statusSUN: null,
