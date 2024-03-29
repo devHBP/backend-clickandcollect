@@ -200,9 +200,10 @@ router.get('/getCart/:cartId', getCart)
 
 //CONNEXION SUN -> PDJ
 router.post('/ConfirmationDemandeSun', ConfirmationDemandeSun)
+router.post('/RefusApresDemandeSun', RefusApresDemandeSun)
 router.post('/receiveSunConnection', receiveSunConnection)
 router.get('/getStatusSun/:userId',getStatusSun)
-router.post('/sendCancelLink', sendCancelLink)
+
 router.post('/receiveDenialFromSun', receiveDenialFromSun)
 // CONNEXION PDJ -> SUN
 router.post('/sendConnexionRequest', sendConnexionRequest)

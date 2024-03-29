@@ -125,7 +125,7 @@ const ConfirmationDemandeSun = async (req, res) => {
 };
 
 // Refus du link sun
-const sendCancelLink = async (req, res) => {
+const RefusApresDemandeSun = async (req, res) => {
   const { idSUN, userId } = req.body;
 
   try {
@@ -136,15 +136,15 @@ const sendCancelLink = async (req, res) => {
 
     const user = await Users.findOne({ where: { userId: userId } });
 
-    console.log("Réponse de l'API Sun:", response.data);
 
     if (response.data.status === "success") {
       await user.update({
         statusSUN: null,
         idSUN: null,
+        emailSUN:null
       });
 
-      console.log("Confirmé");
+      console.log("Annulation de la demande de sun bien prise en compte");
 
       res.status(200).send({
         status: "success",
@@ -308,7 +308,7 @@ module.exports = {
   ConfirmationDemandeSun,
   receiveSunConnection,
   getStatusSun,
-  sendCancelLink,
+  RefusApresDemandeSun,
   sendConnexionRequest,
   receiveConfirmationFromSun,
   receiveCancellationFromSun,
