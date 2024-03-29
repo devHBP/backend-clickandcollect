@@ -1,10 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const axios = require("axios");
-const crypto = require("crypto");
 const Users = require("../models/BDD/Users");
-
-const SUN_KEY = process.env.SUN_KEY;
 
 // Fonction pour valider le format de l'email
 function validateEmail(email) {
@@ -190,6 +187,7 @@ const sendConnexionRequest = async (req, res) => {
 
       await user.update({
         statusSUN: "en attente",
+        emailSun: email,
       });
       res.status(200).send({
         status: "success",
@@ -209,6 +207,43 @@ const sendConnexionRequest = async (req, res) => {
 };
 
 // confirmation de link pdj -> sun
+const receiveConfirmationFromSun = async (req, res) => {
+  
+  console.log("req", req.body.data);
+  // envoi de l'idSUn, idpdj (userid)
+
+  const data = req.body.data;
+    const userId = data.idPdj;
+    const idSUN = data.idSun;
+
+  try {
+  
+    // Recherche de l'utilisateur par email
+    const user = await Users.findOne({ where: { userId: userId } });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ status: "Erreur", message: "Utilisateur non trouvé." });
+    }
+
+    console.log('user trouvé', user)
+    await user.update({
+      statusSUN: "confirmé",
+      idSUN: idSUN,
+    });
+    res.status(200).send({
+      status: "Succès",
+      message: "Confirmation de sun.",
+      user,
+    });
+  } catch (error) {
+    console.error("Erreur:", error);
+    return res.status(500).send({
+      status: "Erreur",
+      message: "Erreur lors du traitement de la requête.",
+    });
+  }
+};
 
 module.exports = {
   sendConfirmLink,
@@ -216,4 +251,5 @@ module.exports = {
   getStatusSun,
   sendCancelLink,
   sendConnexionRequest,
+  receiveConfirmationFromSun
 };
