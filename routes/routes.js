@@ -24,7 +24,7 @@ const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
 const  { createCart, addCartItems, getCart } = require('../controllers/cart')
-const  { sendConfirmLink, receiveSunConnection, getStatusSun, sendCancelLink, sendConnexionRequest , receiveConfirmationFromSun, receiveCancellationFromSun} = require('../controllers/connect_sun')
+const  { sendConfirmLink, receiveSunConnection, getStatusSun, sendCancelLink, sendConnexionRequest , receiveConfirmationFromSun, receiveCancellationFromSun, receiveDenialFromSun} = require('../controllers/connect_sun')
 
 
 const router = Router()
@@ -203,8 +203,11 @@ router.post('/sendConfirmLink', sendConfirmLink)
 router.post('/receiveSunConnection', receiveSunConnection)
 router.get('/getStatusSun/:userId',getStatusSun)
 router.post('/sendCancelLink', sendCancelLink)
+router.post('/receiveDenialFromSun', receiveDenialFromSun)
 // CONNEXION PDJ -> SUN
 router.post('/sendConnexionRequest', sendConnexionRequest)
 router.post('/receiveConfirmationFromSun', receiveConfirmationFromSun) 
 router.post('/receiveCancellationFromSun', receiveCancellationFromSun)
+
+
 module.exports = router

@@ -234,8 +234,10 @@ const receiveConfirmationFromSun = async (req, res) => {
     });
   }
 };
+
+//annulation de Sun suite à la demande de connexion de Pdj
 const receiveCancellationFromSun = async (req, res) => {
-  console.log("req", req.body.data);
+  // console.log("req", req.body.data);
 
   const data = req.body.data;
   const userId = data.idPdj;
@@ -267,6 +269,40 @@ const receiveCancellationFromSun = async (req, res) => {
   }
 };
 
+// annulation de sun suite à la demande de connexion coté SUN
+const receiveDenialFromSun = async (req, res) => {
+  console.log("req", req.body.data);
+
+  const data = req.body.data;
+  const idSUN = data.idSun;
+
+  try {
+    // Recherche de l'utilisateur par email
+    const user = await Users.findOne({ where: { idSUN: idSUN } });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ status: "Erreur", message: "Utilisateur non trouvé." });
+    }
+    console.log
+
+    await user.update({
+      statusSUN: null,
+      idSUN: null
+    });
+    res.status(200).send({
+      status: "success",
+      message: "Annulation de sun.",
+      user,
+    });
+  } catch (error) {
+    console.error("Erreur:", error);
+    return res.status(500).send({
+      status: "Erreur",
+      message: "Erreur lors du traitement de la requête.",
+    });
+  }
+};
 module.exports = {
   sendConfirmLink,
   receiveSunConnection,
@@ -274,5 +310,6 @@ module.exports = {
   sendCancelLink,
   sendConnexionRequest,
   receiveConfirmationFromSun,
-  receiveCancellationFromSun
+  receiveCancellationFromSun,
+  receiveDenialFromSun
 };
