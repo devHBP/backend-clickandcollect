@@ -89,7 +89,7 @@ const getStatusSun = async (req, res) => {
 };
 
 // envoi la confirmation de link vers sun (sun -> pdj)
-const sendConfirmLink = async (req, res) => {
+const ConfirmationDemandeSun = async (req, res) => {
   const { userId, idSUN } = req.body;
 
   console.log('req.body', req.body)
@@ -305,7 +305,7 @@ const receiveDenialFromSun = async (req, res) => {
   }
 };
 module.exports = {
-  sendConfirmLink,
+  ConfirmationDemandeSun,
   receiveSunConnection,
   getStatusSun,
   sendCancelLink,
