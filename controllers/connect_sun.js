@@ -44,7 +44,7 @@ const receiveSunConnection = async (req, res) => {
     }
 
     await user.update({
-      statusSUN: "en attente",
+      statusSUN: "en attente sun",
       idSUN: idSUN,
       emailSun: emailSun
     });
@@ -92,6 +92,7 @@ const getStatusSun = async (req, res) => {
 const sendConfirmLink = async (req, res) => {
   const { userId, idSUN } = req.body;
 
+  console.log('req.body', req.body)
   try {
     const apiUrl = process.env.CONFIRM_LINK_FROM_SUN;
     const response = await axios.post(apiUrl, {
@@ -235,7 +236,7 @@ const receiveConfirmationFromSun = async (req, res) => {
   }
 };
 
-//annulation de Sun suite à la demande de connexion de Pdj
+//annulation de Sun suite à la demande de connexion de sun
 const receiveCancellationFromSun = async (req, res) => {
   // console.log("req", req.body.data);
 
