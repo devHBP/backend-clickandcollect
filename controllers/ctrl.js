@@ -179,7 +179,7 @@ const updateOneUser = (req, res) => {
 
   Users.findByPk(id)
     .then((user) => {
-      console.log("User found !!");
+      console.log(`${user.firstname} ${user.lastname }connecté !!`);
       if (!user) {
         console.log("error");
         return res.status(404).json({ msg: "User not found (updateone)" });

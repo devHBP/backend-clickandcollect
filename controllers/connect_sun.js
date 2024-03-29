@@ -19,7 +19,7 @@ const receiveSunConnection = async (req, res) => {
     const idSUN = data.id;
 
     // Validation du format de l'email
-    if (!validateEmail(email)) {
+    if (!validateEmail(emailSun)) {
       return res.status(400).send({
         status: "Erreur",
         message: "Le format de l'email est invalide.",
@@ -27,7 +27,7 @@ const receiveSunConnection = async (req, res) => {
     }
 
     // Recherche de l'utilisateur par email
-    const user = await Users.findOne({ where: { email: email } });
+    const user = await Users.findOne({ where: { email: emailSun } });
     if (!user) {
       return res
         .status(404)
