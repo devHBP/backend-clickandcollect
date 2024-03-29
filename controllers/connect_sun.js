@@ -12,7 +12,6 @@ function validateEmail(email) {
 
 // je recois la demande de connexion de SUN
 const receiveSunConnection = async (req, res) => {
-  
   console.log("req", req.body.data);
   try {
     const data = req.body.data;
@@ -21,12 +20,10 @@ const receiveSunConnection = async (req, res) => {
 
     // Validation du format de l'email
     if (!validateEmail(email)) {
-      return res
-        .status(400)
-        .send({
-          status: "Erreur",
-          message: "Le format de l'email est invalide.",
-        });
+      return res.status(400).send({
+        status: "Erreur",
+        message: "Le format de l'email est invalide.",
+      });
     }
 
     // Recherche de l'utilisateur par email
@@ -116,7 +113,6 @@ const sendConfirmLink = async (req, res) => {
         user,
       });
     }
-   
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi du message à l'API externe:",
@@ -141,7 +137,6 @@ const sendCancelLink = async (req, res) => {
     console.log("Réponse de l'API Sun:", response.data);
 
     if (response.data.status === "success") {
-
       await user.update({
         statusSUN: null,
         idSUN: null,
@@ -155,7 +150,6 @@ const sendCancelLink = async (req, res) => {
         user,
       });
     }
-   
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi du message à l'API externe:",
@@ -171,7 +165,7 @@ const sendCancelLink = async (req, res) => {
 const sendConnexionRequest = async (req, res) => {
   const { userId, email } = req.body;
 
-  console.log('req', req.body)
+  // console.log('req', req.body)
   try {
     const apiUrl = process.env.DEMAND_LINK_TO_SUN;
     const response = await axios.post(apiUrl, {
@@ -181,7 +175,6 @@ const sendConnexionRequest = async (req, res) => {
 
     const user = await Users.findOne({ where: { userId: userId } });
 
-    console.log('response de sun', response)
     if (response.data.status === "success") {
       console.log("Demande En attente");
 
@@ -208,16 +201,14 @@ const sendConnexionRequest = async (req, res) => {
 
 // confirmation de link pdj -> sun
 const receiveConfirmationFromSun = async (req, res) => {
-  
   console.log("req", req.body.data);
   // envoi de l'idSUn, idpdj (userid)
 
   const data = req.body.data;
-    const userId = data.idPdj;
-    const idSUN = data.idSun;
+  const userId = data.idPdj;
+  const idSUN = data.idSun;
 
   try {
-  
     // Recherche de l'utilisateur par email
     const user = await Users.findOne({ where: { userId: userId } });
     if (!user) {
@@ -226,14 +217,45 @@ const receiveConfirmationFromSun = async (req, res) => {
         .send({ status: "Erreur", message: "Utilisateur non trouvé." });
     }
 
-    console.log('user trouvé', user)
     await user.update({
       statusSUN: "confirmé",
       idSUN: idSUN,
     });
     res.status(200).send({
-      status: "Succès",
+      status: "success",
       message: "Confirmation de sun.",
+      user,
+    });
+  } catch (error) {
+    console.error("Erreur:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Erreur lors du traitement de la requête.",
+    });
+  }
+};
+const receiveCancellationFromSun = async (req, res) => {
+  console.log("req", req.body.data);
+
+  const data = req.body.data;
+  const userId = data.idPdj;
+
+  try {
+    // Recherche de l'utilisateur par email
+    const user = await Users.findOne({ where: { userId: userId } });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ status: "Erreur", message: "Utilisateur non trouvé." });
+    }
+
+    await user.update({
+      statusSUN: null,
+      emailSun: null,
+    });
+    res.status(200).send({
+      status: "success",
+      message: "Annulation de sun.",
       user,
     });
   } catch (error) {
@@ -251,5 +273,6 @@ module.exports = {
   getStatusSun,
   sendCancelLink,
   sendConnexionRequest,
-  receiveConfirmationFromSun
+  receiveConfirmationFromSun,
+  receiveCancellationFromSun
 };
