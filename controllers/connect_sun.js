@@ -15,7 +15,7 @@ const receiveSunConnection = async (req, res) => {
   console.log("req", req.body.data);
   try {
     const data = req.body.data;
-    const email = data.email;
+    const emailSun = data.email;
     const idSUN = data.id;
 
     // Validation du format de l'email
@@ -46,6 +46,7 @@ const receiveSunConnection = async (req, res) => {
     await user.update({
       statusSUN: "en attente",
       idSUN: idSUN,
+      emailSun: emailSun
     });
     // console.log(`Utilisateur trouvé:`, user);
     res.status(200).send({
@@ -288,7 +289,8 @@ const receiveDenialFromSun = async (req, res) => {
 
     await user.update({
       statusSUN: null,
-      idSUN: null
+      idSUN: null,
+      emailSun: null
     });
     res.status(200).send({
       status: "success",
