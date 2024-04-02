@@ -238,10 +238,10 @@ const receiveConfirmationFromSun = async (req, res) => {
 //annulation apres erreur pdj  - receiveCancellationFromSun
 //AnnulationApresErreurPdj
 const AnnulationApresErreurPdj = async (req, res) => {
-  // console.log("req", req.body.data);
+  console.log("req", req.body.data);
 
   const data = req.body.data;
-  const userId = data.idPdj;
+  const userId = data.userId;
 
   try {
     // Recherche de l'utilisateur par email
