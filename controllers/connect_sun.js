@@ -161,10 +161,7 @@ const RefusApresDemandeSun = async (req, res) => {
   }
 };
 
-// Annulation de la demande en cours de link Sun
 
-
-// TST ICI = DemandeConnexionPdjToSun
 // Demande de link PDJ -> SUN
 const DemandeConnexionPdjToSun = async (req, res) => {
   const { userId, email } = req.body;
@@ -238,8 +235,9 @@ const receiveConfirmationFromSun = async (req, res) => {
   }
 };
 
-//annulation de Sun suite à la demande de connexion de sun
-const receiveCancellationFromSun = async (req, res) => {
+//annulation apres erreur pdj  - receiveCancellationFromSun
+//AnnulationApresErreurPdj
+const AnnulationApresErreurPdj = async (req, res) => {
   // console.log("req", req.body.data);
 
   const data = req.body.data;
@@ -313,6 +311,6 @@ module.exports = {
   RefusApresDemandeSun,
   DemandeConnexionPdjToSun,
   receiveConfirmationFromSun,
-  receiveCancellationFromSun,
+  AnnulationApresErreurPdj,
   receiveDenialFromSun
 };
