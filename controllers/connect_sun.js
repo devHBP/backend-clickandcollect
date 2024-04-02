@@ -240,8 +240,10 @@ const receiveConfirmationFromSun = async (req, res) => {
 const AnnulationApresErreurPdj = async (req, res) => {
   console.log("req", req.body);
 
-  // const data = req.body.data;
-  // const userId = data.userId;
+  const data = req.body;
+  const userId = data.userId;
+
+  console.log('userId', userId)
 
   try {
     // Recherche de l'utilisateur par email
