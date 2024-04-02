@@ -24,7 +24,7 @@ const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
 const  { createCart, addCartItems, getCart } = require('../controllers/cart')
-const  { ConfirmationDemandeSun, HandleDemandeConnexionSunToPdj, getStatusSun, RefusApresDemandeSun, DemandeConnexionPdjToSun , HandleConfirmationApresDemandeSun, AnnulationApresErreurPdj, receiveDenialFromSun} = require('../controllers/connect_sun')
+const  { ConfirmationDemandeSun, HandleDemandeConnexionSunToPdj, getStatusSun, RefusApresDemandeSun, DemandeConnexionPdjToSun , HandleConfirmationApresDemandePdj, AnnulationApresErreurPdj, receiveDenialFromSun} = require('../controllers/connect_sun')
 
 
 const router = Router()
@@ -207,7 +207,7 @@ router.get('/getStatusSun/:userId',getStatusSun)
 router.post('/receiveDenialFromSun', receiveDenialFromSun)
 // CONNEXION PDJ -> SUN
 router.post('/DemandeConnexionPdjToSun', DemandeConnexionPdjToSun)
-router.post('/HandleConfirmationApresDemandeSun', HandleConfirmationApresDemandeSun) 
+router.post('/HandleConfirmationApresDemandePdj', HandleConfirmationApresDemandePdj) 
 router.post('/AnnulationApresErreurPdj', AnnulationApresErreurPdj) 
 
 

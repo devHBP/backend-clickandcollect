@@ -200,9 +200,8 @@ const DemandeConnexionPdjToSun = async (req, res) => {
   }
 };
 
-//HandleConfirmationApresDemandeSun
-// confirmation de link pdj -> sun    -- receiveConfirmationFromSun
-const HandleConfirmationApresDemandeSun = async (req, res) => {
+// confirmation : sun clique sur " confirmer"   -- receiveConfirmationFromSun
+const HandleConfirmationApresDemandePdj = async (req, res) => {
   // console.log("req", req.body.data);
 
   const data = req.body.data;
@@ -314,7 +313,7 @@ module.exports = {
   getStatusSun,
   RefusApresDemandeSun,
   DemandeConnexionPdjToSun,
-  HandleConfirmationApresDemandeSun,
+  HandleConfirmationApresDemandePdj,
   AnnulationApresErreurPdj,
   receiveDenialFromSun
 };
