@@ -141,7 +141,7 @@ const RefusApresDemandeSun = async (req, res) => {
       await user.update({
         statusSUN: null,
         idSUN: null,
-        emailSUN:null
+        emailSun:null
       });
 
       console.log("Annulation de la demande de sun bien prise en compte");
@@ -163,8 +163,10 @@ const RefusApresDemandeSun = async (req, res) => {
 
 // Annulation de la demande en cours de link Sun
 
+
+// TST ICI = DemandeConnexionPdjToSun
 // Demande de link PDJ -> SUN
-const sendConnexionRequest = async (req, res) => {
+const DemandeConnexionPdjToSun = async (req, res) => {
   const { userId, email } = req.body;
 
   // console.log('req', req.body)
@@ -309,7 +311,7 @@ module.exports = {
   receiveSunConnection,
   getStatusSun,
   RefusApresDemandeSun,
-  sendConnexionRequest,
+  DemandeConnexionPdjToSun,
   receiveConfirmationFromSun,
   receiveCancellationFromSun,
   receiveDenialFromSun
