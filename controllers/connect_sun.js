@@ -10,8 +10,8 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
-// je recois la demande de connexion de SUN
-const receiveSunConnection = async (req, res) => {
+// je recois la demande de connexion de SUN - receiveSunConnection
+const HandleDemandeConnexionSunToPdj = async (req, res) => {
   console.log("req", req.body.data);
   try {
     const data = req.body.data;
@@ -88,7 +88,7 @@ const getStatusSun = async (req, res) => {
   }
 };
 
-// envoi la confirmation de link vers sun (sun -> pdj)
+// envoi la confirmation de link vers sun (sun -> pdj) - pdj clique sur "confirmer"
 const ConfirmationDemandeSun = async (req, res) => {
   const { userId, idSUN } = req.body;
 
@@ -124,7 +124,7 @@ const ConfirmationDemandeSun = async (req, res) => {
   }
 };
 
-// Refus du link sun
+// Refus du link sun - pdj refuse 
 const RefusApresDemandeSun = async (req, res) => {
   const { idSUN, userId } = req.body;
 
@@ -243,7 +243,7 @@ const AnnulationApresErreurPdj = async (req, res) => {
   const data = req.body;
   const userId = data.userId;
 
-  console.log('userId', userId)
+  // console.log('userId', userId)
 
   try {
     // Recherche de l'utilisateur par email
@@ -272,6 +272,7 @@ const AnnulationApresErreurPdj = async (req, res) => {
   }
 };
 
+// Annulation après erreur SUN
 // annulation de sun suite à la demande de connexion coté SUN
 const receiveDenialFromSun = async (req, res) => {
   // console.log("req", req.body.data);
@@ -308,7 +309,7 @@ const receiveDenialFromSun = async (req, res) => {
 };
 module.exports = {
   ConfirmationDemandeSun,
-  receiveSunConnection,
+  HandleDemandeConnexionSunToPdj,
   getStatusSun,
   RefusApresDemandeSun,
   DemandeConnexionPdjToSun,
