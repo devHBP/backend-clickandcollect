@@ -305,8 +305,7 @@ const HandleAnnulationApresErreurSun = async (req, res) => {
   }
 };
 
-
-// Pdj annule sa propre demande de link vers 
+//OK -- Pdj annule sa propre demande de link vers 
 const AnnulationApresErreurPdj = async (req, res) => {
   const { userId } = req.body;
 
@@ -325,7 +324,7 @@ const AnnulationApresErreurPdj = async (req, res) => {
         emailSun: null,
       });
 
-      console.log("pdj annule sa propre demande");
+      // console.log("pdj annule sa propre demande");
 
       res.status(200).send({
         status: "success",
@@ -341,44 +340,6 @@ const AnnulationApresErreurPdj = async (req, res) => {
     return null;
   }
 }
-
-// - receiveCancellationFromSun
-//AnnulationApresErreurPdj - HandleAnnulationApresErreurSUn
-// const AnnulationApresErreurPdj = async (req, res) => {
-
-//   console.log("req", req.body);
-
-//   const data = req.body;
-//   const userId = data.userId;
-
-//   // console.log('userId', userId)
-
-//   try {
-//     // Recherche de l'utilisateur par email
-//     const user = await Users.findOne({ where: { userId: userId } });
-//     if (!user) {
-//       return res
-//         .status(404)
-//         .send({ status: "Erreur", message: "Utilisateur non trouvé." });
-//     }
-
-//     await user.update({
-//       statusSUN: null,
-//       emailSun: null,
-//     });
-//     res.status(200).send({
-//       status: "success",
-//       message: "Annulation de sun.",
-//       user,
-//     });
-//   } catch (error) {
-//     console.error("Erreur:", error);
-//     return res.status(500).send({
-//       status: "Erreur",
-//       message: "Erreur lors du traitement de la requête.",
-//     });
-//   }
-// };
 
 
 module.exports = {
