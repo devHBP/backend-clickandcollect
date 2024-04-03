@@ -144,7 +144,7 @@ const RefusApresDemandeSun = async (req, res) => {
         emailSun:null
       });
 
-      console.log("Annulation de la demande de sun bien prise en compte");
+      // console.log("Annulation de la demande de sun bien prise en compte");
 
       res.status(200).send({
         status: "success",
@@ -160,7 +160,6 @@ const RefusApresDemandeSun = async (req, res) => {
     return null;
   }
 };
-
 
 // OK -- Demande de link PDJ -> SUN
 const DemandeConnexionPdjToSun = async (req, res) => {
@@ -235,6 +234,114 @@ const HandleConfirmationApresDemandePdj = async (req, res) => {
   }
 };
 
+// OK -- sun refuse la demande de pdj
+const HandleRefusApresDemandePdj = async (req, res) => {
+  // console.log("req HandleRefusApresDemandePdj", req.body.data);
+
+  const data = req.body.data;
+  const userId = data.idPdj;
+
+  try {
+    // Recherche de l'utilisateur par email
+    const user = await Users.findOne({ where: { userId: userId } });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ status: "Erreur", message: "Utilisateur non trouvé." });
+    }
+
+    await user.update({
+      statusSUN: null,
+      idSUN: null,
+      emailSun: null
+    });
+    res.status(200).send({
+      status: "success",
+      message: "refus de sun suite à la demande de pdj.",
+      user,
+    });
+  } catch (error) {
+    console.error("Erreur:", error);
+    return res.status(500).send({
+      status: "Erreur",
+      message: "Erreur lors du traitement de la requête.",
+    });
+  }
+};
+
+// OK -- Annulation après erreur SUN - HandleAnnulationApresErreurSun - receiveDenialFromSun
+// annulation de sun suite à la demande de connexion coté SUN
+const HandleAnnulationApresErreurSun = async (req, res) => {
+  // console.log("req", req.body.data);
+
+  const data = req.body.data;
+  const idSUN = data.idSun;
+
+  try {
+    // Recherche de l'utilisateur par email
+    const user = await Users.findOne({ where: { idSUN: idSUN } });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ status: "Erreur", message: "Utilisateur non trouvé." });
+    }
+
+    await user.update({
+      statusSUN: null,
+      idSUN: null,
+      emailSun: null
+    });
+    res.status(200).send({
+      status: "success",
+      message: "Annulation de sun.",
+      user,
+    });
+  } catch (error) {
+    console.error("Erreur:", error);
+    return res.status(500).send({
+      status: "Erreur",
+      message: "Erreur lors du traitement de la requête.",
+    });
+  }
+};
+
+
+// Pdj annule sa propre demande de link vers 
+const AnnulationApresErreurPdj = async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const apiUrl = process.env.CANCEL_LINK_TO_SUN;
+    const response = await axios.post(apiUrl, {
+      userId
+    });
+
+    const user = await Users.findOne({ where: { userId: userId } });
+
+
+    if (response.data.status === "success") {
+      await user.update({
+        statusSUN: null,
+        emailSun: null,
+      });
+
+      console.log("pdj annule sa propre demande");
+
+      res.status(200).send({
+        status: "success",
+        message: "annulation avec succes.",
+        user,
+      });
+    }
+  } catch (error) {
+    console.error(
+      "Erreur lors de l'envoi du message à l'API externe:",
+      error.response ? error.response.data : error.message
+    );
+    return null;
+  }
+}
+
 // - receiveCancellationFromSun
 //AnnulationApresErreurPdj - HandleAnnulationApresErreurSUn
 // const AnnulationApresErreurPdj = async (req, res) => {
@@ -273,114 +380,6 @@ const HandleConfirmationApresDemandePdj = async (req, res) => {
 //   }
 // };
 
-// sun refuse la demande de pdj
-const HandleRefusApresDemandePdj = async (req, res) => {
-  console.log("req HandleRefusApresDemandePdj", req.body.data);
-
-  const data = req.body.data;
-  const userId = data.idPdj;
-
-  try {
-    // Recherche de l'utilisateur par email
-    const user = await Users.findOne({ where: { userId: userId } });
-    if (!user) {
-      return res
-        .status(404)
-        .send({ status: "Erreur", message: "Utilisateur non trouvé." });
-    }
-
-    await user.update({
-      statusSUN: null,
-      idSUN: null,
-      emailSun: null
-    });
-    res.status(200).send({
-      status: "success",
-      message: "refus de sun suite à la demande de pdj.",
-      user,
-    });
-  } catch (error) {
-    console.error("Erreur:", error);
-    return res.status(500).send({
-      status: "Erreur",
-      message: "Erreur lors du traitement de la requête.",
-    });
-  }
-};
-
-// Annulation après erreur SUN - HandleAnnulationApresErreurSun - receiveDenialFromSun
-// annulation de sun suite à la demande de connexion coté SUN
-const HandleAnnulationApresErreurSun = async (req, res) => {
-  // console.log("req", req.body.data);
-
-  const data = req.body.data;
-  const idSUN = data.idSun;
-
-  try {
-    // Recherche de l'utilisateur par email
-    const user = await Users.findOne({ where: { idSUN: idSUN } });
-    if (!user) {
-      return res
-        .status(404)
-        .send({ status: "Erreur", message: "Utilisateur non trouvé." });
-    }
-
-    await user.update({
-      statusSUN: null,
-      idSUN: null,
-      emailSun: null
-    });
-    res.status(200).send({
-      status: "success",
-      message: "Annulation de sun.",
-      user,
-    });
-  } catch (error) {
-    console.error("Erreur:", error);
-    return res.status(500).send({
-      status: "Erreur",
-      message: "Erreur lors du traitement de la requête.",
-    });
-  }
-};
-
-
-// ma propre route annulation
-const Annulation = async (req, res) => {
-  const { userId, email } = req.body;
-
-  try {
-    const apiUrl = process.env.CANCEL_LINK;
-    const response = await axios.post(apiUrl, {
-      userId, email,
-    });
-
-    const user = await Users.findOne({ where: { userId: userId } });
-
-
-    if (response.data.status === "success") {
-      await user.update({
-        statusSUN: null,
-        emailSun: null,
-      });
-
-      console.log("pdj annule sa propre demande");
-
-      res.status(200).send({
-        status: "success",
-        message: "annulation avec succes.",
-        user,
-      });
-    }
-  } catch (error) {
-    console.error(
-      "Erreur lors de l'envoi du message à l'API externe:",
-      error.response ? error.response.data : error.message
-    );
-    return null;
-  }
-}
-
 
 module.exports = {
   ConfirmationDemandeSun,
@@ -389,8 +388,7 @@ module.exports = {
   RefusApresDemandeSun,
   DemandeConnexionPdjToSun,
   HandleConfirmationApresDemandePdj,
-  // AnnulationApresErreurPdj,
+  AnnulationApresErreurPdj,
   HandleAnnulationApresErreurSun,
-  Annulation,
   HandleRefusApresDemandePdj
 };
