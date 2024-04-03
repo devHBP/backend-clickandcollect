@@ -124,7 +124,7 @@ const ConfirmationDemandeSun = async (req, res) => {
   }
 };
 
-// Refus du link sun - pdj refuse 
+// 0K -- Refus du link sun - pdj refuse 
 const RefusApresDemandeSun = async (req, res) => {
   const { idSUN, userId } = req.body;
 
@@ -200,7 +200,7 @@ const DemandeConnexionPdjToSun = async (req, res) => {
   }
 };
 
-// confirmation : sun clique sur " confirmer"   -- receiveConfirmationFromSun
+// OK -- confirmation : sun clique sur " confirmer"   -- receiveConfirmationFromSun
 const HandleConfirmationApresDemandePdj = async (req, res) => {
   // console.log("req", req.body.data);
 
@@ -235,15 +235,50 @@ const HandleConfirmationApresDemandePdj = async (req, res) => {
   }
 };
 
-//annulation apres erreur pdj  - receiveCancellationFromSun
-//AnnulationApresErreurPdj
-const AnnulationApresErreurPdj = async (req, res) => {
-  console.log("req", req.body);
+// - receiveCancellationFromSun
+//AnnulationApresErreurPdj - HandleAnnulationApresErreurSUn
+// const AnnulationApresErreurPdj = async (req, res) => {
 
-  const data = req.body;
-  const userId = data.userId;
+//   console.log("req", req.body);
 
-  // console.log('userId', userId)
+//   const data = req.body;
+//   const userId = data.userId;
+
+//   // console.log('userId', userId)
+
+//   try {
+//     // Recherche de l'utilisateur par email
+//     const user = await Users.findOne({ where: { userId: userId } });
+//     if (!user) {
+//       return res
+//         .status(404)
+//         .send({ status: "Erreur", message: "Utilisateur non trouvé." });
+//     }
+
+//     await user.update({
+//       statusSUN: null,
+//       emailSun: null,
+//     });
+//     res.status(200).send({
+//       status: "success",
+//       message: "Annulation de sun.",
+//       user,
+//     });
+//   } catch (error) {
+//     console.error("Erreur:", error);
+//     return res.status(500).send({
+//       status: "Erreur",
+//       message: "Erreur lors du traitement de la requête.",
+//     });
+//   }
+// };
+
+// sun refuse la demande de pdj
+const HandleRefusApresDemandePdj = async (req, res) => {
+  console.log("req HandleRefusApresDemandePdj", req.body.data);
+
+  const data = req.body.data;
+  const userId = data.idPdj;
 
   try {
     // Recherche de l'utilisateur par email
@@ -256,11 +291,12 @@ const AnnulationApresErreurPdj = async (req, res) => {
 
     await user.update({
       statusSUN: null,
-      emailSun: null,
+      idSUN: null,
+      emailSun: null
     });
     res.status(200).send({
       status: "success",
-      message: "Annulation de sun.",
+      message: "refus de sun suite à la demande de pdj.",
       user,
     });
   } catch (error) {
@@ -272,9 +308,9 @@ const AnnulationApresErreurPdj = async (req, res) => {
   }
 };
 
-// Annulation après erreur SUN
+// Annulation après erreur SUN - HandleAnnulationApresErreurSun - receiveDenialFromSun
 // annulation de sun suite à la demande de connexion coté SUN
-const receiveDenialFromSun = async (req, res) => {
+const HandleAnnulationApresErreurSun = async (req, res) => {
   // console.log("req", req.body.data);
 
   const data = req.body.data;
@@ -307,6 +343,45 @@ const receiveDenialFromSun = async (req, res) => {
     });
   }
 };
+
+
+// ma propre route annulation
+const Annulation = async (req, res) => {
+  const { userId, email } = req.body;
+
+  try {
+    const apiUrl = process.env.CANCEL_LINK;
+    const response = await axios.post(apiUrl, {
+      userId, email,
+    });
+
+    const user = await Users.findOne({ where: { userId: userId } });
+
+
+    if (response.data.status === "success") {
+      await user.update({
+        statusSUN: null,
+        emailSun: null,
+      });
+
+      console.log("pdj annule sa propre demande");
+
+      res.status(200).send({
+        status: "success",
+        message: "annulation avec succes.",
+        user,
+      });
+    }
+  } catch (error) {
+    console.error(
+      "Erreur lors de l'envoi du message à l'API externe:",
+      error.response ? error.response.data : error.message
+    );
+    return null;
+  }
+}
+
+
 module.exports = {
   ConfirmationDemandeSun,
   HandleDemandeConnexionSunToPdj,
@@ -314,6 +389,8 @@ module.exports = {
   RefusApresDemandeSun,
   DemandeConnexionPdjToSun,
   HandleConfirmationApresDemandePdj,
-  AnnulationApresErreurPdj,
-  receiveDenialFromSun
+  // AnnulationApresErreurPdj,
+  HandleAnnulationApresErreurSun,
+  Annulation,
+  HandleRefusApresDemandePdj
 };
