@@ -61,14 +61,16 @@ const createOrder = async (req, res) => {
       []
     );
 
-    // Par défaut, le statut est "en attente" 
+    // Par défaut, le statut est "en attente"
     const status = "en attente";
 
     // Vérifie si le panier contient uniquement un produit avec type_produit "offreSUN"
     // et si le prix total est 0 pour marquer la commande comme payée
-    const isOnlyFreeBaguetteInCart = cart.every(item => item.type_produit === "offreSUN") && cart.length === 1;
+    const isOnlyFreeBaguetteInCart =
+      cart.every((item) => item.type_produit === "offreSUN") &&
+      cart.length === 1;
     const paid = isOnlyFreeBaguetteInCart ? true : false;
-      
+
     const order = await Orders.create({
       userRole,
       firstname_client,
@@ -275,8 +277,8 @@ const ordersByDate = async (req, res) => {
     let whereCondition = {
       date: {
         [Op.gte]: new Date(startDate),
-        [Op.lte]: new Date(endDate)
-      }
+        [Op.lte]: new Date(endDate),
+      },
     };
 
     // Ajouter la condition de statut si spécifié
@@ -296,10 +298,11 @@ const ordersByDate = async (req, res) => {
     res.json({ orders });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "An error occurred while retrieving the orders." });
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving the orders." });
   }
 };
-
 
 //suppression d'une commande
 // const deleteOneOrder = async (req, res) => {
@@ -369,17 +372,52 @@ const deleteOneOrder = async (req, res) => {
 };
 
 //lister les commandes d'un utilisateur
+// const ordersOfUser = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const orders = await Orders.findAll({ where: { userId: userId } });
+
+//     if (orders.length === 0) {
+//       return res.json([]);
+//       // return res.status(404).json({ error: 'No orders found for the specified user.' });
+//     }
+
+//     res.json(orders);
+//   } catch (error) {
+//     console.error(error);
+//     res
+//       .status(500)
+//       .json({ error: "An error occurred while trying to fetch the orders." });
+//   }
+// };
+
 const ordersOfUser = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const orders = await Orders.findAll({ where: { userId: userId } });
+    const dateForDatabase = req.query.date; // présent sous ce format dans la bdd 2024-02-21T00:00:00.000Z
 
-    if (orders.length === 0) {
-      return res.json([]);
-      // return res.status(404).json({ error: 'No orders found for the specified user.' });
+    if (!dateForDatabase) {
+      return res.status(400).json({ error: "Date parameter is required." });
     }
 
-    res.json(orders);
+    const date = new Date(dateForDatabase);
+    date.setUTCHours(0, 0, 0, 0);
+
+    // Trouver les commandes pour cet utilisateur à la date spécifiée
+    const orders = await Orders.findAll({
+      where: {
+        userId: userId,
+        date: date.toISOString(),
+        paid: true,
+      },
+    });
+
+    const filteredOrders = orders.filter((order) => {
+      const cartItems = JSON.parse(order.cartString); // colonne est nommée 'cartString'
+      return cartItems.some((item) => item.type_produit === "offreSUN");
+    });
+
+    res.json(filteredOrders);
   } catch (error) {
     console.error(error);
     res
@@ -722,19 +760,19 @@ const updateViewStatus = async (req, res) => {
 const ordersInWebApp = async (req, res) => {
   try {
     // Statuts à filtrer
-    const filteredStatuses = ['prete', 'en attente'];
+    const filteredStatuses = ["prete", "en attente"];
 
     // profils à filtrer
-    const usersDeleted = [ 'Supprimé']
+    const usersDeleted = ["Supprimé"];
 
     const orders = await Orders.findAll({
       where: {
         status: filteredStatuses,
         paid: true,
         lastname_client: {
-          [Op.notIn]: usersDeleted // Exclut les profils supprimés
-        }
-      }
+          [Op.notIn]: usersDeleted, // Exclut les profils supprimés
+        },
+      },
     });
 
     if (!orders || orders.length === 0) {
@@ -753,18 +791,18 @@ const ordersInWebApp = async (req, res) => {
 const ordersInWaiting = async (req, res) => {
   try {
     // Statuts à filtrer
-    const filteredStatuses = ['en attente'];
+    const filteredStatuses = ["en attente"];
 
-     // profils à filtrer
-     const usersDeleted = ['Supprimé']
+    // profils à filtrer
+    const usersDeleted = ["Supprimé"];
 
     const orders = await Orders.findAll({
       where: {
         status: filteredStatuses,
         lastname_client: {
-          [Op.notIn]: usersDeleted // Exclut les profils supprimés
-        }
-      }
+          [Op.notIn]: usersDeleted, // Exclut les profils supprimés
+        },
+      },
     });
 
     if (!orders || orders.length === 0) {
@@ -774,9 +812,7 @@ const ordersInWaiting = async (req, res) => {
     res.json({ orders });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "erreur commande en attente" });
+    res.status(500).json({ error: "erreur commande en attente" });
   }
 };
 
@@ -787,11 +823,15 @@ const updateOrderContent = async (req, res) => {
   try {
     // Mise à jour de la commande avec les valeurs reçues de la requête
     const [updatedRows] = await Orders.update(updateValues, {
-      where: { orderId }
+      where: { orderId },
     });
 
     if (updatedRows === 0) {
-      return res.status(404).json({ message: "Aucune commande trouvée ou les données sont identiques." });
+      return res
+        .status(404)
+        .json({
+          message: "Aucune commande trouvée ou les données sont identiques.",
+        });
     }
 
     res.status(200).json({ message: "Commande mise à jour avec succès" });
@@ -800,7 +840,6 @@ const updateOrderContent = async (req, res) => {
     res.status(500).json({ message: "Erreur interne du serveur" });
   }
 };
-
 
 module.exports = {
   createOrder,
@@ -821,5 +860,5 @@ module.exports = {
   updateViewStatus,
   ordersInWebApp,
   ordersInWaiting,
-  updateOrderContent
+  updateOrderContent,
 };
