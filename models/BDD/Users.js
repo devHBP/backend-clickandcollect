@@ -99,6 +99,10 @@ const Users = db.define('Users', {
           isEmail: true, 
         },
       },
+      dateFreeBaguettePerDay: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
 })
 
 //TestUsers.belongsTo(TestStores, { foreignKey: 'id_magasin' });
