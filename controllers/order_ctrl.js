@@ -372,53 +372,17 @@ const deleteOneOrder = async (req, res) => {
 };
 
 //lister les commandes d'un utilisateur
-const ordersOfUser = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const orders = await Orders.findAll({ where: { userId: userId } });
-
-    if (orders.length === 0) {
-      return res.json([]);
-      // return res.status(404).json({ error: 'No orders found for the specified user.' });
-    }
-
-    res.json(orders);
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while trying to fetch the orders." });
-  }
-};
-
-// mise à jour a faire
 // const ordersOfUser = async (req, res) => {
 //   try {
 //     const userId = req.params.userId;
-//     const dateForDatabase = req.query.date; // présent sous ce format dans la bdd 2024-02-21T00:00:00.000Z
+//     const orders = await Orders.findAll({ where: { userId: userId } });
 
-//     if (!dateForDatabase) {
-//       return res.status(400).json({ error: "Date parameter is required." });
+//     if (orders.length === 0) {
+//       return res.json([]);
+//       // return res.status(404).json({ error: 'No orders found for the specified user.' });
 //     }
 
-//     const date = new Date(dateForDatabase);
-//     date.setUTCHours(0, 0, 0, 0);
-
-//     // Trouver les commandes pour cet utilisateur à la date spécifiée
-//     const orders = await Orders.findAll({
-//       where: {
-//         userId: userId,
-//         date: date.toISOString(),
-//         paid: true,
-//       },
-//     });
-
-//     const filteredOrders = orders.filter((order) => {
-//       const cartItems = JSON.parse(order.cartString); // colonne est nommée 'cartString'
-//       return cartItems.some((item) => item.type_produit === "offreSUN");
-//     });
-
-//     res.json(filteredOrders);
+//     res.json(orders);
 //   } catch (error) {
 //     console.error(error);
 //     res
@@ -426,6 +390,42 @@ const ordersOfUser = async (req, res) => {
 //       .json({ error: "An error occurred while trying to fetch the orders." });
 //   }
 // };
+
+// mise à jour a faire
+const ordersOfUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const dateForDatabase = req.query.date; // présent sous ce format dans la bdd 2024-02-21T00:00:00.000Z
+
+    if (!dateForDatabase) {
+      return res.status(400).json({ error: "Date parameter is required." });
+    }
+
+    const date = new Date(dateForDatabase);
+    date.setUTCHours(0, 0, 0, 0);
+
+    // Trouver les commandes pour cet utilisateur à la date spécifiée
+    const orders = await Orders.findAll({
+      where: {
+        userId: userId,
+        date: date.toISOString(),
+        paid: true,
+      },
+    });
+
+    const filteredOrders = orders.filter((order) => {
+      const cartItems = JSON.parse(order.cartString); // colonne est nommée 'cartString'
+      return cartItems.some((item) => item.type_produit === "offreSUN");
+    });
+
+    res.json(filteredOrders);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while trying to fetch the orders." });
+  }
+};
 
 //derniere commande
 const statusLastOrder = async (req, res) => {
