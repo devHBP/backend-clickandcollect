@@ -375,19 +375,15 @@ const deleteOneOrder = async (req, res) => {
 const userOrders = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const orders = await Orders.findAll({ where: { userId: userId } });
+    const lastOrder = await Orders.findOne({
+      where: { userId: userId },
+      order: [['date', 'DESC']]  
+    });
 
-    if (orders.length === 0) {
-      return res.json([]);
-      // return res.status(404).json({ error: 'No orders found for the specified user.' });
-    }
-
-    res.json(orders);
+    res.json(lastOrder);  // dernière commande
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while trying to fetch the orders." });
+    res.status(500).json({ error: "An error occurred while trying to fetch the orders." });
   }
 };
 
