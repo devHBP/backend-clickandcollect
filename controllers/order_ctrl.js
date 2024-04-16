@@ -372,24 +372,24 @@ const deleteOneOrder = async (req, res) => {
 };
 
 //lister les commandes d'un utilisateur
-// const ordersOfUser = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const orders = await Orders.findAll({ where: { userId: userId } });
+const userOrders = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const orders = await Orders.findAll({ where: { userId: userId } });
 
-//     if (orders.length === 0) {
-//       return res.json([]);
-//       // return res.status(404).json({ error: 'No orders found for the specified user.' });
-//     }
+    if (orders.length === 0) {
+      return res.json([]);
+      // return res.status(404).json({ error: 'No orders found for the specified user.' });
+    }
 
-//     res.json(orders);
-//   } catch (error) {
-//     console.error(error);
-//     res
-//       .status(500)
-//       .json({ error: "An error occurred while trying to fetch the orders." });
-//   }
-// };
+    res.json(orders);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while trying to fetch the orders." });
+  }
+};
 
 // mise à jour a faire
 const ordersOfUser = async (req, res) => {
@@ -849,6 +849,7 @@ module.exports = {
   ordersByDate,
   deleteOneOrder,
   ordersOfUser,
+  userOrders,
   updateOrder,
   getOrderProducts,
   cancelOrder,

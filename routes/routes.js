@@ -11,7 +11,7 @@ const {addPromo, handleApplyDiscount, allDiscounts, deletePromo, updateStatusPro
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi, getAddStock} = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement, cancel , back, stripeWebhook } = require('../controllers/payment_ctrl')
 const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser, updateOrder,getOrderProducts , cancelOrder , 
-    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate, updateOrderContent } = require('../controllers/order_ctrl')
+    productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate, updateOrderContent, userOrders } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
@@ -133,6 +133,7 @@ router.get('/allOrders', allOrders)
 router.get('/ordersByDate', ordersByDate)
 router.delete('/deleteOneOrder/:id', deleteOneOrder)
 router.get('/ordersOfUser/:userId', ordersOfUser)
+router.get('/userOrders/:userId', userOrders)
 router.post('/updateOrder', updateOrder) //update paymentId if order paid 
 router.get('/getOrderProducts/:orderId', getOrderProducts) //products of order
 router.post('/cancelOrder', cancelOrder)
