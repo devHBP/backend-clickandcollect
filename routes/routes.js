@@ -23,7 +23,7 @@ const  { versionApp, status, checkAntiGaspi, updateVersion, getUserVersion } = r
 const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
-const  { createCart, addCartItems, getCart } = require('../controllers/cart')
+// const  { createCart, addCartItems, getCart } = require('../controllers/cart')
 const  { ConfirmationDemandeSun, HandleDemandeConnexionSunToPdj, getStatusSun, RefusApresDemandeSun, DemandeConnexionPdjToSun , HandleConfirmationApresDemandePdj, HandleAnnulationApresErreurSun, AnnulationApresErreurPdj, HandleRefusApresDemandePdj} = require('../controllers/connect_sun')
 
 
@@ -195,9 +195,9 @@ router.get('/calculateAverageBasket', calculateAverageBasket);
 router.get('/getTopSoldProducts', getTopSoldProducts);
 
 // PANIER BACKEND
-router.post('/createCart', createCart)
-router.post('/addCartItems', addCartItems)
-router.get('/getCart/:cartId', getCart)
+// router.post('/createCart', createCart)
+// router.post('/addCartItems', addCartItems)
+// router.get('/getCart/:cartId', getCart)
 
 //CONNEXION SUN -> PDJ
 router.post('/ConfirmationDemandeSun', ConfirmationDemandeSun) 
