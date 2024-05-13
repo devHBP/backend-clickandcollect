@@ -25,6 +25,7 @@ const createSession = async (req, res) => {
     const role = req.body.orderInfo.userRole;
     // console.log("req", req.body.orderInfo.cart);
     const lineItems = req.body.orderInfo.cart.map((item) => {
+
       const { libelle, prix, qty, prix_unitaire, antigaspi } = item;
       let adjustedPrice = prix || prix_unitaire;
       // console.log("item", item);
@@ -34,6 +35,19 @@ const createSession = async (req, res) => {
       if (role === "SUNcollaborateur" && !antigaspi) {
         adjustedPrice *= 0.8;
       }
+
+      // ICI - modif à faire uen fois front ok
+      // const { libelle, prix, quantity, unitPrice, type } = item;
+      // let adjustedPrice = prix || unitPrice;
+      // console.log("item", item);
+      // console.log("libelle", libelle);
+      // console.log("prix", adjustedPrice);
+
+      // if (role === "SUNcollaborateur" && type !== "antigaspi") {
+      //   // adjustedPrice *= 0.8;
+      //   adjustedPrice = parseFloat((adjustedPrice * 0.8).toFixed(2));
+      // }
+
       return {
         price_data: {
           currency: "eur",
@@ -42,11 +56,13 @@ const createSession = async (req, res) => {
           },
           unit_amount: Math.round(parseFloat(adjustedPrice * 100)),
         },
+        // ICI - modif à faire uen fois front ok
+        // quantity: quantity,
         quantity: qty,
       };
     });
 
-    // console.log("lineItems", lineItems);
+    console.log("lineItems", lineItems);
 
     let success_url = `${process.env.ADRESS_PREPROD}/success/`;
     let cancel_url = `${process.env.ADRESS_PREPROD}/cancel/`;

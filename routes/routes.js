@@ -23,7 +23,7 @@ const  { versionApp, status, checkAntiGaspi, updateVersion, getUserVersion } = r
 const  { updateOrderPaidStatus } = require('../controllers/order_paid')
 const  { getEmailInvite, getPsswInvite } = require('../controllers/config')
 const  { getTotalSales, getSalesToday, getSalesMonth, getSalesWeek, getSalesByDate, getOrderToday, getOrderWeek, getOrderMonth, getTotalOrders, getOrdersByDate, calculateAverageBasket, getTopSoldProducts} = require('../controllers/dashboard_webapp')
-// const  { createCart, addCartItems, getCart } = require('../controllers/cart')
+const  { createCart, addCartItems, getCart, adjustCartItemQuantity, deleteOneCart,deleteCartItems, updateFormulaQuantity, getAllCarts, addOrUpdateCartItem, removeOrUpdateCartItem , getCartItemId, getOffer31ItemsGroupedByOfferId, getCartTotalQuantity, getAllCartItemsForUser, clearUserCart} = require('../controllers/cart')
 const  { ConfirmationDemandeSun, HandleDemandeConnexionSunToPdj, getStatusSun, RefusApresDemandeSun, DemandeConnexionPdjToSun , HandleConfirmationApresDemandePdj, HandleAnnulationApresErreurSun, AnnulationApresErreurPdj, HandleRefusApresDemandePdj} = require('../controllers/connect_sun')
 
 
@@ -195,9 +195,21 @@ router.get('/calculateAverageBasket', calculateAverageBasket);
 router.get('/getTopSoldProducts', getTopSoldProducts);
 
 // PANIER BACKEND
-// router.post('/createCart', createCart)
-// router.post('/addCartItems', addCartItems)
-// router.get('/getCart/:cartId', getCart)
+router.post('/createCart', createCart)
+router.post('/addCartItems', addCartItems)
+router.post('/addOrUpdateCartItem', addOrUpdateCartItem)
+router.post('/removeOrUpdateCartItem', removeOrUpdateCartItem)
+router.get('/getCart/:userId', getCart)
+router.put('/adjustCartItemQuantity/:cartId/:productId/:type', adjustCartItemQuantity)
+router.delete('/deleteOneCart/:cartId', deleteOneCart);
+router.delete('/deleteCartItems/:cartItemId', deleteCartItems);
+router.put('/updateFormulaQuantity/:cartId/:cartItemId', updateFormulaQuantity)
+router.get('/getAllCarts', getAllCarts)
+router.get('/getCartItemId', getCartItemId)
+router.get('/getOffer31ItemsGroupedByOfferId/:productId', getOffer31ItemsGroupedByOfferId)
+router.get('/getCartTotalQuantity/:userId', getCartTotalQuantity)
+router.get('/getAllCartItemsForUser/:userId', getAllCartItemsForUser)
+router.delete('/clearUserCart/:userId', clearUserCart)
 
 //CONNEXION SUN -> PDJ
 router.post('/ConfirmationDemandeSun', ConfirmationDemandeSun) 
