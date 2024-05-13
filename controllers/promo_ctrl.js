@@ -74,6 +74,7 @@ const addPromo = async (req, res) => {
 //         res.status(500).json({ error: 'Une erreur s\'est produite lors de la récupération du code promo' });
 //       }
 // };
+
 const handleApplyDiscount = async (req, res) => {
   const { promoCode, cartItems } = req.body;
 
@@ -119,7 +120,7 @@ const handleApplyDiscount = async (req, res) => {
       };
     });
 
-    console.log('updatedCart', updatedCart)
+    // console.log('updatedCart', updatedCart)
 
     res.json(updatedCart);
   } catch (error) {
@@ -128,6 +129,67 @@ const handleApplyDiscount = async (req, res) => {
       .json({ message: "Erreur lors de l’application du code promo." });
   }
 };
+
+// ICI - modif à faire une fois le front mis à jour 
+// const handleApplyDiscount = async (req, res) => {
+//   const { promoCode, cartItems } = req.body;
+//   try {
+//     const promo = await Promos.findOne({ where: { code: promoCode } });
+//     if (!promo || !promo.active) {
+//       return res
+//         .status(400)
+//         .json({ message: "Code promo invalide ou non actif." });
+//     }
+
+//     // Calculer le total du panier
+//     const totalCart = cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
+//     // console.log('totalCart', totalCart)
+//     let discountRemaining = promo.fixedAmount;
+//     // console.log('totalCart', totalCart)
+//     // console.log('discountRemaining', discountRemaining)
+
+//     const updatedCart = cartItems.map((item) => {
+//       // console.log('item', item)
+//       let reducedPrice = item.unitPrice;
+
+//       if (promo.percentage) {
+//         // reducedPrice -= (reducedPrice * promo.percentage) / 100;
+//         reducedPrice -= parseFloat((reducedPrice * promo.percentage / 100).toFixed(2));
+
+//         // console.log("code promo pourcentage");
+//         // console.log('reducedPrice', reducedPrice)
+//       } else if (promo.fixedAmount) {
+//         let discountShare = (item.unitPrice * item.quantity / totalCart) * promo.fixedAmount;
+
+//         // Réduire le prix de l'article par sa part de la réduction
+//         reducedPrice -= discountShare / item.quantity;
+
+//         // Assurer que le prix ne devienne pas négatif
+//         reducedPrice = Math.max(reducedPrice, 0);
+
+//         // Mettre à jour le montant restant de la réduction
+//         discountRemaining -= discountShare;
+//       }
+//       let totalPrice = reducedPrice * (item.quantity)
+//       // console.log('totalPrice', totalPrice)
+
+//       return {
+//         ...item,
+//         originalPrice: item.unitPrice,
+//         unitPrice: reducedPrice,
+//         totalPrice,
+//         promo
+//       };
+//     });
+
+
+//     res.json(updatedCart);
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Erreur lors de l’application du code promo." });
+//   }
+// };
 
 
 

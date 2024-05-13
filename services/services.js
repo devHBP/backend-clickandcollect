@@ -1,6 +1,7 @@
 const TestPaymentsV2 = require("../models/BDD/Payments");
 const Orders = require("../models/BDD/Orders");
-const TestStoresV2 = require('../models/BDD/Stores')
+const TestStoresV2 = require("../models/BDD/Stores");
+const CartItems = require("../models/BDD/ProductsCart")
 
 const createPaiementId = async (method, transactionId, status) => {
   try {
@@ -24,7 +25,7 @@ const updateOrderService = async (orderId, paymentId) => {
   }
 
   order.paymentId = paymentId;
-  order.paid = true
+  order.paid = true;
   await order.save();
 
   return order;
@@ -39,13 +40,24 @@ const getOneStoreName = async (storeId) => {
     return store.nom_magasin;
   } catch (error) {
     console.error(error);
-    throw new Error("Une erreur est survenue lors de la récupération du nom du magasin");
+    throw new Error(
+      "Une erreur est survenue lors de la récupération du nom du magasin"
+    );
   }
 };
+
+const  getCurrentOfferId = async (userId, productId) => {
+  const lastItem = await CartItems.findOne({
+    where: { userId, productId, type: 'offre31' },
+    order: [['createdAt', 'DESC']]
+  });
+  return lastItem ? lastItem.offerId : 0;
+}
 
 
 module.exports = {
   createPaiementId,
   updateOrderService,
-  getOneStoreName
+  getOneStoreName,
+  getCurrentOfferId
 };
