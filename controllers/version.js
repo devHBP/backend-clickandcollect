@@ -23,7 +23,7 @@ const checkAntiGaspi = (req, res) => {
   const hour = now.getHours();
 
   // L'offre est accessible à partir de 21h
-  if (hour >=21 && hour < 24) {
+  if (hour >=11 && hour < 24) {
     res.json({ accessible: true });
   } else {
     res.json({
