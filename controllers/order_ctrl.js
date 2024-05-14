@@ -67,9 +67,9 @@ const createOrder = async (req, res) => {
     // Vérifie si le panier contient uniquement un produit avec type_produit "offreSUN"
     // et si le prix total est 0 pour marquer la commande comme payée
     const isOnlyFreeBaguetteInCart =
-      cart.every((item) => item.type_produit === "offreSUN") &&
       // ICI - modif après mise à jour front 
-      // cart.every((item) => item.typeProduit === "offreSUN") &&
+      // cart.every((item) => item.type_produit === "offreSUN") &&
+      cart.every((item) => item.typeProduit === "offreSUN") &&
       cart.length === 1;
     const paid = isOnlyFreeBaguetteInCart ? true : false;
 
@@ -413,9 +413,9 @@ const ordersOfUser = async (req, res) => {
 
     const filteredOrders = orders.filter((order) => {
       const cartItems = JSON.parse(order.cartString); // colonne est nommée 'cartString'
-      return cartItems.some((item) => item.type_produit === "offreSUN");
       // ICI - modif à faire une fis le front ok
-      // return cartItems.some((item) => item.typeProduit === "offreSUN");
+      // return cartItems.some((item) => item.type_produit === "offreSUN");
+      return cartItems.some((item) => item.typeProduit === "offreSUN");
     });
 
     res.json(filteredOrders);

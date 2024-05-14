@@ -56,83 +56,10 @@ const addPromo = async (req, res) => {
   }
 };
 
-// const handleApplyDiscount = async (req, res) => {
-//     try {
-//         const code = req.params.code;
 
-//         // Recherche du code promo dans la base de données
-//         const promoCode = await TestPromotions.findOne({
-//           where: { code: code.toUpperCase() }
-//         });
-
-//         if (promoCode) {
-//           res.json(promoCode);
-//         } else {
-//           res.status(404).json({ error: 'Code promo introuvable' });
-//         }
-//       } catch (error) {
-//         res.status(500).json({ error: 'Une erreur s\'est produite lors de la récupération du code promo' });
-//       }
-// };
-
-const handleApplyDiscount = async (req, res) => {
-  const { promoCode, cartItems } = req.body;
-
-  try {
-    const promo = await Promos.findOne({ where: { code: promoCode } });
-    if (!promo || !promo.active) {
-      return res
-        .status(400)
-        .json({ message: "Code promo invalide ou non actif." });
-    }
-
-    // Calculer le total du panier
-    const totalCart = cartItems.reduce((total, item) => total + item.prix_unitaire * item.qty, 0);
-    let discountRemaining = promo.fixedAmount;
-    // console.log('totalCart', totalCart)
-    // console.log('discountRemaining', discountRemaining)
-
-    const updatedCart = cartItems.map((item) => {
-      let reducedPrice = item.prix_unitaire;
-
-      if (promo.percentage) {
-        reducedPrice -= (reducedPrice * promo.percentage) / 100;
-        // console.log("code promo pourcentage");
-        // console.log('reducedPrice', reducedPrice)
-      } else if (promo.fixedAmount) {
-        let discountShare = (item.prix_unitaire * item.qty / totalCart) * promo.fixedAmount;
-
-        // Réduire le prix de l'article par sa part de la réduction
-        reducedPrice -= discountShare / item.qty;
-
-        // Assurer que le prix ne devienne pas négatif
-        reducedPrice = Math.max(reducedPrice, 0);
-
-        // Mettre à jour le montant restant de la réduction
-        discountRemaining -= discountShare;
-      }
-
-      return {
-        ...item,
-        originalPrice: item.prix_unitaire,
-        prix_unitaire: reducedPrice,
-        promo
-      };
-    });
-
-    // console.log('updatedCart', updatedCart)
-
-    res.json(updatedCart);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erreur lors de l’application du code promo." });
-  }
-};
-
-// ICI - modif à faire une fois le front mis à jour 
 // const handleApplyDiscount = async (req, res) => {
 //   const { promoCode, cartItems } = req.body;
+
 //   try {
 //     const promo = await Promos.findOne({ where: { code: promoCode } });
 //     if (!promo || !promo.active) {
@@ -141,47 +68,41 @@ const handleApplyDiscount = async (req, res) => {
 //         .json({ message: "Code promo invalide ou non actif." });
 //     }
 
-//     Calculer le total du panier
-//     const totalCart = cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
-//     console.log('totalCart', totalCart)
+//     // Calculer le total du panier
+//     const totalCart = cartItems.reduce((total, item) => total + item.prix_unitaire * item.qty, 0);
 //     let discountRemaining = promo.fixedAmount;
-//     console.log('totalCart', totalCart)
-//     console.log('discountRemaining', discountRemaining)
+//     // console.log('totalCart', totalCart)
+//     // console.log('discountRemaining', discountRemaining)
 
 //     const updatedCart = cartItems.map((item) => {
-//       console.log('item', item)
-//       let reducedPrice = item.unitPrice;
+//       let reducedPrice = item.prix_unitaire;
 
 //       if (promo.percentage) {
 //         reducedPrice -= (reducedPrice * promo.percentage) / 100;
-//         reducedPrice -= parseFloat((reducedPrice * promo.percentage / 100).toFixed(2));
-
-//         console.log("code promo pourcentage");
-//         console.log('reducedPrice', reducedPrice)
+//         // console.log("code promo pourcentage");
+//         // console.log('reducedPrice', reducedPrice)
 //       } else if (promo.fixedAmount) {
-//         let discountShare = (item.unitPrice * item.quantity / totalCart) * promo.fixedAmount;
+//         let discountShare = (item.prix_unitaire * item.qty / totalCart) * promo.fixedAmount;
 
-//         Réduire le prix de l'article par sa part de la réduction
-//         reducedPrice -= discountShare / item.quantity;
+//         // Réduire le prix de l'article par sa part de la réduction
+//         reducedPrice -= discountShare / item.qty;
 
-//         Assurer que le prix ne devienne pas négatif
+//         // Assurer que le prix ne devienne pas négatif
 //         reducedPrice = Math.max(reducedPrice, 0);
 
-//         Mettre à jour le montant restant de la réduction
+//         // Mettre à jour le montant restant de la réduction
 //         discountRemaining -= discountShare;
 //       }
-//       let totalPrice = reducedPrice * (item.quantity)
-//       console.log('totalPrice', totalPrice)
 
 //       return {
 //         ...item,
-//         originalPrice: item.unitPrice,
-//         unitPrice: reducedPrice,
-//         totalPrice,
+//         originalPrice: item.prix_unitaire,
+//         prix_unitaire: reducedPrice,
 //         promo
 //       };
 //     });
 
+//     // console.log('updatedCart', updatedCart)
 
 //     res.json(updatedCart);
 //   } catch (error) {
@@ -191,26 +112,65 @@ const handleApplyDiscount = async (req, res) => {
 //   }
 // };
 
+// ICI - modif à faire une fois le front mis à jour 
+const handleApplyDiscount = async (req, res) => {
+  const { promoCode, cartItems } = req.body;
+  try {
+    const promo = await Promos.findOne({ where: { code: promoCode } });
+    if (!promo || !promo.active) {
+      return res
+        .status(400)
+        .json({ message: "Code promo invalide ou non actif." });
+    }
 
+    //Calculer le total du panier
+    const totalCart = cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
+    // console.log('totalCart', totalCart)
+    let discountRemaining = promo.fixedAmount;
+    // console.log('totalCart', totalCart)
+    // console.log('discountRemaining', discountRemaining)
 
+    const updatedCart = cartItems.map((item) => {
+      // console.log('item', item)
+      let reducedPrice = item.unitPrice;
 
-//lister toutes les promos
-// const allDiscounts = async (req, res) => {
-//   try {
-//     // Récupérer tous les codes promo de la base de données
-//     const promoCodes = await TestPromotions.findAll();
+      if (promo.percentage) {
+        reducedPrice -= (reducedPrice * promo.percentage) / 100;
+        reducedPrice -= parseFloat((reducedPrice * promo.percentage / 100).toFixed(2));
 
-//     res.json(promoCodes); // Envoyer la réponse avec tous les codes promo
-//   } catch (error) {
-//     console.error(error);
-//     res
-//       .status(500)
-//       .json({
-//         message:
-//           "Une erreur est survenue lors de la récupération des codes promo.",
-//       });
-//   }
-// };
+        // console.log("code promo pourcentage");
+        // console.log('reducedPrice', reducedPrice)
+      } else if (promo.fixedAmount) {
+        let discountShare = (item.unitPrice * item.quantity / totalCart) * promo.fixedAmount;
+
+        //Réduire le prix de l'article par sa part de la réduction
+        reducedPrice -= discountShare / item.quantity;
+
+        //Assurer que le prix ne devienne pas négatif
+        reducedPrice = Math.max(reducedPrice, 0);
+
+        //Mettre à jour le montant restant de la réduction
+        discountRemaining -= discountShare;
+      }
+      let totalPrice = reducedPrice * (item.quantity)
+      // console.log('totalPrice', totalPrice)
+
+      return {
+        ...item,
+        originalPrice: item.unitPrice,
+        unitPrice: reducedPrice,
+        totalPrice,
+        promo
+      };
+    });
+
+    res.json(updatedCart);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de l’application du code promo." });
+  }
+};
 
 //lister toutes les promos
 const allDiscounts = async (req, res) => {

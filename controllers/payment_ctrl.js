@@ -26,27 +26,27 @@ const createSession = async (req, res) => {
     // console.log("req", req.body.orderInfo.cart);
     const lineItems = req.body.orderInfo.cart.map((item) => {
 
-      const { libelle, prix, qty, prix_unitaire, antigaspi } = item;
-      let adjustedPrice = prix || prix_unitaire;
-      // console.log("item", item);
-      // console.log("libelle", libelle);
-      // console.log("prix", adjustedPrice);
+      // const { libelle, prix, qty, prix_unitaire, antigaspi } = item;
+      // let adjustedPrice = prix || prix_unitaire;
+      // // console.log("item", item);
+      // // console.log("libelle", libelle);
+      // // console.log("prix", adjustedPrice);
 
-      if (role === "SUNcollaborateur" && !antigaspi) {
-        adjustedPrice *= 0.8;
-      }
-
-      // ICI - modif à faire uen fois front ok
-      // const { libelle, prix, quantity, unitPrice, type } = item;
-      // let adjustedPrice = prix || unitPrice;
-      // console.log("item", item);
-      // console.log("libelle", libelle);
-      // console.log("prix", adjustedPrice);
-
-      // if (role === "SUNcollaborateur" && type !== "antigaspi") {
-      // //  adjustedPrice *= 0.8;
-      //   adjustedPrice = parseFloat((adjustedPrice * 0.8).toFixed(2));
+      // if (role === "SUNcollaborateur" && !antigaspi) {
+      //   adjustedPrice *= 0.8;
       // }
+
+      // ICI - modif à faire une fois front ok
+      const { libelle, prix, quantity, unitPrice, type } = item;
+      let adjustedPrice = prix || unitPrice;
+      console.log("item", item);
+      console.log("libelle", libelle);
+      console.log("prix", adjustedPrice);
+
+      if (role === "SUNcollaborateur" && type !== "antigaspi") {
+      //  adjustedPrice *= 0.8;
+        adjustedPrice = parseFloat((adjustedPrice * 0.8).toFixed(2));
+      }
 
       return {
         price_data: {
@@ -57,8 +57,8 @@ const createSession = async (req, res) => {
           unit_amount: Math.round(parseFloat(adjustedPrice * 100)),
         },
         // ICI - modif à faire uen fois front ok
-        //quantity: quantity,
-        quantity: qty,
+        quantity: quantity,
+        //quantity: qty,
       };
     });
 
