@@ -103,6 +103,32 @@ const getOneStore = ( req, res ) => {
         .catch(error => res.statut(500).json(error))
 }
 
+// combinaison
+const getStore = (req, res) => {
+    const { role, storeId } = req.body; 
+
+    const roleQuery = (!role || !ROLE_STORES[role]) ? 'client' : ROLE_STORES[role];
+
+    TestStoresV2.findAll({
+        where: { storeId: roleQuery },
+        attributes : { exclude: ['createdAt', 'updatedAt'] }
+    })
+    .then((stores) => {
+        if (storeId) {
+            TestStoresV2.findByPk(storeId)
+            .then(store => {
+                if (!store) return res.status(404).json({stores, msg: "Store not found"});
+                res.status(200).json({stores, selectedStore: store});
+            })
+            .catch(error => res.status(500).json({error}));
+        } else {
+            res.status(200).json({stores});
+        }
+    })
+    .catch(error => res.status(500).json({error}));
+};
+
+
 const getOneStoreName = ( req, res ) => {
     const { id} = req.params
     //findbyprimarykey
@@ -205,4 +231,4 @@ const deleteStore = ( req, res ) => {
 // };
 
 
-module.exports = { addStore, updateStore, getOneStore, getAllStores, deleteStore, getStoresByRole, getStores, getOneStoreName }
+module.exports = { addStore, updateStore, getOneStore, getAllStores, deleteStore, getStoresByRole, getStores, getOneStoreName, getStore }

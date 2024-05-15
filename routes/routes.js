@@ -6,7 +6,7 @@ const { addProduct, getAllProducts, getOneProduct, uploadImage, updateProduct, d
      getFamillyOfProduct, createFormule, getAllFormules, getAllProductsClickandCollect, addDessertIds, getDessertIds, resetDessertIds, addBoissonIds, getBoissonIds,resetBoissonIds,updateStatusProduct,
      getProductsSolanid, getOneProductForNewCartString, getLibelleProduct } = require('../controllers/product_ctrl')
 const { addFamillyProduct, getAllFamillyProducts, getOneFamillyProduct, deleteFamillyProduct } = require('../controllers/famille_produits_ctrl')
-const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole, getStores, getOneStoreName } = require('../controllers/stores_ctrl')
+const { addStore, getAllStores, getOneStore, updateStore, getStoresByRole, getStores, getOneStoreName, getStore } = require('../controllers/stores_ctrl')
 const {addPromo, handleApplyDiscount, allDiscounts, deletePromo, updateStatusPromo } = require('../controllers/promo_ctrl')
 const { getAllStocks, getStockByProduct, getUpdateStockAntigaspi, checkStockAntiGaspi , getUpdateStock, getAddStockAntigaspi, verifStockAntiGaspi, getAddStock} = require('../controllers/stock_ctrl')
 const { createSession, success, paiementStatus, createPaiement, cancel , back, stripeWebhook } = require('../controllers/payment_ctrl')
@@ -103,7 +103,7 @@ router.get('/getOneStore/:id', getOneStore)
 router.get('/getOneStoreName/:id', getOneStoreName)
 router.put('/updateStore/:id', updateStore)
 router.get('/getStores', getStores)
-
+router.post('/getStore', getStore)
 // router.get('/:roleName/stores', getStoresByRole);
 
 //PROMOS
