@@ -63,7 +63,7 @@ const clearUserCart = async (userId) => {
     });
 
     if (!cart) {
-      return res.status(404).json({ message: "No active cart found for this user." });
+      return { message: "No active cart found for this user." };
     }
 
     // Supprimer tous les articles du panier
