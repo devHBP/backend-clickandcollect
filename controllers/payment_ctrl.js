@@ -6,6 +6,7 @@ const {
   createPaiementId,
   updateOrderService,
   getOneStoreName,
+  clearUserCart
 } = require("../services/services");
 
 const stripe = require("stripe")(process.env.STRIPE_KEY_PRIVATE);
@@ -74,7 +75,7 @@ const createSession = async (req, res) => {
     const email = req.body.orderInfo.user.email;
     const date = req.body.orderInfo.dateForDatabase;
     const store = req.body.orderInfo.selectStore;
-
+    const userId = req.body.orderInfo.user.userId;
     // je recupère le nom_magasin via le storeID
     const point_de_vente = await getOneStoreName(store);
 
@@ -91,6 +92,7 @@ const createSession = async (req, res) => {
         email,
         date,
         point_de_vente,
+        userId
       },
     });
 
@@ -247,12 +249,15 @@ const paiementStatus = async (req, res) => {
     console.log("méthode de paiement", method);
     const orderID = session.metadata.orderId;
     console.log("orderID", orderID);
+    const userId = session.metadata.userId;
 
     res.json({
       status: paymentStatus,
       transactionId: paymentId,
       method: method,
       orderID: orderID,
+      userId: userId,
+
     });
   } catch (error) {
     console.error(
@@ -321,6 +326,8 @@ const stripeWebhook = async (req, res) => {
       // const numero_commande = checkoutSession.metadata.numero_commande;
       const date = checkoutSession.metadata.date;
       const point_de_vente = checkoutSession.metadata.point_de_vente;
+      const userId = checkoutSession.metadata.userId;
+
 
       console.log("paymentIntentId", paymentIntentId);
       console.log("paymentStatus", paymentStatus);
@@ -330,6 +337,8 @@ const stripeWebhook = async (req, res) => {
       console.log("orderId", orderId);
       console.log("date", date);
       console.log("point_de_vente", point_de_vente);
+      console.log("userId", userId);
+
       // console.log("numero_commande", numero_commande);
 
 
@@ -367,6 +376,11 @@ const stripeWebhook = async (req, res) => {
               status: () => ({ send: () => {} }),
             };
             const emailResponse = await confirmOrderMail(fakeReq, fakeRes);
+            // console.log('envoi du mail ici')
+
+            // suppression du panier ici alors 
+            const deleteCart = await clearUserCart(userId)
+
           } catch (error) {
             console.error(
               "Erreur lors de la modification de la commande avec paymentId et orderId",

@@ -2,6 +2,7 @@ const TestPaymentsV2 = require("../models/BDD/Payments");
 const Orders = require("../models/BDD/Orders");
 const TestStoresV2 = require("../models/BDD/Stores");
 const CartItems = require("../models/BDD/ProductsCart")
+const Carts = require("../models/BDD/Carts")
 
 const createPaiementId = async (method, transactionId, status) => {
   try {
@@ -54,10 +55,40 @@ const  getCurrentOfferId = async (userId, productId) => {
   return lastItem ? lastItem.offerId : 0;
 }
 
+const clearUserCart = async (userId) => {
+  try {
+    // Trouver le panier actif de l'utilisateur
+    const cart = await Carts.findOne({
+      where: { userId: userId, status: 'active' }
+    });
+
+    if (!cart) {
+      return res.status(404).json({ message: "No active cart found for this user." });
+    }
+
+    // Supprimer tous les articles du panier
+    await CartItems.destroy({
+      where: { cartId: cart.cartId }
+    });
+
+    // Supprimer le panier lui-même si nécessaire
+    await Carts.destroy({
+      where: { cartId: cart.cartId }
+    });
+    // console.log('panier supprimé dans le service')
+
+    return { message: "Cart and all its items have been successfully cleared." };
+  } catch (error) {
+    console.error('Failed to clear cart:', error);
+    throw new Error(error.message);
+  }
+};
+
 
 module.exports = {
   createPaiementId,
   updateOrderService,
   getOneStoreName,
-  getCurrentOfferId
+  getCurrentOfferId,
+  clearUserCart
 };
