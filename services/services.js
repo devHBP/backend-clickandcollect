@@ -1,8 +1,10 @@
 const TestPaymentsV2 = require("../models/BDD/Payments");
 const Orders = require("../models/BDD/Orders");
 const TestStoresV2 = require("../models/BDD/Stores");
-const CartItems = require("../models/BDD/ProductsCart")
-const Carts = require("../models/BDD/Carts")
+const CartItems = require("../models/BDD/ProductsCart");
+const Carts = require("../models/BDD/Carts");
+const Products = require("../models/BDD/Produits");
+const StocksTest = require("../models/BDD/Stocks");
 
 const createPaiementId = async (method, transactionId, status) => {
   try {
@@ -47,19 +49,19 @@ const getOneStoreName = async (storeId) => {
   }
 };
 
-const  getCurrentOfferId = async (userId, productId) => {
+const getCurrentOfferId = async (userId, productId) => {
   const lastItem = await CartItems.findOne({
-    where: { userId, productId, type: 'offre31' },
-    order: [['createdAt', 'DESC']]
+    where: { userId, productId, type: "offre31" },
+    order: [["createdAt", "DESC"]],
   });
   return lastItem ? lastItem.offerId : 0;
-}
+};
 
 const clearUserCart = async (userId) => {
   try {
     // Trouver le panier actif de l'utilisateur
     const cart = await Carts.findOne({
-      where: { userId: userId, status: 'active' }
+      where: { userId: userId, status: "active" },
     });
 
     if (!cart) {
@@ -68,27 +70,69 @@ const clearUserCart = async (userId) => {
 
     // Supprimer tous les articles du panier
     await CartItems.destroy({
-      where: { cartId: cart.cartId }
+      where: { cartId: cart.cartId },
     });
 
     // Supprimer le panier lui-même si nécessaire
     await Carts.destroy({
-      where: { cartId: cart.cartId }
+      where: { cartId: cart.cartId },
     });
     // console.log('panier supprimé dans le service')
 
-    return { message: "Cart and all its items have been successfully cleared." };
+    return {
+      message: "Cart and all its items have been successfully cleared.",
+    };
   } catch (error) {
-    console.error('Failed to clear cart:', error);
+    console.error("Failed to clear cart:", error);
     throw new Error(error.message);
   }
 };
 
+const getAddStock = async (productId, quantityPurchased) => {
+  try {
+    const product = await Products.findByPk(productId);
+    const stock = await StocksTest.findOne({ where: { productId: productId } });
+
+    if (!product) {
+      throw new Error("Produit non trouvé.");
+    }
+
+    product.stock += quantityPurchased;
+    stock.quantite += quantityPurchased;
+    await product.save();
+    await stock.save();
+
+    return { message: "Stock mis à jour (+) avec succès." };
+  } catch (error) {
+    throw new Error(`Erreur lors de la mise à jour du stock: ${error.message}`);
+  }
+};
+
+const getAddStockAntigaspi = async (productId, quantityPurchased) => {
+  try {
+    const product = await Products.findByPk(productId);
+
+    if (!product) {
+      throw new Error("Produit non trouvé.");
+    }
+
+    product.stockantigaspi += quantityPurchased;
+
+    await product.save();
+
+    return { message: "Stock mis à jour (+ antigaspi) avec succès." };
+  } catch (error) {
+    throw new Error(`Erreur lors de la mise à jour du stock: ${error.message}`);
+
+  }
+};
 
 module.exports = {
   createPaiementId,
   updateOrderService,
   getOneStoreName,
   getCurrentOfferId,
-  clearUserCart
+  clearUserCart,
+  getAddStock,
+  getAddStockAntigaspi
 };

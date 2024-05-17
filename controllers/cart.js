@@ -72,6 +72,10 @@ const addCartItems = async (req, res) => {
         userId,
         status: "active",
       });
+    }else {
+      // Mettre à jour le champ updatedAt du panier
+      cart.changed('updatedAt', true);
+      await cart.save();
     }
 
     if (productId) {
@@ -347,14 +351,27 @@ const deleteCartItems = async (req, res) => {
  * @description get all carts
  * @returns Sends a JSON response containing all carts or an error message.
  */
-const getAllCarts = async (req, res) => {
+// const getAllCarts = async (req, res) => {
+//   try {
+//     const carts = await Carts.findAll({
+//       attributes: { exclude: ["createdAt", "updatedAt"] },
+//     });
+//     res.status(200).json(carts);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+const getAllCarts = async () => {
   try {
-    const carts = await Carts.findAll({
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-    });
-    res.status(200).json(carts);
+    const carts = await Carts.findAll();
+    if (!carts) {
+      console.log("Aucun panier trouvé");
+      return []; // Retourner un tableau vide si aucun panier n'est trouvé
+    }
+    return carts;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Erreur lors de la récupération des paniers:", error);
+    throw error; // Propager l'erreur pour la gérer plus haut dans la pile d'appels
   }
 };
 
@@ -385,6 +402,11 @@ const addOrUpdateCartItem = async (req, res) => {
     });
     if (!cart) {
       cart = await Carts.create({ userId, status: "active" });
+    }
+    else {
+      // Mettre à jour le champ updatedAt du panier
+      cart.changed('updatedAt', true);
+      await cart.save();
     }
     // logique pour les offres 3 + 1
     // Initialize or update offerId for offre31 type

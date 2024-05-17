@@ -11,7 +11,7 @@ const admin = require('firebase-admin');
 const stripeWebhook = require('./controllers/payment_ctrl').stripeWebhook;
 
 const app = express();
-
+require('./services/cronTasks')
 
 // Chemin vers votre fichier de configuration Firebase
 const serviceAccount = require('./firebase.json');
