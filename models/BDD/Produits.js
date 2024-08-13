@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize')
 const db = require('../../db/db')
+require('dotenv').config();
+
 
 const Products = db.define('Products', {
     
@@ -174,9 +176,9 @@ const Products = db.define('Products', {
     stockantigaspi: {
         type: DataTypes.INTEGER,
         allowNull: true,
-    },
-
+    }
 })
+
 
 // relation
 // a rajouter
@@ -190,7 +192,6 @@ Products.associate = function(models) {
       foreignKey: 'productId',
       otherKey: 'orderId'
     });
-  
   };
 
   

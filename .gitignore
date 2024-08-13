@@ -8,3 +8,5 @@ firebase.json
 tests
 jest.config.js
 config/
+server.cert
+server.key

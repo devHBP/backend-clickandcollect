@@ -58,7 +58,7 @@ const addCartItems = async (req, res) => {
       libelle,
       key,
     } = req.body;
-
+    
     // Recherche d'un panier actif existant pour cet utilisateur
     let cart = await Carts.findOne({
       where: {
@@ -84,7 +84,7 @@ const addCartItems = async (req, res) => {
         return res.status(404).json({ error: "Product not found" });
       }
     }
-
+    
     let totalPrice = 0;
     if (type === "formule") {
       const option1 = await Products.findByPk(option1ProductId);

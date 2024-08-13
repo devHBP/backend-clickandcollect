@@ -149,7 +149,6 @@ const confirmOrder = async (req, res) => {
                     <p style="margin: 0;">START FOOD - LE PAIN DU JOUR - MAS GUERIDO</p>
                     <p style="margin: 0;">Numéro de téléphone : 04 68 84 46 01</p>
                     <p style="margin: 0;">Adresse e-mail de Contact : <a href="mailto:contact@lepaindujour.io">contact@lepaindujour.io</a></p>
-                    <p style="margin: 0;">Capital : 00000 €</p>
                     <p style="margin: 0;">SIRET 919 823 054 00011</p>
                     <p style="margin: 10px 0;"><a href=${lienRGPD} target="_blank">RGPD</a> | <a href=${desabonnement} target="_blank">Se désabonner</a></p>
                 </td>
@@ -267,7 +266,7 @@ const confirmOrderMail = async (req, res) => {
                                         <h1 style="font-size: 24px; margin-bottom: 20px;">Bonjour ${firstname},</h1>
                                         <p style="font-size: 16px; margin-bottom: 20px;">Merci pour ta commande <strong>${orderId}</strong> !</p>
                                         <p style="font-size: 16px; margin-bottom: 20px;">Nos équipes vont la préparer pour <strong>${formattedDate}</strong>, elle te sera livrée via la navette à ton lieu de travail : <strong>${point_de_vente}</strong>.</p>
-                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous te tiendrons informé dès que la commande sera livrée. Si tu as des questions ou des demandes spécifiques concernant ta commande, n'hésites pas à nous contacter en répondant à cet e-mail ou en appelant notre service clientèle au <strong>${numero_service_client}</strong>.</p>
+                                        <p style="font-size: 16px; margin-bottom: 20px;">Nous te tiendrons informé dès que la commande sera livrée. Si tu as des questions ou des demandes spécifiques concernant ta commande, n'hésites pas à nous contacter <a href="https://help.lepaindujour.io">ici</a> ou en appelant notre service clientèle au <strong>${numero_service_client}</strong>.</p>
                                         <h2 style="font-size: 18px; margin-bottom: 10px;">Comment se passe la livraison de ta commande sur ton lieu de travail ?</h2>
                                         <ol style="font-size: 16px; margin-bottom: 20px; padding-left: 20px; list-style-position: inside; text-align: left;">
                                             <li>Commande via l'app Click and Collect pain du Jour grâce à ton compte collaborateur HBP</li>

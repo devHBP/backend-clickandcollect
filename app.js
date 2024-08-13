@@ -1,3 +1,4 @@
+
 const express = require("express");
 const routes = require("./routes/routes");
 const db = require("./db/db");
@@ -61,6 +62,5 @@ db.sync()
 
 app.listen(NODEJS_PORT, () => {
   console.log(`Lancement serveur ${NODEJS_URL}:${NODEJS_PORT}`);
-});
-
+}); 
 
