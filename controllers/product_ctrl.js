@@ -85,7 +85,6 @@ const addProduct = async (req, res) => {
       stockantigaspi: req.body.stockantigaspi,
       allergenes: allergenes,
     };
-    // console.log('product', product)
 
     const createdProduct = await Products.create(product);
 

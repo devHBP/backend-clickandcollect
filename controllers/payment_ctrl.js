@@ -22,7 +22,6 @@ const createSession = async (req, res) => {
         .status(400)
         .json({ error: "Informations de commande manquantes." });
     }
-
     const role = req.body.orderInfo.userRole;
     // console.log("req", req.body.orderInfo.cart);
     const lineItems = req.body.orderInfo.cart.map((item) => {
@@ -38,7 +37,7 @@ const createSession = async (req, res) => {
       // }
 
       // ICI - modif à faire une fois front ok
-      const { libelle, prix, quantity, unitPrice, type } = item;
+      const { libelle, prix, quantity, unitPrice, type, option2ProductId, option3ProductId } = item;
       let adjustedPrice = prix || unitPrice;
       console.log("item", item);
       console.log("libelle", libelle);
@@ -46,8 +45,32 @@ const createSession = async (req, res) => {
 
       if (role === "SUNcollaborateur" && type !== "antigaspi") {
       //  adjustedPrice *= 0.8;
-        adjustedPrice = parseFloat((adjustedPrice * 0.8).toFixed(2));
+        if(type === "formule"){
+          let sandwichPrice = unitPrice;
+          // CAS 1, Formule complète, donc 4€ a dissocier puis réinjecter.
+          if(option2ProductId && option3ProductId){
+            sandwichPrice -= 4;
+            sandwichPrice *= process.env.COEFF_REMISE_COLLABORATEUR;
+            adjustedPrice = sandwichPrice + 4;
+          }
+          // CAS 2, Formule avec 1 supplément Dessert ou Boisson, 2€ à retirer et réinjecter au prix final
+          else if(option2ProductId || option3ProductId){
+            sandwichPrice -= 2;
+            sandwichPrice *= process.env.COEFF_REMISE_COLLABORATEUR;
+            adjustedPrice = sandwichPrice + 2;
+          }
+          // CAS 3 , juste le sandwich, pas de calcul on pose la remise.
+          else{
+            adjustedPrice *= process.env.COEFF_REMISE_COLLABORATEUR;
+          }
+        }
+        else{
+          adjustedPrice *= process.env.COEFF_REMISE_COLLABORATEUR;
+        }
+        adjustedPrice = adjustedPrice.toFixed(2);
       }
+
+      console.log("Ajustement tarif:", adjustedPrice);
 
       return {
         price_data: {
