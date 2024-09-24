@@ -140,7 +140,6 @@ const refundArticle = async (req, res) => {
                                             <p style="margin: 0;">START FOOD - LE PAIN DU JOUR - MAS GUERIDO</p>
                                             <p style="margin: 0;">Numéro de téléphone : 04 68 84 46 01</p>
                                             <p style="margin: 0;">Adresse e-mail de Contact : <a href="mailto:contact@lepaindujour.io">contact@lepaindujour.io</a></p>
-                                            <p style="margin: 0;">Capital : 00000 €</p>
                                             <p style="margin: 0;">SIRET 919 823 054 00011</p>
                                             <p style="margin: 10px 0;"><a href=${lienRGPD} target="_blank">RGPD</a> | <a href=${desabonnement} target="_blank">Se désabonner</a></p>
                                         </td>
