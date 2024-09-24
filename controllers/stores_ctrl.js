@@ -69,8 +69,7 @@ const getAllStores = ( req, res ) => {
 const ROLE_STORES = {
     SUNcollaborateur: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
     client: [1],
-    invite:[1], 
-          
+    invite:[1],  
 };
 
 // Lister tous les magasins en fonction du rôle
