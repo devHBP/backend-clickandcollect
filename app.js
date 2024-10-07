@@ -2,7 +2,7 @@
 const express = require("express");
 const routes = require("./routes/routes");
 const db = require("./db/db");
-var cors = require("cors");
+const cors = require("cors");
 const path = require("path");
 const auth = require("./middleware/auth");
 const NODEJS_PORT = process.env.NODEJS_PORT;
@@ -14,7 +14,8 @@ const stripeWebhook = require('./controllers/payment_ctrl').stripeWebhook;
 const app = express();
 require('./services/cronTasks')
 
-// Chemin vers votre fichier de configuration Firebase
+
+//Chemin vers votre fichier de configuration Firebase
 const serviceAccount = require('./firebase.json');
 
 admin.initializeApp({

@@ -11,7 +11,7 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     host:'127.0.0.1',
     dialectOptions:{
       // Rajouté le 02/08/2024, suite à un bug de node serveur.
-      //allowPublicKeyRetrieval: true,
+      // allowPublicKeyRetrieval: true,
     },
     logging: (query) => {
       if (!query.includes("SELECT")) {
