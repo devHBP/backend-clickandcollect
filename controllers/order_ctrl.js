@@ -197,6 +197,7 @@ const updateStatusOrder = async (req, res) => {
 
     await order.save();
 
+    console.log(`Commande mise à jour via updateStatusOrder: ${orderId} / ${status} .`)
     res.json({ message: "Order status updated successfully.", order });
   } catch (error) {
     console.error(error);
@@ -247,7 +248,7 @@ const allOrders = async (req, res) => {
     if (!orders || orders.length === 0) {
       return res.status(200).json({ orders: [] });
     }
-
+    console.log(`Fonction allOrder utilisée : ${orders}`)
     res.json({ orders });
   } catch (error) {
     console.error(error);
@@ -296,7 +297,7 @@ const ordersByDate = async (req, res) => {
     if (!orders || orders.length === 0) {
       return res.status(200).json({ orders: [] });
     }
-
+    console.log(`Fonction ordersByDate utilisée : ${orders}`)
     res.json({ orders });
   } catch (error) {
     console.error(error);
@@ -780,6 +781,7 @@ const ordersInWebApp = async (req, res) => {
       return res.status(200).json({ orders: [] });
     }
 
+    console.log("Commandes recues via ordersInWebApp: " . orders);
     res.json({ orders });
   } catch (error) {
     console.error(error);
@@ -806,6 +808,7 @@ const ordersInWaiting = async (req, res) => {
       },
     });
 
+    console.log("Commandes recues via ordersInAwaiting: " . orders);
     if (!orders || orders.length === 0) {
       return res.status(200).json({ orders: [] });
     }
