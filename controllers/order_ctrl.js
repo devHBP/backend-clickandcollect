@@ -39,6 +39,31 @@ const createOrder = async (req, res) => {
       //   // etc.
       // ]
     } = req.body;
+
+    // Controle backend des jours férié fixes.
+    const holidays = [
+      {day: 1, month: 1},
+      {day: 1, month: 5},
+      {day: 8, month: 5},
+      {day: 14, month: 7},
+      {day: 15, month: 8},
+      {day: 1, month: 11},
+      {day: 11, month: 11},
+      {day: 25, month: 12}
+    ];
+    const orderDate = new Date(date);
+    //const currentYear = new Date().getFullYear();
+    const isHoliday = holidays.some(
+      (holiday) =>
+        holiday.day === orderDate.getDate() &&
+        holiday.month === orderDate.getMonth() + 1
+    );
+    if(isHoliday){
+      return res.status(400).json({
+        message: "Il n'est pas possible de commander sur un jour férié."
+      })
+    };
+
     const cartString = JSON.stringify(cart);
     console.log("req createOrder", req.body);
     //console.log('products', products)
