@@ -66,8 +66,6 @@ const createOrder = async (req, res) => {
 
     const cartString = JSON.stringify(cart);
     console.log("req createOrder", req.body);
-    //console.log('products', products)
-    //console.log('prix total', prix_total)
 
     const aggregatedProducts = products.reduce(
       (accumulator, currentProduct) => {
@@ -97,6 +95,10 @@ const createOrder = async (req, res) => {
       cart.every((item) => item.typeProduit === "offreSUN") &&
       cart.length === 1;
     const paid = isOnlyFreeBaguetteInCart ? true : false;
+
+    // Ajout du controle de la remise spéciale pour les commandes de Central padel user ID 543 et possède la promo ID 14 :
+    const isCentralPadelCode = userId === 543 && promotionId === 14;
+    paid = isCentralPadelCode ? true : false;
 
     const order = await Orders.create({
       userRole,
