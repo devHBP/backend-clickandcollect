@@ -2,32 +2,45 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const Users = require('../../models/BDD/Users');
+const Products = require('../../models/BDD/Produits');
+
 
 const PASSWORD = process.env.PASSWORD;
 const HOSTNAME = process.env.HOSTNAME;
 const PORT = process.env.PORT;
 const USERNAME = process.env.USERNAME;
-const CONTACTS_EMAIL = process.env.CONTACTS_EMAIL;
+const CONTACT_EMAILS = process.env.CONTACT_EMAILS;
 
-const orderAnticipation = async (req, res) => {
+const sendPreparationAlert = async (order, orderProducts) => {
     try{
-        const { email, firstname , lastname, numero_commande, date, point_de_vente} = req.body;
-        const numeroCommande = numero_commande.substring(numero_commande.length - 5);
+        const anticipationProducts = await Products.findAll({
+            where: {
+                productId: orderProducts.map((p) => p.productId),
+                gere_a_lentrepot: true
+            },
+            attributes: ["libelle", "productId"]
+        });
 
-        const dateObj = new Date(date);
-        if (isNaN(dateObj.getTime())) {
-            console.error('Invalid date received:', date);
-            res.status(400).send('Invalid date format received');
+        const dateOrder = new Date(order.date);
+        const day = String(dateOrder.getUTCDate()).padStart(2, '0'); 
+        const month = String(dateOrder.getUTCMonth() + 1).padStart(2, '0'); 
+        const year = dateOrder.getUTCFullYear();
+
+        const formattedDateOrder = `${day}-${month}-${year}`;
+
+
+        if (anticipationProducts.length === 0) {
+            console.log("Aucun produit nécessitant une anticipation.");
             return;
         }
 
-        // Extraction des composants de la date
-        const day = String(dateObj.getUTCDate()).padStart(2, '0'); 
-        const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); 
-        const year = dateObj.getUTCFullYear(); 
+        const productsTableRows = anticipationProducts.map(p =>
+            `<tr>
+                <td style="padding: 8px; border: 1px solid #ddd;">${p.libelle}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${orderProducts.find(op => op.productId === p.productId).quantity}</td>
+            </tr>`
+        ).join('');
 
-        // Concaténation sous le format JJ-MM-AAAA
-        const formattedDate = `${day}-${month}-${year}`;
 
         let transporter = nodemailer.createTransport({
             host: HOSTNAME,
@@ -41,7 +54,7 @@ const orderAnticipation = async (req, res) => {
 
         const mailOptions = {
             from: USERNAME,
-            subject: 'Commande à Anticiper',
+            subject: `⚠️ Préparation Anticipée - Commande #${order.orderId}`,
             html: `
             <!DOCTYPE html>
             <html>
@@ -68,19 +81,25 @@ const orderAnticipation = async (req, res) => {
                     <tr>
                         <td align="center" style="padding: 20px 0; background-color: #273545;">
                             <!-- Logo -->
-                            <img src="https://www.lepaindujour.io/wp-content/uploads/2023/10/logo.png" alt="Le Pain du Jour" style="width: 100px; height: auto;">
+                            <img src="https://www.lepaindujour.io/wp-content/uploads/2023/10/logo.png" 
+                                alt="Le Pain du Jour" 
+                                style="display: block; width: 100%; max-width: 600px; height: auto;">
                         </td>
                     </tr>
-                    <tr>
+                    <td align="center" style="padding: 20px;">
                         <td align="center" style="padding: 20px;">
-                            <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #fff; border-radius: 8px; overflow: hidden;">
-                        <tr>
-                            <td align="center" style="padding: 40px;">
-                                <h2 style="font-size: 24px; margin-bottom: 20px;">Une commande importante à été passée par : ${firstname} ${lastname},</h2>
-                                <p style="font-size: 16px; margin-bottom: 20px;">N° de Commande: <strong>${numeroCommande}</strong> !</p>
-                                <p style="font-size: 16px; margin-bottom: 20px;">Point de Livraison: <strong>${point_de_vente}</strong> !</p>
-                            </td>
-                        </tr>
+                            <h2>Commande urgente à anticiper</h2>
+                            <p><strong>Numéro de commande :</strong> #${order.orderId}</p>
+                            <p>Doit être prête pour le : ${formattedDateOrder}</p>
+                            <h3>🛠 Produits à anticiper :</h3>
+                            <table>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                </tr>
+                                ${productsTableRows}
+                            </table>
+                        </td>
                     </tr>
             </table>
     
@@ -88,21 +107,30 @@ const orderAnticipation = async (req, res) => {
             </html>
             `
         };
-        if(!CONTACTS_EMAIL){
+
+        transporter.verify(function(error, success){
+            if(error){
+                console.log("Erreur Smtp");
+            }else {
+                console.log("SMTP prêt à envoyer des emails");
+            }
+        })
+
+        if(!CONTACT_EMAILS){
             console.error('MAILS_CONTACT is not set');
-            return res.status(500).send('Configuration error: MAILS_CONTACT missing')
+            return 'Configuration error: MAILS_CONTACT missing';
         }
-        const contacts = CONTACTS_EMAIL.split(',').map(email => email.trim());
+        const contacts = CONTACT_EMAILS.split(',').map(email => email.trim());
 
         for (const contactEmail of contacts){
             await transporter.sendMail({ ...mailOptions, to: contactEmail });
             console.log(`Email envoyé à ${contactEmail}`);
         }
-        return res.status(200).send('Emails envoyés avec succès.');
+        return 'Emails envoyés avec succès.';
     } catch (error){
         console.error("Erreur lors de l'envoi de l'email: " , error);
-        return res.status(500).send("Erreur interne");
+        return "Erreur interne";
     }
 }
 
-module.exports = { orderAnticipation }
+module.exports = { sendPreparationAlert }

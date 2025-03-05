@@ -9,6 +9,7 @@ const Reviews = require("../models/BDD/Reviews");
 const Users = require("../models/BDD/Users");
 
 const { Op } = require("sequelize");
+const { sendPreparationAlert } = require('../controllers/emails/orderAnticipation.js');
 
 //creation commande (sans le paiement, par exemple pour prendre en compte le paiement sur place plus tard)
 const createOrder = async (req, res) => {
@@ -94,7 +95,7 @@ const createOrder = async (req, res) => {
       // cart.every((item) => item.type_produit === "offreSUN") &&
       cart.every((item) => item.typeProduit === "offreSUN") &&
       cart.length === 1;
-    const paid = isOnlyFreeBaguetteInCart ? true : false;
+    let paid = isOnlyFreeBaguetteInCart ? true : false;
 
     // Ajout du controle de la remise spéciale pour les commandes de Central padel user ID 543 et possède la promo ID 14 :
     const isCentralPadelCode = userId === 543 && promotionId === 14;
@@ -138,6 +139,18 @@ const createOrder = async (req, res) => {
 
     await TableOrderProduct.bulkCreate(orderProducts);
 
+    const requirePreparation = await checkPreparationNeeded(orderProducts);
+    if(requirePreparation){
+      try{
+        await sendPreparationAlert(order, orderProducts);
+        console.log("Email envoyé");
+      }catch(e){
+        console.error("Erreur lors de l'envoi de l'email: ", error)
+      }
+    }else {
+      console.log("Pas de préparation nécéssaire")
+    }
+
     res.status(201).json(order);
   } catch (error) {
     console.error(error);
@@ -147,6 +160,24 @@ const createOrder = async (req, res) => {
     });
   }
 };
+
+
+/**
+ *  Vérifie si un des product a l'attribut gere_a_lentrepot == true
+ * 
+ *  @return true|false;
+ */
+const checkPreparationNeeded = async (orderProducts) => {
+  const productIds = orderProducts.map((product)=> product.productId);
+  console.log("Préparation requise");
+  const products = await Products.findAll({
+    where: { productId: productIds},
+    attributes: ["productId", "libelle", "gere_a_lentrepot"]
+  });
+
+  return products.some(product => product.gere_a_lentrepot);
+}
+
 
 //creation d'une commande avec paiement en une seule fonction
 //   const createOrderAndPayment = async (req, res) => {

@@ -14,7 +14,7 @@ const { createOrder, updateStatusOrder, allOrders, deleteOneOrder, ordersOfUser,
     productsWithFormuleForOrder, ordersOfUserWithProducts, createReview, getAllReviews, statusLastOrder, tableOrderProduct, updateViewStatus, ordersInWebApp, ordersInWaiting, ordersByDate, updateOrderContent, userOrders } = require('../controllers/order_ctrl')
 const {sendWelcomeEmail } = require('../controllers/emails/welcomeEmail')
 const {confirmOrder } = require('../controllers/emails/confirmOrder')
-const { orderAnticipation } = require('../controllers/emails/orderAnticipation')
+const { sendPreparationAlert } = require('../controllers/emails/orderAnticipation')
 const {orderStatusReady } = require('../controllers/emails/orderStatusReady')
 const {refundArticle } = require('../controllers/emails/refundArticle')
 const {feedback} = require('../controllers/emails/feedback')
@@ -164,7 +164,7 @@ router.post('/createPaiement', createPaiement) //paiement sur place, seuleulemen
 //EMAILS
 router.post('/sendWelcomeEmail', sendWelcomeEmail)
 router.post('/confirmOrder', confirmOrder)
-router.post('/orderAnticipation', orderAnticipation)
+router.post('/orderAnticipation', sendPreparationAlert)
 router.post('/orderStatusReady', orderStatusReady)
 router.post('/feedback', feedback)
 router.post('/refundArticle', refundArticle)
