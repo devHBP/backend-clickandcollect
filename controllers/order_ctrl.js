@@ -88,18 +88,21 @@ const createOrder = async (req, res) => {
     // Par défaut, le statut est "en attente"
     const status = "en attente";
     
+    let paid = false;
+
     // Ajout du controle de la remise spéciale pour les commandes de Central padel user ID 543 et possède la promo ID 14 :
-    const isCentralPadelCode = userId === 543 && promotionId === 14;
-    let paid = isCentralPadelCode ? true : false;
+    const isCentralPadelCode = userId === 543;
     
     // Vérifie si le panier contient uniquement un produit avec type_produit "offreSUN"
     // et si le prix total est 0 pour marquer la commande comme payée
-    const isOnlyFreeBaguetteInCart =
-      // ICI - modif après mise à jour front 
-      // cart.every((item) => item.type_produit === "offreSUN") &&
-      cart.every((item) => item.typeProduit === "offreSUN") &&
-      cart.length === 1;
-      paid = isOnlyFreeBaguetteInCart ? true : false;
+    const isOnlyFreeBaguetteInCart = cart.every((item) => item.typeProduit === "offreSUN") && cart.length === 1;
+    // ICI - modif après mise à jour front 
+    // cart.every((item) => item.type_produit === "offreSUN") &&
+    
+    
+    if(isOnlyFreeBaguetteInCart || isCentralPadelCode ){
+      paid = true;
+    }
 
     const order = await Orders.create({
       userRole,
