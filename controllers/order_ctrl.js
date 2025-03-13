@@ -64,6 +64,20 @@ const createOrder = async (req, res) => {
         message: "Il n'est pas possible de commander sur un jour férié."
       })
     };
+    
+    //* Ici on vient vérifier la présence du cartID dans un Order et qu'il à été payé, il ne peux y en avoir qu'un seul sinon c'est un duplicat.
+    const existingOrder = await Orders.findOne({
+      where: {
+        [Op.and]: [
+          { cartString: { [Op.like]: `%cartId":${cart[0].cartId}%` } }, 
+          { paid: true } // Vérifie uniquement si la commande a déjà été payée
+        ]
+      }
+    });
+    if (existingOrder) {
+      console.log("Duplicat trouvé ");
+      return res.status(400).json({ message: "Une commande a déjà été créée pour ce panier." });
+    }
 
     const cartString = JSON.stringify(cart);
     console.log("req createOrder", req.body);
