@@ -16,11 +16,11 @@ require('./services/cronTasks')
 
 
 //Chemin vers votre fichier de configuration Firebase
-// const serviceAccount = require('./firebase.json');
+const serviceAccount = require('./firebase.json');
 
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount)
-// });
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 app.use(cors());
 
