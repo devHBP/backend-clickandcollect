@@ -52,7 +52,17 @@ const createOrder = async (req, res) => {
       {day: 11, month: 11},
       {day: 25, month: 12}
     ];
+
+    const dateNow = new Date();
     const orderDate = new Date(date);
+    console.log(orderDate, dateNow);
+    console.log(orderDate < dateNow);
+    if(orderDate < dateNow){
+      return res.status(400).json({
+        message: "Commande posterieur à la date du jour."
+      })
+    } 
+
     //const currentYear = new Date().getFullYear();
     const isHoliday = holidays.some(
       (holiday) =>
